@@ -118,7 +118,7 @@
             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Akun Gratis (Aktif)</p>
             <p class="text-3xl font-black text-slate-900 dark:text-white mb-4">Rp 0</p>
             <ul class="space-y-2.5 text-sm text-slate-600 dark:text-slate-400">
-                @foreach(['✅ Akses artikel & berita','✅ Daftar kegiatan umum','✅ Dashboard member','✅ Profil & keanggotaan','❌ Materi edukasi eksklusif','❌ Webinar premium','❌ Sertifikat resmi','❌ Konten member-only'] as $f)
+                @foreach(['✅ Akses artikel & berita','✅ Daftar kegiatan umum','✅ Dashboard member','✅ Profil & keanggotaan','❌ Materi edukasi eksklusif','❌ Webinar premium','❌ Konten member-only'] as $f)
                 <li class="{{ str_starts_with($f,'❌') ? 'opacity-40' : '' }}">{{ $f }}</li>
                 @endforeach
             </ul>
@@ -130,7 +130,7 @@
             <p class="text-3xl font-black text-amber-900 dark:text-amber-100 mb-1">Rp 300.000</p>
             <p class="text-xs text-amber-600 dark:text-amber-400 mb-4">per tahun</p>
             <ul class="space-y-2.5 text-sm text-amber-900 dark:text-amber-200">
-                @foreach(['✅ Semua fitur gratis','✅ Semua materi edukasi','✅ Webinar & seminar eksklusif','✅ Sertifikat resmi HPMI','✅ Konten member-only','✅ Akses prioritas kegiatan','✅ Jaringan premium HPMI','✅ Konsultasi online']) as $f)
+                @foreach (['✅ Semua fitur gratis','✅ Semua materi edukasi','✅ Webinar & seminar eksklusif','✅ Konten member-only','✅ Akses prioritas kegiatan','✅ Jaringan premium HPMI','✅ Konsultasi online'] as $f)
                 <li class="font-semibold">{{ $f }}</li>
                 @endforeach
             </ul>
