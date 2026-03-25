@@ -1,98 +1,226 @@
 @extends('layouts.admin')
-@section('title','Dashboard')
-@section('subtitle','Ringkasan data platform HPMI')
+@section('title', 'Dashboard Overview')
+
 @section('content')
-<div class="space-y-6">
-    {{-- Stats Grid --}}
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="space-y-[20px]">
+
+  {{-- ── STAT CARDS ── --}}
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-[16px]">
+
+    {{-- Total Anggota --}}
+    <div class="stat-card bg-white rounded-[14px] p-[20px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.06)] flex items-start gap-3.5">
+      <div class="w-11 h-11 rounded-[11px] bg-[rgba(30,90,255,.1)] flex items-center justify-center text-[#1e5aff] flex-shrink-0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <div>
+        <div class="text-[26px] font-extrabold text-slate-800 leading-none tracking-tight">{{ number_format($stats['total_members']) }}</div>
+        <div class="text-[12px] text-slate-500 mt-1 font-medium">Total Anggota</div>
+        <div class="text-[11px] font-semibold text-[#1e5aff] mt-2 flex items-center gap-1">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+          Terdaftar
+        </div>
+      </div>
+    </div>
+
+    {{-- Anggota Aktif --}}
+    <div class="stat-card bg-white rounded-[14px] p-[20px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.06)] flex items-start gap-3.5">
+      <div class="w-11 h-11 rounded-[11px] bg-[rgba(16,185,129,.1)] flex items-center justify-center text-[#10b981] flex-shrink-0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div>
+        <div class="text-[26px] font-extrabold text-slate-800 leading-none tracking-tight">{{ number_format($stats['active_members']) }}</div>
+        <div class="text-[12px] text-slate-500 mt-1 font-medium">Anggota Aktif</div>
+        @php $activePct = $stats['total_members'] > 0 ? round($stats['active_members']/$stats['total_members']*100) : 0; @endphp
+        <div class="text-[11px] font-semibold text-[#10b981] mt-2">{{ $activePct }}% dari total</div>
+      </div>
+    </div>
+
+    {{-- Menunggu Verifikasi --}}
+    <div class="stat-card bg-white rounded-[14px] p-[20px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.06)] flex items-start gap-3.5">
+      <div class="w-11 h-11 rounded-[11px] bg-[rgba(245,158,11,.1)] flex items-center justify-center text-[#f59e0b] flex-shrink-0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div>
+        <div class="text-[26px] font-extrabold text-slate-800 leading-none tracking-tight">{{ number_format($stats['pending_members']) }}</div>
+        <div class="text-[12px] text-slate-500 mt-1 font-medium">Menunggu Aktivasi</div>
+        @if($stats['pending_members'] > 0)
+        <a href="{{ route('admin.members.index') }}?status=pending" class="text-[11px] font-semibold text-[#f59e0b] mt-2 flex items-center gap-1 hover:underline">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          Tinjau sekarang
+        </a>
+        @else
+        <div class="text-[11px] font-semibold text-slate-400 mt-2">Semua terverifikasi</div>
+        @endif
+      </div>
+    </div>
+
+    {{-- Pembayaran Tertunda --}}
+    <div class="stat-card bg-white rounded-[14px] p-[20px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.06)] flex items-start gap-3.5">
+      <div class="w-11 h-11 rounded-[11px] bg-[rgba(239,68,68,.1)] flex items-center justify-center text-[#ef4444] flex-shrink-0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      </div>
+      <div>
+        <div class="text-[26px] font-extrabold text-slate-800 leading-none tracking-tight">{{ number_format($stats['pending_payments']) }}</div>
+        <div class="text-[12px] text-slate-500 mt-1 font-medium">Bayar Tertunda</div>
+        @if($stats['pending_payments'] > 0)
+        <a href="{{ route('admin.payments.index') }}?status=pending" class="text-[11px] font-semibold text-[#ef4444] mt-2 flex items-center gap-1 hover:underline">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          Konfirmasi
+        </a>
+        @else
+        <div class="text-[11px] font-semibold text-slate-400 mt-2">Tidak ada pending</div>
+        @endif
+      </div>
+    </div>
+
+    {{-- Total Kegiatan --}}
+    <div class="stat-card bg-white rounded-[14px] p-[20px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.06)] flex items-start gap-3.5">
+      <div class="w-11 h-11 rounded-[11px] bg-[rgba(139,92,246,.1)] flex items-center justify-center text-[#8b5cf6] flex-shrink-0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <div>
+        <div class="text-[26px] font-extrabold text-slate-800 leading-none tracking-tight">{{ number_format($stats['total_events']) }}</div>
+        <div class="text-[12px] text-slate-500 mt-1 font-medium">Total Kegiatan</div>
+        <div class="text-[11px] font-semibold text-[#8b5cf6] mt-2">Seminar & Webinar</div>
+      </div>
+    </div>
+
+    {{-- Total Artikel --}}
+    <div class="stat-card bg-white rounded-[14px] p-[20px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.06)] flex items-start gap-3.5">
+      <div class="w-11 h-11 rounded-[11px] bg-[rgba(14,165,233,.1)] flex items-center justify-center text-[#0ea5e9] flex-shrink-0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </div>
+      <div>
+        <div class="text-[26px] font-extrabold text-slate-800 leading-none tracking-tight">{{ number_format($stats['total_articles']) }}</div>
+        <div class="text-[12px] text-slate-500 mt-1 font-medium">Total Artikel</div>
+        <div class="text-[11px] font-semibold text-[#0ea5e9] mt-2">Artikel & Berita</div>
+      </div>
+    </div>
+
+    {{-- Pesan Belum Dibaca --}}
+    <div class="stat-card bg-white rounded-[14px] p-[20px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.06)] flex items-start gap-3.5">
+      <div class="w-11 h-11 rounded-[11px] bg-[rgba(236,72,153,.1)] flex items-center justify-center text-[#ec4899] flex-shrink-0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <div>
+        <div class="text-[26px] font-extrabold text-slate-800 leading-none tracking-tight">{{ number_format($stats['unread_messages']) }}</div>
+        <div class="text-[12px] text-slate-500 mt-1 font-medium">Pesan Belum Dibaca</div>
+        @if($stats['unread_messages'] > 0)
+        <a href="{{ route('admin.contact.index') }}" class="text-[11px] font-semibold text-[#ec4899] mt-2 flex items-center gap-1 hover:underline">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          Buka Pesan
+        </a>
+        @else
+        <div class="text-[11px] font-semibold text-slate-400 mt-2">Semua sudah dibaca</div>
+        @endif
+      </div>
+    </div>
+
+    {{-- Aksi Cepat --}}
+    <div class="bg-[#0f1b2d] rounded-[14px] p-[20px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.06)]">
+      <div class="text-[12px] font-bold text-white/50 uppercase tracking-widest mb-3">Aksi Cepat</div>
+      <div class="flex flex-col gap-2">
+        <a href="{{ route('admin.members.index') }}" class="flex items-center gap-2 py-1.5 px-2.5 rounded-[8px] bg-white/[.05] hover:bg-white/[.1] text-white/80 text-[12px] font-medium transition-colors">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          Tambah Anggota
+        </a>
+        <a href="{{ route('admin.articles.create') }}" class="flex items-center gap-2 py-1.5 px-2.5 rounded-[8px] bg-white/[.05] hover:bg-white/[.1] text-white/80 text-[12px] font-medium transition-colors">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Tulis Artikel
+        </a>
+        <a href="{{ route('admin.events.create') }}" class="flex items-center gap-2 py-1.5 px-2.5 rounded-[8px] bg-white/[.05] hover:bg-white/[.1] text-white/80 text-[12px] font-medium transition-colors">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Buat Kegiatan
+        </a>
+      </div>
+    </div>
+
+  </div>{{-- /stat grid --}}
+
+  {{-- ── BOTTOM TABLES ── --}}
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-[18px]">
+
+    {{-- Anggota Terbaru --}}
+    <div class="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.06)] overflow-hidden">
+      <div class="px-5 pt-[18px] pb-3.5 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <div class="text-[14px] font-bold text-slate-800">Anggota Terbaru</div>
+          <div class="text-[12px] text-slate-500 mt-0.5">Pendaftar terakhir masuk</div>
+        </div>
+        <a href="{{ route('admin.members.index') }}" class="px-3 py-1.5 rounded-[8px] border border-slate-200 bg-white text-slate-600 text-[12px] font-semibold hover:bg-slate-50 transition-colors">Lihat semua</a>
+      </div>
+      <div>
+        @forelse($recent_members as $member)
         @php
-        $cards = [
-            ['label'=>'Total Anggota','value'=>$stats['total_members'],'icon'=>'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z','from'=>'from-blue-500','to'=>'to-blue-600','light'=>'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'],
-            ['label'=>'Anggota Aktif','value'=>$stats['active_members'],'icon'=>'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z','from'=>'from-emerald-500','to'=>'to-emerald-600','light'=>'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'],
-            ['label'=>'Menunggu Aktivasi','value'=>$stats['pending_members'],'icon'=>'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z','from'=>'from-amber-500','to'=>'to-amber-600','light'=>'bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400'],
-            ['label'=>'Bayar Tertunda','value'=>$stats['pending_payments'],'icon'=>'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z','from'=>'from-red-500','to'=>'to-red-600','light'=>'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400'],
-            ['label'=>'Total Kegiatan','value'=>$stats['total_events'],'icon'=>'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z','from'=>'from-violet-500','to'=>'to-violet-600','light'=>'bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400'],
-            ['label'=>'Total Artikel','value'=>$stats['total_articles'],'icon'=>'M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z','from'=>'from-indigo-500','to'=>'to-indigo-600','light'=>'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400'],
-            ['label'=>'Pesan Belum Dibaca','value'=>$stats['unread_messages'],'icon'=>'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z','from'=>'from-pink-500','to'=>'to-pink-600','light'=>'bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400'],
-        ];
+          $initials = collect(explode(' ', $member->user->name ?? 'User'))->take(2)->map(fn($w)=>strtoupper(substr($w,0,1)))->join('');
+          $colors = ['bg-[rgba(30,90,255,.12)] text-[#1e5aff]','bg-[rgba(16,185,129,.12)] text-[#10b981]','bg-[rgba(245,158,11,.12)] text-[#f59e0b]','bg-[rgba(139,92,246,.12)] text-[#8b5cf6]','bg-[rgba(14,165,233,.12)] text-[#0ea5e9]'];
+          $color = $colors[$loop->index % count($colors)];
         @endphp
-        @foreach($cards as $card)
-        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 hover:shadow-md transition-shadow">
-            <div class="flex items-start justify-between gap-3">
-                <div>
-                    <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ $card['label'] }}</p>
-                    <p class="text-2xl font-black text-slate-900 dark:text-white mt-1">{{ number_format($card['value']) }}</p>
-                </div>
-                <div class="{{ $card['light'] }} p-3 rounded-xl flex-shrink-0">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="{{ $card['icon'] }}"/></svg>
-                </div>
-            </div>
+        <div class="flex items-center gap-3 px-4 py-3 {{ !$loop->last ? 'border-b border-slate-100' : '' }} hover:bg-slate-50 transition-colors cursor-pointer">
+          <div class="w-[38px] h-[38px] rounded-[10px] {{ $color }} flex items-center justify-center font-bold text-[13px] flex-shrink-0">{{ $initials }}</div>
+          <div class="flex-1 min-w-0">
+            <div class="text-[13px] font-semibold text-slate-800 truncate">{{ $member->user->name ?? 'Unknown' }}</div>
+            <div class="text-[11px] text-slate-500">{{ $member->member_code }}</div>
+          </div>
+          @if($member->status === 'active')
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[rgba(16,185,129,.12)] text-[#059669]">Aktif</span>
+          @elseif($member->status === 'pending')
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[rgba(245,158,11,.12)] text-[#d97706]">Pending</span>
+          @else
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[rgba(239,68,68,.1)] text-[#dc2626]">{{ ucfirst($member->status) }}</span>
+          @endif
         </div>
-        @endforeach
+        @empty
+        <div class="px-4 py-8 text-center text-[13px] text-slate-400">
+          <svg class="mx-auto mb-2 text-slate-300" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          Belum ada anggota terdaftar
+        </div>
+        @endforelse
+      </div>
     </div>
 
-    {{-- Recent Data --}}
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {{-- Recent Members --}}
-        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-4 bg-gradient-to-b from-blue-400 to-blue-600 rounded-full"></div>
-                    <h3 class="font-bold text-slate-900 dark:text-white text-sm">Anggota Terbaru</h3>
-                </div>
-                <a href="{{ route('admin.members.index') }}" class="text-xs font-semibold text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1">
-                    Semua <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </a>
-            </div>
-            <div class="divide-y divide-slate-50 dark:divide-slate-800">
-                @forelse($recent_members as $member)
-                <div class="flex items-center gap-3 px-6 py-3 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">{{ substr($member->user->name??'?',0,1) }}</div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold text-slate-900 dark:text-white truncate">{{ $member->user->name??'-' }}</p>
-                        <p class="text-xs text-slate-400 truncate">{{ $member->member_code }}</p>
-                    </div>
-                    @php $sc=['active'=>'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400','pending'=>'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400','expired'=>'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400','suspended'=>'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'];$sl=['active'=>'Aktif','pending'=>'Pending','expired'=>'Expired','suspended'=>'Suspend']; @endphp
-                    <span class="text-xs font-semibold px-2 py-1 rounded-lg {{ $sc[$member->status]??'bg-slate-100 text-slate-600' }}">{{ $sl[$member->status]??$member->status }}</span>
-                </div>
-                @empty
-                <div class="px-6 py-10 text-center text-slate-400 text-sm">Belum ada anggota</div>
-                @endforelse
-            </div>
+    {{-- Pembayaran Terbaru --}}
+    <div class="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.06)] overflow-hidden">
+      <div class="px-5 pt-[18px] pb-3.5 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <div class="text-[14px] font-bold text-slate-800">Pembayaran Terbaru</div>
+          <div class="text-[12px] text-slate-500 mt-0.5">Transaksi iuran anggota</div>
         </div>
-
-        {{-- Recent Payments --}}
-        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-4 bg-gradient-to-b from-emerald-400 to-emerald-600 rounded-full"></div>
-                    <h3 class="font-bold text-slate-900 dark:text-white text-sm">Pembayaran Terbaru</h3>
-                </div>
-                <a href="{{ route('admin.payments.index') }}" class="text-xs font-semibold text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1">
-                    Semua <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </a>
-            </div>
-            <div class="divide-y divide-slate-50 dark:divide-slate-800">
-                @forelse($recent_payments as $payment)
-                <div class="flex items-center gap-3 px-6 py-3 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white flex-shrink-0">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold text-slate-900 dark:text-white truncate">{{ $payment->member->user->name??'-' }}</p>
-                        <p class="text-xs text-slate-400">{{ $payment->invoice_no }}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-sm font-bold text-slate-900 dark:text-white">Rp {{ number_format($payment->amount) }}</p>
-                        @php $ps=['paid'=>'text-emerald-600 dark:text-emerald-400','pending'=>'text-amber-600 dark:text-amber-400','failed'=>'text-red-600 dark:text-red-400']; @endphp
-                        <span class="text-xs font-semibold {{ $ps[$payment->status]??'text-slate-500' }}">{{ ucfirst($payment->status) }}</span>
-                    </div>
-                </div>
-                @empty
-                <div class="px-6 py-10 text-center text-slate-400 text-sm">Belum ada pembayaran</div>
-                @endforelse
-            </div>
+        <a href="{{ route('admin.payments.index') }}" class="px-3 py-1.5 rounded-[8px] border border-slate-200 bg-white text-slate-600 text-[12px] font-semibold hover:bg-slate-50 transition-colors">Lihat semua</a>
+      </div>
+      <div>
+        @forelse($recent_payments as $payment)
+        <div class="flex items-center gap-3 px-4 py-3 {{ !$loop->last ? 'border-b border-slate-100' : '' }} hover:bg-slate-50 transition-colors cursor-pointer">
+          <div class="w-[38px] h-[38px] rounded-[10px] bg-[rgba(30,90,255,.08)] flex items-center justify-center text-[#1e5aff] flex-shrink-0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-[13px] font-semibold text-slate-800 truncate">{{ $payment->member->user->name ?? 'Unknown' }}</div>
+            <div class="text-[11px] text-slate-500 font-mono">{{ $payment->invoice_no }}</div>
+          </div>
+          <div class="text-right flex-shrink-0">
+            <div class="text-[13px] font-bold text-slate-800">Rp {{ number_format($payment->amount) }}</div>
+            @if($payment->status === 'paid')
+            <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#059669]">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Lunas
+            </span>
+            @else
+            <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#d97706]">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Pending
+            </span>
+            @endif
+          </div>
         </div>
+        @empty
+        <div class="px-4 py-8 text-center text-[13px] text-slate-400">
+          <svg class="mx-auto mb-2 text-slate-300" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Belum ada transaksi pembayaran
+        </div>
+        @endforelse
+      </div>
     </div>
+
+  </div>{{-- /bottom row --}}
+
 </div>
 @endsection

@@ -1,78 +1,88 @@
 @extends('layouts.admin')
-@section('title','Pembayaran & Validasi Premium')
-@section('subtitle','Validasi pengajuan upgrade Premium dari anggota')
+@section('title', 'Manajemen Pembayaran')
 @section('content')
 <div class="space-y-5">
-    <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 rounded-xl flex items-center justify-center">
-            <svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        </div>
-        <div>
-            <p class="font-bold text-slate-900 dark:text-white">{{ $payments->total() }} transaksi</p>
-            <p class="text-xs text-slate-500">Pengajuan upgrade Premium dari anggota</p>
-        </div>
+    <div>
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Manajemen Pembayaran</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Konfirmasi dan kelola pembayaran anggota</p>
     </div>
 
-    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+    {{-- Stats --}}
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        @php $statsCards = [
+            ['label'=>'Total Pembayaran','value'=>$payments->total(),'color'=>'blue','icon'=>'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z'],
+            ['label'=>'Menunggu Konfirmasi','value'=>$payments->where('status','pending')->count(),'color'=>'yellow','icon'=>'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
+            ['label'=>'Lunas','value'=>$payments->where('status','paid')->count(),'color'=>'green','icon'=>'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
+            ['label'=>'Gagal','value'=>$payments->where('status','failed')->count(),'color'=>'red','icon'=>'M6 18L18 6M6 6l12 12'],
+        ];
+        $cm=['blue'=>'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400','yellow'=>'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400','green'=>'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400','red'=>'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400']; @endphp
+        @foreach($statsCards as $sc)
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ $sc['label'] }}</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ $sc['value'] }}</p>
+                </div>
+                <div class="{{ $cm[$sc['color']] }} p-3 rounded-xl">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $sc['icon'] }}"/></svg>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="font-semibold text-gray-900 dark:text-white">Daftar Pembayaran</h3>
+        </div>
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead>
-                    <tr class="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800">
-                        <th class="text-left px-5 py-3.5 font-semibold text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Anggota</th>
-                        <th class="text-left px-5 py-3.5 font-semibold text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Invoice</th>
-                        <th class="text-left px-5 py-3.5 font-semibold text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Nominal</th>
-                        <th class="text-left px-5 py-3.5 font-semibold text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Metode Bayar</th>
-                        <th class="text-left px-5 py-3.5 font-semibold text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Status</th>
-                        <th class="text-left px-5 py-3.5 font-semibold text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">Aksi</th>
+                    <tr class="bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
+                        <th class="text-left px-5 py-3.5 font-semibold text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wide">Anggota</th>
+                        <th class="text-left px-5 py-3.5 font-semibold text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wide">Invoice</th>
+                        <th class="text-left px-5 py-3.5 font-semibold text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wide">Nominal</th>
+                        <th class="text-left px-5 py-3.5 font-semibold text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wide">Tipe</th>
+                        <th class="text-left px-5 py-3.5 font-semibold text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wide">Status</th>
+                        <th class="text-left px-5 py-3.5 font-semibold text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wide">Tanggal</th>
+                        <th class="text-left px-5 py-3.5 font-semibold text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wide">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-50 dark:divide-slate-800">
+                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                     @forelse($payments as $payment)
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition {{ $payment->status==='pending' && $payment->payment_method ? 'bg-amber-50/50 dark:bg-amber-900/10' : '' }}">
-                        <td class="px-5 py-4">
-                            <p class="font-semibold text-slate-900 dark:text-white">{{ $payment->member->user->name??'-' }}</p>
-                            <p class="text-xs text-slate-400">{{ $payment->member->user->email??'-' }}</p>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition">
+                        <td class="px-5 py-3.5">
+                            <p class="font-medium text-gray-900 dark:text-white">{{ $payment->member->user->name??'-' }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">{{ $payment->member->member_code??'-' }}</p>
                         </td>
-                        <td class="px-5 py-4"><code class="text-xs font-mono text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-lg">{{ $payment->invoice_no }}</code></td>
-                        <td class="px-5 py-4 font-bold text-slate-900 dark:text-white">Rp {{ number_format($payment->amount, 0, ',', '.') }}</td>
-                        <td class="px-5 py-4">
-                            @if($payment->payment_method)
-                            <span class="text-xs font-bold bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2.5 py-1 rounded-lg">{{ $payment->payment_method }}</span>
-                            @else
-                            <span class="text-xs text-slate-400 italic">Belum dikonfirmasi</span>
-                            @endif
+                        <td class="px-5 py-3.5"><code class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-gray-700 dark:text-gray-300">{{ $payment->invoice_no }}</code></td>
+                        <td class="px-5 py-3.5 font-semibold text-gray-900 dark:text-white">Rp {{ number_format($payment->amount) }}</td>
+                        <td class="px-5 py-3.5 text-gray-600 dark:text-gray-400 capitalize">{{ str_replace('_',' ',$payment->type) }}</td>
+                        <td class="px-5 py-3.5">
+                            @php $ss=['paid'=>'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400','pending'=>'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400','failed'=>'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400','expired'=>'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'];$sl=['paid'=>'Lunas','pending'=>'Pending','failed'=>'Gagal','expired'=>'Kadaluarsa']; @endphp
+                            <span class="text-xs px-2.5 py-1 rounded-full font-medium {{ $ss[$payment->status]??'' }}">{{ $sl[$payment->status]??$payment->status }}</span>
                         </td>
-                        <td class="px-5 py-4">
-                            @php $ps=['paid'=>'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400','pending'=>'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400','failed'=>'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400']; @endphp
-                            <span class="text-xs font-semibold px-2.5 py-1 rounded-lg {{ $ps[$payment->status]??'bg-slate-100 text-slate-600' }}">
-                                {{ $payment->status==='paid' ? '✅ Lunas' : ($payment->status==='pending' && $payment->payment_method ? '⏳ Dikonfirmasi Member' : ($payment->status==='pending' ? '🕐 Belum Bayar' : ucfirst($payment->status))) }}
-                            </span>
-                        </td>
-                        <td class="px-5 py-4">
-                            @if($payment->status === 'pending' && $payment->payment_method)
-                            <form method="POST" action="{{ route('admin.payments.confirm', $payment->id) }}">
-                                @csrf @method('PUT')
-                                <button type="submit"
-                                        onclick="return confirm('Validasi pembayaran ini dan aktifkan Premium untuk {{ $payment->member->user->name }}?')"
-                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 rounded-xl shadow-lg shadow-emerald-500/20 transition">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                    Validasi & Aktifkan
-                                </button>
+                        <td class="px-5 py-3.5 text-gray-600 dark:text-gray-400 text-xs">{{ $payment->created_at->format('d M Y') }}</td>
+                        <td class="px-5 py-3.5">
+                            @if($payment->status === 'pending')
+                            <form method="POST" action="{{ route('admin.payments.confirm', $payment) }}" class="inline">
+                                @csrf @method('PATCH')
+                                <button type="submit" class="text-xs text-green-600 dark:text-green-400 hover:underline font-medium">Konfirmasi</button>
                             </form>
-                            @elseif($payment->status === 'paid')
-                            <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Premium Aktif ✓</span>
                             @else
-                            <span class="text-xs text-slate-400">Menunggu konfirmasi member</span>
+                            <span class="text-xs text-gray-400">-</span>
                             @endif
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="6" class="px-5 py-16 text-center text-slate-400 text-sm">Belum ada transaksi</td></tr>
+                    <tr><td colspan="7" class="px-5 py-10 text-center text-gray-400 text-sm">Belum ada data pembayaran</td></tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-        @if($payments->hasPages())<div class="px-5 py-3 border-t border-slate-100 dark:border-slate-800">{{ $payments->links() }}</div>@endif
+        @if($payments->hasPages())
+        <div class="px-5 py-3 border-t border-gray-200 dark:border-gray-700">{{ $payments->links() }}</div>
+        @endif
     </div>
 </div>
 @endsection
