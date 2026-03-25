@@ -106,33 +106,38 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Sample learning materials - sebagian gratis, sebagian premium
+        $baseUrl = config('app.url');
+
         $matCat = Category::where('type','material')->first();
+
         LearningMaterial::create([
             'user_id'      => $admin->id,
             'category_id'  => $matCat?->id,
             'title'        => '[GRATIS] Panduan Dasar Manajemen Keperawatan',
             'description'  => 'Modul pengantar untuk memahami dasar-dasar manajemen keperawatan.',
             'type'         => 'pdf',
-            'file_url'     => 'https://example.com/materi-dasar.pdf',
-            'is_member_only' => false, // GRATIS untuk semua member
+            'file_url'     => $baseUrl.'/storage/materials/materi-dasar.pdf',
+            'is_member_only' => false,
         ]);
+
         LearningMaterial::create([
             'user_id'      => $admin->id,
             'category_id'  => $matCat?->id,
             'title'        => '[PREMIUM] Strategi Kepemimpinan Keperawatan Lanjutan',
             'description'  => 'Modul lanjutan khusus anggota premium tentang strategi kepemimpinan.',
             'type'         => 'module',
-            'file_url'     => 'https://example.com/materi-premium.pdf',
-            'is_member_only' => true, // PREMIUM only
+            'file_url'     => $baseUrl.'/storage/materials/materi-premium.pdf',
+            'is_member_only' => true,
         ]);
+
         LearningMaterial::create([
             'user_id'      => $admin->id,
             'category_id'  => $matCat?->id,
             'title'        => '[PREMIUM] Video: Manajemen Konflik di Rumah Sakit',
             'description'  => 'Video pembelajaran eksklusif tentang manajemen konflik.',
             'type'         => 'video',
-            'video_url'    => 'https://youtube.com/watch?v=example',
-            'is_member_only' => true, // PREMIUM only
+            'video_url'    => 'https://youtube.com/watch?v=example', // ini tetap boleh external
+            'is_member_only' => true,
         ]);
 
         // Org structures
