@@ -2,6 +2,100 @@
 @section('title', 'Beranda - HPMI')
 @section('content')
 
+
+{{-- SLIDESHOW BANNER --}}
+<div class="relative overflow-hidden white py-36 px-4" 
+     x-data="{ current: 0, total: {{ count($announcements ?? []) ?: 3 }}, paused: false }"
+     x-init="setInterval(() => { if (!paused) current = (current + 1) % total }, 5000)">
+
+    {{-- Slides wrapper --}}
+    <div class="flex transition-transform duration-500 ease-in-out"
+         :style="'transform: translateX(-' + (current * 100) + '%)'">
+
+        @forelse($announcements ?? [] as $item)
+        <div class="min-w-full flex items-center justify-between gap-4 px-6 py-3">
+            <div class="flex items-center gap-3 text-dark min-w-0">
+                {{-- Badge --}}
+                @php
+                    $badgeMap = ['event'=>['bg-emerald-500','Kegiatan'],'article'=>['bg-violet-500','Artikel'],'info'=>['bg-amber-500','Info']];
+                    [$bg, $label] = $badgeMap[$item->type ?? 'info'] ?? ['bg-primary-500','Info'];
+                @endphp
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 {{ $bg }} rounded-full text-xs font-bold shrink-0">
+                    <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                    {{ $label }}
+                </span>
+                {{-- Text --}}
+                <a href="{{ $item->url ?? '#' }}" 
+                   class="text-sm font-medium text-dark/90 hover:text-dark truncate transition">
+                    {{ $item->title }}
+                </a>
+            </div>
+            <a href="{{ $item->url ?? '#' }}"
+               class="shrink-0 text-xs font-semibold text-dark/60 hover:text-dark flex items-center gap-1 transition">
+                Selengkapnya
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+        @empty
+        {{-- Fallback statis jika tidak ada data --}}
+        <div class="min-w-full flex items-center justify-center gap-3 px-6 py-3 text-dark">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500 rounded-full text-xs font-bold">
+                <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                Info
+            </span>
+            <span class="text-sm font-medium text-dark/90">
+                Selamat datang di HPMI — Himpunan Perawat Manajer Indonesia
+            </span>
+        </div>
+        <div class="min-w-full flex items-center justify-center gap-3 px-6 py-3 text-dark">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-violet-500 rounded-full text-xs font-bold">
+                <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                Kegiatan
+            </span>
+            <a href="{{ route('events.index') }}" class="text-sm font-medium text-dark/90 hover:text-dark transition">
+                Cek kegiatan mendatang HPMI di seluruh Indonesia
+            </a>
+        </div>
+        <div class="min-w-full flex items-center justify-center gap-3 px-6 py-3 text-dark">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500 rounded-full text-xs font-bold">
+                <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                Daftar
+            </span>
+            <a href="{{ route('register') }}" class="text-sm font-medium text-dark/90 hover:text-dark transition">
+                Bergabung sebagai anggota HPMI — Pendaftaran terbuka!
+            </a>
+        </div>
+        @endforelse
+    </div>
+
+    {{-- Prev / Next buttons --}}
+    <button @click="current = (current - 1 + total) % total; paused = true"
+            class="absolute left-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white/10 hover:bg-white/25 text-dark flex items-center justify-center transition">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+    </button>
+    <button @click="current = (current + 1) % total; paused = true"
+            class="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white/10 hover:bg-white/25 text-dark flex items-center justify-center transition">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+    </button>
+
+    {{-- Dots --}}
+    <div class="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-1.5">
+        <template x-for="i in total" :key="i">
+            <button @click="current = i - 1"
+                    :class="current === i - 1 ? 'bg-white' : 'bg-white/35'"
+                    class="w-1.5 h-1.5 rounded-full transition-all">
+            </button>
+        </template>
+    </div>
+</div>
+{{-- END SLIDESHOW BANNER --}}
+
 {{-- Hero --}}
 <section class="relative bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 text-white py-24 overflow-hidden">
     <div class="absolute inset-0 opacity-10">
