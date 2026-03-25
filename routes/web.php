@@ -115,8 +115,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         Route::delete('/{id}', [ContactAdminController::class, 'destroy'])->name('admin.contact.destroy');
     });
 
-    Route::prefix('pengaturan')->group(function () {
-        Route::get('/', [SettingAdminController::class, 'index'])->name('admin.settings');
-        Route::put('/', [SettingAdminController::class, 'update'])->name('admin.settings.update');
-    });
+    // ✅ Settings Routes - PENTING!
+    Route::get('/pengaturan', [SettingAdminController::class, 'index'])->name('admin.settings.index');
+    Route::put('/pengaturan', [SettingAdminController::class, 'update'])->name('admin.settings.update');
 });
