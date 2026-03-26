@@ -6,7 +6,10 @@
   {{-- Back + Header --}}
   <div class="flex items-center gap-3">
     <a href="{{ route('admin.members.index') }}" class="w-9 h-9 rounded-[9px] bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-all shadow-[0_1px_3px_rgba(0,0,0,.06)]">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
     </a>
     <div>
       <h2 class="text-[18px] font-extrabold text-slate-800">Detail Anggota</h2>
@@ -14,15 +17,22 @@
     </div>
   </div>
 
+  {{-- Flash Message --}}
+  @if(session('success'))
+    <div class="p-3 bg-green-100 text-green-800 rounded text-[12px] mb-3">
+      {{ session('success') }}
+    </div>
+  @endif
+
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-[18px]">
 
     {{-- Profile Card --}}
     <div class="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.06)] p-6 text-center">
       <div class="w-20 h-20 rounded-[18px] bg-[rgba(30,90,255,.12)] text-[#1e5aff] flex items-center justify-center font-extrabold text-[28px] mx-auto mb-4">
-        {{ strtoupper(substr($member->user->name ?? 'U', 0, 1)) }}
+        {{ strtoupper(substr(optional($member->user)->name ?? 'U', 0, 1)) }}
       </div>
-      <h3 class="text-[16px] font-extrabold text-slate-800">{{ $member->user->name ?? '-' }}</h3>
-      <p class="text-[12px] text-slate-500 mt-1">{{ $member->user->email ?? '-' }}</p>
+      <h3 class="text-[16px] font-extrabold text-slate-800">{{ optional($member->user)->name ?? '-' }}</h3>
+      <p class="text-[12px] text-slate-500 mt-1">{{ optional($member->user)->email ?? '-' }}</p>
       <code class="inline-block mt-2 text-[11px] bg-[rgba(30,90,255,.08)] text-[#1e5aff] px-3 py-1 rounded-full font-mono">{{ $member->member_code }}</code>
 
       @php
@@ -43,7 +53,7 @@
         </span>
       </div>
 
-      {{-- Update Status Form — PUT, route admin.members.status --}}
+      {{-- Update Status Form --}}
       <div class="mt-5">
         <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Ubah Status</p>
         <form method="POST" action="{{ route('admin.members.status', $member->id) }}">
@@ -77,8 +87,8 @@
         </h4>
         <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           @foreach([
-            ['Nama Lengkap', $member->user->name ?? '-'],
-            ['Email', $member->user->email ?? '-'],
+            ['Nama Lengkap', optional($member->user)->name ?? '-'],
+            ['Email', optional($member->user)->email ?? '-'],
             ['Telepon', $member->phone ?? '-'],
             ['Spesialisasi', $member->specialty ?? '-'],
           ] as [$label, $value])
@@ -125,7 +135,7 @@
           <a href="{{ route('admin.payments.index') }}" class="text-[12px] text-[#1e5aff] hover:underline font-medium">Semua pembayaran</a>
         </div>
         <div class="divide-y divide-slate-100">
-          @forelse($member->payments ?? [] as $pay)
+          @forelse(optional($member->payments)->sortByDesc('created_at') ?? [] as $pay)
           <div class="px-5 py-3.5 flex items-center gap-3">
             <div class="w-9 h-9 rounded-[9px] flex items-center justify-center flex-shrink-0 {{ $pay->status === 'paid' ? 'bg-[rgba(16,185,129,.1)] text-[#10b981]' : 'bg-[rgba(245,158,11,.1)] text-[#f59e0b]' }}">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>

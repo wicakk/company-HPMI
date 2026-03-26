@@ -69,6 +69,15 @@ class MemberAdminController extends Controller
         return back()->with('success', 'Pembayaran dikonfirmasi. Anggota diupgrade ke Premium.');
     }
 
+    public function rejectPayment($id)
+    {
+        $payment = Payment::findOrFail($id);
+        $payment->status = 'ditolak';
+        $payment->save();
+
+        return redirect()->route('admin.payments.index')->with('success', 'Pembayaran ditolak.');
+    }
+
     public function exportExcel()
     {
         $members = Member::with('user')->get();

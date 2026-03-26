@@ -106,6 +106,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::prefix('pembayaran')->group(function () {
         Route::get('/', [MemberAdminController::class, 'payments'])->name('admin.payments.index');
         Route::put('/{id}/konfirmasi', [MemberAdminController::class, 'confirmPayment'])->name('admin.payments.confirm');
+        Route::put('{id}/tolak', [MemberAdminController::class, 'rejectPayment'])->name('reject');
     });
 
     Route::prefix('pesan')->group(function () {
