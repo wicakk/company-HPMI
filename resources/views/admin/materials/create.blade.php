@@ -61,7 +61,7 @@
                     </label>
                 </div>
                 <div class="flex gap-3">
-                    <button type="submit" class="flex-1 py-2.5 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition">Simpan</button>
+                    <button type="submit" class="flex-1 py-2.5 bg-primary-600 hover:bg-primary-700 text-white bg-amber-400 text-sm font-medium rounded-lg transition">Simpan</button>
                     <a href="{{ route('admin.materials.index') }}" class="flex-1 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-200 transition text-center">Batal</a>
                 </div>
             </div>
