@@ -1,21 +1,24 @@
 @extends('layouts.app')
-@section('title', 'Beranda - HPMI')
+@section('title', 'Beranda - ' . ($settings['org_name']?->value ?? 'HPMI'))
+
+@php
+    // Helper: ambil value setting dengan fallback
+    $s = fn(string $key, string $default = '') => $settings[$key]?->value ?? $default;
+@endphp
+
 @section('content')
 
-
 {{-- SLIDESHOW BANNER --}}
-<div class="relative overflow-hidden white py-36 px-4" 
+<div class="relative overflow-hidden white py-36 px-4"
      x-data="{ current: 0, total: {{ count($announcements ?? []) ?: 3 }}, paused: false }"
      x-init="setInterval(() => { if (!paused) current = (current + 1) % total }, 5000)">
 
-    {{-- Slides wrapper --}}
     <div class="flex transition-transform duration-500 ease-in-out"
          :style="'transform: translateX(-' + (current * 100) + '%)'">
 
         @forelse($announcements ?? [] as $item)
         <div class="min-w-full flex items-center justify-between gap-4 px-6 py-3">
             <div class="flex items-center gap-3 text-dark min-w-0">
-                {{-- Badge --}}
                 @php
                     $badgeMap = ['event'=>['bg-emerald-500','Kegiatan'],'article'=>['bg-violet-500','Artikel'],'info'=>['bg-amber-500','Info']];
                     [$bg, $label] = $badgeMap[$item->type ?? 'info'] ?? ['bg-primary-500','Info'];
@@ -24,8 +27,7 @@
                     <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
                     {{ $label }}
                 </span>
-                {{-- Text --}}
-                <a href="{{ $item->url ?? '#' }}" 
+                <a href="{{ $item->url ?? '#' }}"
                    class="text-sm font-medium text-dark/90 hover:text-dark truncate transition">
                     {{ $item->title }}
                 </a>
@@ -39,14 +41,13 @@
             </a>
         </div>
         @empty
-        {{-- Fallback statis jika tidak ada data --}}
         <div class="min-w-full flex items-center justify-center gap-3 px-6 py-3 text-dark">
             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500 rounded-full text-xs font-bold">
                 <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
                 Info
             </span>
             <span class="text-sm font-medium text-dark/90">
-                Selamat datang di HPMI — Himpunan Perawat Manajer Indonesia
+                Selamat datang di {{ $s('org_name', 'HPMI') }} — {{ $s('org_tagline') }}
             </span>
         </div>
         <div class="min-w-full flex items-center justify-center gap-3 px-6 py-3 text-dark">
@@ -55,7 +56,7 @@
                 Kegiatan
             </span>
             <a href="{{ route('events.index') }}" class="text-sm font-medium text-dark/90 hover:text-dark transition">
-                Cek kegiatan mendatang HPMI di seluruh Indonesia
+                Cek kegiatan mendatang {{ $s('org_name', 'HPMI') }} di seluruh Indonesia
             </a>
         </div>
         <div class="min-w-full flex items-center justify-center gap-3 px-6 py-3 text-dark">
@@ -63,14 +64,19 @@
                 <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
                 Daftar
             </span>
+            @if($s('feature_registration', '1') === '1')
             <a href="{{ route('register') }}" class="text-sm font-medium text-dark/90 hover:text-dark transition">
-                Bergabung sebagai anggota HPMI — Pendaftaran terbuka!
+                Bergabung sebagai anggota {{ $s('org_name', 'HPMI') }} — Pendaftaran terbuka!
             </a>
+            @else
+            <span class="text-sm font-medium text-dark/90">
+                Pendaftaran anggota sementara ditutup.
+            </span>
+            @endif
         </div>
         @endforelse
     </div>
 
-    {{-- Prev / Next buttons --}}
     <button @click="current = (current - 1 + total) % total; paused = true"
             class="absolute left-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white/10 hover:bg-white/25 text-dark flex items-center justify-center transition">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,7 +90,6 @@
         </svg>
     </button>
 
-    {{-- Dots --}}
     <div class="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-1.5">
         <template x-for="i in total" :key="i">
             <button @click="current = i - 1"
@@ -103,12 +108,25 @@
         <div class="absolute bottom-10 right-10 w-96 h-96 bg-accent-400 rounded-full filter blur-3xl"></div>
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <span class="inline-block bg-white/20 backdrop-blur text-sm font-medium px-4 py-1.5 rounded-full mb-6">Organisasi Profesi Keperawatan Indonesia</span>
-        <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">Himpunan Perawat<br><span class="text-accent-400">Manajer Indonesia</span></h1>
-        <p class="text-xl text-primary-100 mb-10 max-w-2xl mx-auto">Bersama membangun kompetensi dan profesionalisme perawat manajer di seluruh Indonesia.</p>
+        <span class="inline-block bg-white/20 backdrop-blur text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+            {{ $s('hero_badge_text', 'Organisasi Profesi Keperawatan Indonesia') }}
+        </span>
+        <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+            {{ $s('hero_title', 'Himpunan Perawat') }}<br>
+            <span class="text-accent-400">{{ $s('hero_title_accent', 'Manajer Indonesia') }}</span>
+        </h1>
+        <p class="text-xl text-primary-100 mb-10 max-w-2xl mx-auto">
+            {{ $s('hero_subtitle', 'Bersama membangun kompetensi dan profesionalisme perawat manajer di seluruh Indonesia.') }}
+        </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="{{ route('register') }}" class="px-8 py-3.5 bg-white text-primary-700 font-semibold rounded-xl hover:bg-primary-50 transition shadow-lg">Gabung Sekarang</a>
-            <a href="{{ route('about') }}" class="px-8 py-3.5 border-2 border-white/50 text-white font-semibold rounded-xl hover:bg-white/10 transition">Tentang HPMI</a>
+            @if($s('feature_registration', '1') === '1')
+            <a href="{{ route('register') }}" class="px-8 py-3.5 bg-white text-primary-700 font-semibold rounded-xl hover:bg-primary-50 transition shadow-lg">
+                {{ $s('hero_cta_primary', 'Gabung Sekarang') }}
+            </a>
+            @endif
+            <a href="{{ route('about') }}" class="px-8 py-3.5 border-2 border-white/50 text-white font-semibold rounded-xl hover:bg-white/10 transition">
+                {{ $s('hero_cta_secondary', 'Tentang HPMI') }}
+            </a>
         </div>
     </div>
 </section>
@@ -163,7 +181,9 @@
             @foreach($articles as $article)
             <article class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-md transition group">
                 <div class="h-44 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 flex items-center justify-center">
-                    <svg class="w-12 h-12 text-primary-300 dark:text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2"/></svg>
+                    <svg class="w-12 h-12 text-primary-300 dark:text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2"/>
+                    </svg>
                 </div>
                 <div class="p-5">
                     @if($article->category)
@@ -218,9 +238,16 @@
 {{-- CTA --}}
 <section class="py-20 bg-primary-600 dark:bg-primary-800 text-white text-center">
     <div class="max-w-2xl mx-auto px-4">
-        <h2 class="text-3xl font-bold mb-4">Bergabunglah dengan HPMI</h2>
-        <p class="text-primary-100 mb-8 text-lg">Tingkatkan kompetensi Anda bersama ribuan perawat manajer profesional di seluruh Indonesia.</p>
-        <a href="{{ route('register') }}" class="inline-flex items-center px-8 py-4 bg-white text-primary-700 font-semibold rounded-xl hover:bg-primary-50 transition shadow-lg text-lg">Daftar Sekarang</a>
+        <h2 class="text-3xl font-bold mb-4">{{ $s('cta_title', 'Bergabunglah dengan HPMI') }}</h2>
+        <p class="text-primary-100 mb-8 text-lg">{{ $s('cta_subtitle', 'Tingkatkan kompetensi Anda bersama ribuan perawat manajer profesional di seluruh Indonesia.') }}</p>
+        @if($s('feature_registration', '1') === '1')
+        <a href="{{ route('register') }}" class="inline-flex items-center px-8 py-4 bg-white text-primary-700 font-semibold rounded-xl hover:bg-primary-50 transition shadow-lg text-lg">
+            {{ $s('cta_button_text', 'Daftar Sekarang') }}
+        </a>
+        @else
+        <p class="text-white/70 text-base">Pendaftaran anggota sementara ditutup.</p>
+        @endif
     </div>
 </section>
+
 @endsection
