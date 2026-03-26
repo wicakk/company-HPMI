@@ -9,95 +9,58 @@
 @section('content')
 
 {{-- SLIDESHOW BANNER --}}
-<div class="relative overflow-hidden white py-36 px-4"
-     x-data="{ current: 0, total: {{ count($announcements ?? []) ?: 3 }}, paused: false }"
-     x-init="setInterval(() => { if (!paused) current = (current + 1) % total }, 5000)">
-
-    <div class="flex transition-transform duration-500 ease-in-out"
-         :style="'transform: translateX(-' + (current * 100) + '%)'">
-
-        @forelse($announcements ?? [] as $item)
-        <div class="min-w-full flex items-center justify-between gap-4 px-6 py-3">
-            <div class="flex items-center gap-3 text-dark min-w-0">
-                @php
-                    $badgeMap = ['event'=>['bg-emerald-500','Kegiatan'],'article'=>['bg-violet-500','Artikel'],'info'=>['bg-amber-500','Info']];
-                    [$bg, $label] = $badgeMap[$item->type ?? 'info'] ?? ['bg-primary-500','Info'];
-                @endphp
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 {{ $bg }} rounded-full text-xs font-bold shrink-0">
-                    <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
-                    {{ $label }}
-                </span>
-                <a href="{{ $item->url ?? '#' }}"
-                   class="text-sm font-medium text-dark/90 hover:text-dark truncate transition">
-                    {{ $item->title }}
-                </a>
+<div class="relative w-full max-w-full p-32 mx-auto py-16 overflow-hidden bg-primary-50 dark:bg-primary-900/10" style="perspective:1200px;">
+    
+    <!-- Track -->
+    <div id="carouselTrack" class="relative w-full h-64">
+        
+        <!-- Slide -->
+        <a href="#" class="carousel-slide absolute w-64 h-64 rounded-2xl shadow-lg bg-cover bg-center transition-all duration-500"
+           style="background-image: url('https://images.unsplash.com/photo-1588776814546-1c0c7c86d50d?w=900&q=80')">
+            <div class="absolute bottom-4 left-4 text-dark">
+                <h3 class="font-bold text-lg">Kegiatan Pelatihan Medis</h3>
+                <span class="text-xs text-dark/80">Selengkapnya →</span>
             </div>
-            <a href="{{ $item->url ?? '#' }}"
-               class="shrink-0 text-xs font-semibold text-dark/60 hover:text-dark flex items-center gap-1 transition">
-                Selengkapnya
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-            </a>
-        </div>
-        @empty
-        <div class="min-w-full flex items-center justify-center gap-3 px-6 py-3 text-dark">
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500 rounded-full text-xs font-bold">
-                <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
-                Info
-            </span>
-            <span class="text-sm font-medium text-dark/90">
-                Selamat datang di {{ $s('org_name', 'HPMI') }} — {{ $s('org_tagline') }}
-            </span>
-        </div>
-        <div class="min-w-full flex items-center justify-center gap-3 px-6 py-3 text-dark">
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-violet-500 rounded-full text-xs font-bold">
-                <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
-                Kegiatan
-            </span>
-            <a href="{{ route('events.index') }}" class="text-sm font-medium text-dark/90 hover:text-dark transition">
-                Cek kegiatan mendatang {{ $s('org_name', 'HPMI') }} di seluruh Indonesia
-            </a>
-        </div>
-        <div class="min-w-full flex items-center justify-center gap-3 px-6 py-3 text-dark">
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500 rounded-full text-xs font-bold">
-                <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
-                Daftar
-            </span>
-            @if($s('feature_registration', '1') === '1')
-            <a href="{{ route('register') }}" class="text-sm font-medium text-dark/90 hover:text-dark transition">
-                Bergabung sebagai anggota {{ $s('org_name', 'HPMI') }} — Pendaftaran terbuka!
-            </a>
-            @else
-            <span class="text-sm font-medium text-dark/90">
-                Pendaftaran anggota sementara ditutup.
-            </span>
-            @endif
-        </div>
-        @endforelse
+        </a>
+
+        <a href="#" class="carousel-slide absolute w-64 h-64 rounded-2xl shadow-lg bg-cover bg-center transition-all duration-500"
+           style="background-image: url('https://images.unsplash.com/photo-1579154203451-4f06e6d1780e?w=900&q=80')">
+            <div class="absolute bottom-4 left-4 text-dark">
+                <h3 class="font-bold text-lg">Seminar Kesehatan Nasional</h3>
+                <span class="text-xs text-dark/80">Selengkapnya →</span>
+            </div>
+        </a>
+
+        <a href="#" class="carousel-slide absolute w-64 h-64 rounded-2xl shadow-lg bg-cover bg-center transition-all duration-500"
+           style="background-image: url('https://images.unsplash.com/photo-1581091870622-90df50b79819?w=900&q=80')">
+            <div class="absolute bottom-4 left-4 text-dark">
+                <h3 class="font-bold text-lg">Donor Darah Bersama</h3>
+                <span class="text-xs text-dark/80">Selengkapnya →</span>
+            </div>
+        </a>
+
+        <a href="#" class="carousel-slide absolute w-64 h-64 rounded-2xl shadow-lg bg-cover bg-center transition-all duration-500"
+           style="background-image: url('https://images.unsplash.com/photo-1588776814546-1c0c7c86d50d?w=900&q=80')">
+            <div class="absolute bottom-4 left-4 text-dark">
+                <h3 class="font-bold text-lg">Kunjungan RS Anggota</h3>
+                <span class="text-xs text-dark/80">Selengkapnya →</span>
+            </div>
+        </a>
+
+        <a href="#" class="carousel-slide absolute w-64 h-64 rounded-2xl shadow-lg bg-cover bg-center transition-all duration-500"
+           style="background-image: url('https://images.unsplash.com/photo-1579154203451-4f06e6d1780e?w=900&q=80')">
+            <div class="absolute bottom-4 left-4 text-dark">
+                <h3 class="font-bold text-lg">Workshop RS</h3>
+                <span class="text-xs text-dark/80">Selengkapnya →</span>
+            </div>
+        </a>
+
     </div>
 
-    <button @click="current = (current - 1 + total) % total; paused = true"
-            class="absolute left-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white/10 hover:bg-white/25 text-dark flex items-center justify-center transition">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-        </svg>
-    </button>
-    <button @click="current = (current + 1) % total; paused = true"
-            class="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white/10 hover:bg-white/25 text-dark flex items-center justify-center transition">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-        </svg>
-    </button>
+    <!-- Navigation -->
+    <button id="prevBtn" class="absolute top-1/2 left-2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full shadow flex items-center justify-center">‹</button>
+    <button id="nextBtn" class="absolute top-1/2 right-2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full shadow flex items-center justify-center">›</button>
 
-    <div class="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-1.5">
-        <template x-for="i in total" :key="i">
-            <button @click="current = i - 1"
-                    :class="current === i - 1 ? 'bg-white' : 'bg-white/35'"
-                    class="w-1.5 h-1.5 rounded-full transition-all">
-            </button>
-        </template>
-    </div>
 </div>
 {{-- END SLIDESHOW BANNER --}}
 
@@ -236,7 +199,7 @@
 @endif
 
 {{-- CTA --}}
-<section class="py-20 bg-primary-600 dark:bg-primary-800 text-white text-center">
+<section class="py-20 mx-20 md:mx-5 rounded-3xl bg-primary-600 dark:bg-primary-800 text-white text-center">
     <div class="max-w-2xl mx-auto px-4">
         <h2 class="text-3xl font-bold mb-4">{{ $s('cta_title', 'Bergabunglah dengan HPMI') }}</h2>
         <p class="text-primary-100 mb-8 text-lg">{{ $s('cta_subtitle', 'Tingkatkan kompetensi Anda bersama ribuan perawat manajer profesional di seluruh Indonesia.') }}</p>
@@ -249,5 +212,56 @@
         @endif
     </div>
 </section>
+
+<script>
+(function(){
+    const track = document.getElementById('carouselTrack');
+    const slides = track.querySelectorAll('.carousel-slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let current = 0;
+
+    function updateSlides(){
+        const total = slides.length;
+
+        slides.forEach((slide,i)=>{
+            const offset = i - current;
+
+            const scale = i === current ? 1 : 0.7;
+            const rotateY = offset * 20;
+            const translateX = offset * 360;
+            const translateZ = i === current ? 0 : -200;
+
+            slide.style.transform =
+                `translateX(${translateX}px)
+                 translateZ(${translateZ}px)
+                 rotateY(${rotateY}deg)
+                 scale(${scale})`;
+
+            slide.style.zIndex = total - Math.abs(offset);
+            slide.style.opacity = i === current ? 1 : 0.5;
+        });
+    }
+
+    function next(){
+        current = (current + 1) % slides.length;
+        updateSlides();
+    }
+
+    function prev(){
+        current = (current - 1 + slides.length) % slides.length;
+        updateSlides();
+    }
+
+    nextBtn.onclick = next;
+    prevBtn.onclick = prev;
+
+    // autoplay
+    setInterval(next, 4000);
+
+    updateSlides();
+})();
+</script>
 
 @endsection
