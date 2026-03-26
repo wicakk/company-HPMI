@@ -66,10 +66,9 @@ Route::prefix('member')->middleware(['auth', 'member'])->group(function () {
     });
 
     Route::prefix('pembayaran')->group(function () {
-        Route::get('/', [PaymentController::class, 'index'])->name('member.payment');
-        Route::post('/bayar', [PaymentController::class, 'pay'])->name('member.payment.pay');
-        Route::post('/konfirmasi/{id}', [PaymentController::class, 'simulateConfirm'])->name('member.payment.confirm');
-        Route::get('/riwayat', [PaymentController::class, 'history'])->name('member.payment.history');
+        Route::get('/', [MemberAdminController::class, 'payments'])->name('admin.payments.index');
+        Route::put('/{id}/konfirmasi', [MemberAdminController::class, 'confirmPayment'])->name('admin.payments.confirm');
+        Route::put('/{id}/tolak', [MemberAdminController::class, 'rejectPayment'])->name('admin.payments.reject'); // ← fix ini
     });
 
     Route::prefix('materi')->group(function () {
@@ -98,9 +97,9 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
     Route::prefix('anggota')->group(function () {
         Route::get('/', [MemberAdminController::class, 'index'])->name('admin.members.index');
+        Route::get('/export/excel', [MemberAdminController::class, 'exportExcel'])->name('admin.members.export'); // ← pindah ke sini
         Route::get('/{id}', [MemberAdminController::class, 'show'])->name('admin.members.show');
         Route::put('/{id}/status', [MemberAdminController::class, 'updateStatus'])->name('admin.members.status');
-        Route::get('/export/excel', [MemberAdminController::class, 'exportExcel'])->name('admin.members.export');
     });
 
     Route::prefix('pembayaran')->group(function () {
