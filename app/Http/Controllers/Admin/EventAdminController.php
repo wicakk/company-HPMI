@@ -118,6 +118,6 @@ class EventAdminController extends Controller
 
         $kegiatan->delete();
 
-        return back()->with('success', 'Kegiatan berhasil dihapus.');
+        return redirect()->route('admin.events.index')->with('success', 'Kegiatan berhasil dihapus.');
     }
 }

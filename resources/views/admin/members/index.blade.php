@@ -54,7 +54,7 @@
         @endphp
         <div class="bg-white dark:bg-gray-800 rounded-xl dark:border-gray-700 overflow-hidden shadow hover:shadow-lg transition p-4 event-card" data-name="{{ strtolower($member->user->name ?? '') }}" data-status="{{ $member->status }}">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-purple-700 dark:text-purple-300 font-bold text-lg">
+                <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-blue-400 font-bold text-lg">
                     {{ substr($member->user->name ?? 'U',0,1) }}
                 </div>
                 <div class="flex-1">
@@ -69,7 +69,7 @@
                 <p><span class="font-semibold">Bergabung:</span> {{ $member->joined_at ? \Carbon\Carbon::parse($member->joined_at)->format('d M Y') : '-' }}</p>
             </div>
             <div class="mt-3 flex gap-2">
-                <a href="{{ route('admin.members.show', $member) }}" class="flex-1 text-center bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-lg py-1.5 text-sm font-medium hover:bg-purple-200 dark:hover:bg-purple-800 transition">Detail</a>
+                <a href="{{ route('admin.members.show', $member) }}" class="flex-1 text-center bg-blue-600 hover:bg-blue-700 rounded-lg py-1.5 text-sm font-medium transition">Detail</a>
                 {{-- <a href="{{ route('admin.members.edit', $member) }}" class="flex-1 text-center bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg py-1.5 text-sm font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition">Edit</a> --}}
             </div>
         </div>

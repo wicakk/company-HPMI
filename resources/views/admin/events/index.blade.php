@@ -175,8 +175,12 @@
             </span>
             <h2 class="page-title">Kegiatan & Acara</h2>
         </div>
-        <a href="{{ route('admin.events.create') }}" class="btn-add">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+        
+        <a href="{{ route('admin.events.create') }}"
+           class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow-sm shadow-blue-500/25 transition active:scale-95">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor">
+                <path stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
             Tambah Kegiatan
         </a>
     </div>
@@ -304,7 +308,11 @@
             </div>
             <p class="font-bold text-gray-900 dark:text-white text-lg mb-1">Belum ada kegiatan</p>
             <p class="text-sm text-gray-400 mb-5">Mulai dengan membuat kegiatan pertama Anda</p>
-            <a href="{{ route('admin.events.create') }}" class="btn-add" style="display:inline-flex">+ Tambah Kegiatan</a>
+            <a href="{{ route('admin.events.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow-sm shadow-blue-500/25 transition active:scale-95">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor">
+                    <path stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>Tambah Kegiatan
+            </a>
         </div>
         @endforelse
     </div>
