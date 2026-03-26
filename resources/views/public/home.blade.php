@@ -98,15 +98,15 @@
 <section class="py-12 bg-white dark:bg-gray-800 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-3 gap-6 text-center">
-            <div>
+            <div data-aos="fade-down-right">
                 <div class="text-4xl font-bold text-primary-600 dark:text-primary-400">{{ number_format($stats['members']) }}+</div>
                 <div class="text-gray-500 dark:text-gray-400 mt-1">Anggota Aktif</div>
             </div>
-            <div>
+            <div data-aos="fade-down-right">
                 <div class="text-4xl font-bold text-primary-600 dark:text-primary-400">{{ number_format($stats['events']) }}+</div>
                 <div class="text-gray-500 dark:text-gray-400 mt-1">Kegiatan Terlaksana</div>
             </div>
-            <div>
+            <div data-aos="fade-down-right">
                 <div class="text-4xl font-bold text-primary-600 dark:text-primary-400">{{ number_format($stats['articles']) }}+</div>
                 <div class="text-gray-500 dark:text-gray-400 mt-1">Artikel Edukasi</div>
             </div>
@@ -118,7 +118,7 @@
 @if($announcements->count())
 <section class="py-12 bg-primary-50 dark:bg-primary-900/10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="space-y-3">
+        <div class="space-y-3" data-aos="fade-right">
             @foreach($announcements as $ann)
             <div class="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-primary-100 dark:border-gray-700">
                 @if($ann->is_pinned)<span class="flex-shrink-0 mt-0.5 w-5 h-5 text-primary-600">📌</span>@endif
@@ -140,7 +140,7 @@
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Artikel Terbaru</h2>
             <a href="{{ route('articles.index') }}" class="text-primary-600 dark:text-primary-400 text-sm hover:underline">Lihat semua →</a>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-aos="fade-down">
             @foreach($articles as $article)
             <article class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-md transition group">
                 <div class="h-44 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 flex items-center justify-center">
@@ -148,7 +148,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2"/>
                     </svg>
                 </div>
-                <div class="p-5">
+                <div class="p-5" data-aos="fade-right">
                     @if($article->category)
                     <span class="inline-block text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 px-2.5 py-0.5 rounded-full mb-3">{{ $article->category->name }}</span>
                     @endif
@@ -175,7 +175,7 @@
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Kegiatan Mendatang</h2>
             <a href="{{ route('events.index') }}" class="text-primary-600 dark:text-primary-400 text-sm hover:underline">Lihat semua →</a>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" data-aos="zoom-in-down">
             @foreach($events as $event)
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex gap-4 hover:shadow-md transition">
                 <div class="flex-shrink-0 w-14 h-14 bg-primary-600 rounded-xl flex flex-col items-center justify-center text-white">
@@ -199,7 +199,7 @@
 @endif
 
 {{-- CTA --}}
-<section class="py-20 mx-20 md:mx-5 rounded-3xl bg-primary-600 dark:bg-primary-800 text-white text-center">
+<section class="py-20 mx-20 md:mx-5 rounded-3xl bg-primary-600 dark:bg-primary-800 text-white text-center" data-aos="zoom-in-down">
     <div class="max-w-2xl mx-auto px-4">
         <h2 class="text-3xl font-bold mb-4">{{ $s('cta_title', 'Bergabunglah dengan HPMI') }}</h2>
         <p class="text-primary-100 mb-8 text-lg">{{ $s('cta_subtitle', 'Tingkatkan kompetensi Anda bersama ribuan perawat manajer profesional di seluruh Indonesia.') }}</p>

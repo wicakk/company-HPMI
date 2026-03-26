@@ -9,7 +9,7 @@
         <p class="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">Himpunan Perawat Manajer Indonesia (HPMI) adalah organisasi profesi yang menghimpun dan mengembangkan kompetensi perawat manajer di Indonesia.</p>
     </div>
     {{-- Visi Misi --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" data-aos="zoom-in-down">
         <div class="bg-gradient-to-br from-primary-600 to-primary-800 rounded-3xl p-8 text-white relative overflow-hidden">
             <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -translate-y-10 translate-x-10"></div>
             <div class="relative">
@@ -36,7 +36,7 @@
         </div>
     </div>
     {{-- CTA --}}
-    <div class="text-center">
+    <div class="text-center" data-aos="zoom-out">
         <a href="{{ route('about.structure') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-2xl shadow-lg shadow-primary-500/30 transition mr-3">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             Lihat Struktur Organisasi

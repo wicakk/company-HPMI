@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('title', $article->title)
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12" >
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" >
         <div class="lg:col-span-2">
             @if($article->thumbnail)<img src="{{ $article->thumbnail }}" class="w-full h-64 object-cover rounded-2xl mb-6" alt="{{ $article->title }}">@endif
             @if($article->category)<a href="{{ route('articles.index', ['category'=>$article->category->slug]) }}" class="inline-block text-xs font-bold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 px-3 py-1 rounded-xl mb-4">{{ $article->category->name }}</a>@endif
