@@ -229,7 +229,7 @@
             </div>
             <div data-aos="fade-down-right">
                 <div class="text-4xl font-bold text-primary-600 dark:text-primary-400">{{ number_format($stats['events']) }}+</div>
-                <div class="text-gray-500 dark:text-gray-400 mt-1">Kegiatan Terlaksana</div>
+                <div class="text-gray-500 dark:text-gray-400 mt-1">Kegiatan</div>
             </div>
             <div data-aos="fade-down-right">
                 <div class="text-4xl font-bold text-primary-600 dark:text-primary-400">{{ number_format($stats['articles']) }}+</div>
@@ -254,8 +254,8 @@
         <div class="flex flex-col md:flex-row gap-8 items-start">
 
             {{-- ── LEFT: icon + title + CTA ── --}}
-            <div class="flex-shrink-0 md:w-56">
-                {{-- Green badge icon --}}
+            {{-- <div class="flex-shrink-0 md:w-56">
+                
                 <div class="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-800 flex items-center justify-center mb-4">
                     <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -269,7 +269,7 @@
                    class="inline-block text-sm font-semibold text-primary-600 dark:text-primary-400 bg-primary-100 dark:bg-primary-800 px-5 py-2.5 rounded-xl hover:bg-primary-200 dark:hover:bg-primary-700 transition">
                     Lihat semua pengumuman
                 </a>
-            </div>
+            </div> --}}
 
             {{-- ── RIGHT: filter tabs + announcement cards ── --}}
             <div class="flex-1 min-w-0">

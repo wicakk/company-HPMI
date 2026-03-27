@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\AnnouncementAdminController;
 use App\Http\Controllers\Admin\SettingAdminController;
 use App\Http\Controllers\Admin\ContactAdminController;
 use App\Http\Controllers\Admin\OrgStructureAdminController;
+use App\Http\Controllers\Admin\AnalyticsController;
 
 // ─── PUBLIC ROUTES ───────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -56,20 +57,18 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // ─── MEMBER ROUTES ────────────────────────────────────────────────────
-Route::prefix('member')->middleware(['auth', 'member'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('member.dashboard');
+Route::prefix('member')
+    ->middleware(['auth', 'member'])
+    ->name('member.')
+    ->group(function () {
 
-    Route::prefix('profil')->group(function () {
-        Route::get('/', [ProfileController::class, 'index'])->name('member.profile');
-        Route::put('/', [ProfileController::class, 'update'])->name('member.profile.update');
-        Route::put('/password', [ProfileController::class, 'updatePassword'])->name('member.profile.password');
-    });
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('pembayaran')->group(function () {
-        Route::get('/', [PaymentController::class, 'index'])->name('member.payment');
-        Route::post('/', [PaymentController::class, 'pay'])->name('member.payment.pay');
-        Route::post('/{id}/confirm', [PaymentController::class, 'confirm'])->name('member.payment.confirm');
-        Route::get('/history', [PaymentController::class, 'history'])->name('member.payment.history');
+        Route::get('/', [PaymentController::class, 'index'])->name('payment');
+        Route::post('/', [PaymentController::class, 'pay'])->name('payment.pay');
+        Route::post('/{id}/confirm', [PaymentController::class, 'confirm'])->name('payment.confirm');
+        Route::get('/history', [PaymentController::class, 'history'])->name('payment.history');
     });
 
     Route::prefix('materi')->group(function () {
@@ -119,4 +118,15 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     // ✅ Settings Routes - PENTING!
     Route::get('/pengaturan', [SettingAdminController::class, 'index'])->name('admin.settings.index');
     Route::put('/pengaturan', [SettingAdminController::class, 'update'])->name('admin.settings.update');
+});
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/analytics', [AnalyticsController::class, 'index'])
+        ->name('analytics.index');
+
+    Route::get('/analytics/realtime', [AnalyticsController::class, 'realtime'])
+        ->name('analytics.realtime');
+
+    Route::post('/analytics/duration', [AnalyticsController::class, 'duration'])
+        ->name('analytics.duration');
 });
