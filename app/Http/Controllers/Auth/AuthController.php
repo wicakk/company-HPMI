@@ -38,6 +38,10 @@ class AuthController extends Controller
             'email'       => 'required|email|unique:users',
             'password'    => 'required|min:8|confirmed',
             'phone'       => 'nullable|string|max:20',
+            'nira'        => 'required|string|max:20',
+            'jabatan'     => 'required|string|max:20',
+            'address'      => 'required|string|max:255',
+            'phone'       => 'nullable|string|max:20',
             'institution' => 'nullable|string|max:255',
         ]);
 
@@ -54,6 +58,9 @@ class AuthController extends Controller
             'user_id'     => $user->id,
             'phone'       => $data['phone'] ?? null,
             'institution' => $data['institution'] ?? null,
+            'nira' => $data['nira'] ?? null,
+            'jabatan' => $data['jabatan'] ?? null,
+            'address' => $data['address'] ?? null,
             'status'      => 'free',  // gratis, bisa upgrade ke premium
             'joined_at'   => now(),
         ]);

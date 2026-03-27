@@ -9,7 +9,7 @@ class Member extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id','member_code','phone','address','institution',
+        'user_id','member_code','phone','nira', 'jabatan', 'address','institution',
         'specialty','status','joined_at','expired_at',
     ];
     protected $casts = ['joined_at' => 'date', 'expired_at' => 'date'];

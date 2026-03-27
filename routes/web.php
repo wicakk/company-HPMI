@@ -66,9 +66,10 @@ Route::prefix('member')->middleware(['auth', 'member'])->group(function () {
     });
 
     Route::prefix('pembayaran')->group(function () {
-        Route::get('/', [MemberAdminController::class, 'payments'])->name('admin.payments.index');
-        Route::put('/{id}/konfirmasi', [MemberAdminController::class, 'confirmPayment'])->name('admin.payments.confirm');
-        Route::put('/{id}/tolak', [MemberAdminController::class, 'rejectPayment'])->name('admin.payments.reject'); // ← fix ini
+        Route::get('/', [PaymentController::class, 'index'])->name('member.payment');
+        Route::post('/', [PaymentController::class, 'pay'])->name('member.payment.pay');
+        Route::post('/{id}/confirm', [PaymentController::class, 'confirm'])->name('member.payment.confirm');
+        Route::get('/history', [PaymentController::class, 'history'])->name('member.payment.history');
     });
 
     Route::prefix('materi')->group(function () {
@@ -105,7 +106,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::prefix('pembayaran')->group(function () {
         Route::get('/', [MemberAdminController::class, 'payments'])->name('admin.payments.index');
         Route::put('/{id}/konfirmasi', [MemberAdminController::class, 'confirmPayment'])->name('admin.payments.confirm');
-        Route::put('{id}/tolak', [MemberAdminController::class, 'rejectPayment'])->name('reject');
+        Route::put('{id}/tolak', [MemberAdminController::class, 'rejectPayment'])->name('admin.payments.reject');
     });
 
     Route::prefix('pesan')->group(function () {

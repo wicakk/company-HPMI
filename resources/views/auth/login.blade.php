@@ -21,11 +21,11 @@
     <div class="w-full max-w-sm">
         {{-- Logo --}}
         <div class="text-center mb-8">
-            <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl flex items-center justify-center text-white font-black text-2xl mx-auto mb-4 shadow-2xl shadow-primary-500/40">H</div>
+            <div class="w-16 h-16 bg-gradient-to-br from-blue-700 to-blue-200 rounded-2xl flex items-center justify-center text-white font-black text-2xl mx-auto mb-4 shadow-2xl shadow-primary-500/40">H</div>
             <h1 class="text-2xl font-black text-slate-900 dark:text-white">Selamat Datang</h1>
             <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Masuk ke akun HPMI Anda</p>
         </div>
-        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl shadow-slate-200/60 dark:shadow-slate-900 border border-slate-200/50 dark:border-slate-800 p-8">
+        <div class="bg-white shadow-lg dark:bg-slate-900 rounded-3xl shadow-2xl shadow-slate-200/60 dark:shadow-slate-900 border border-slate-200/50 dark:border-slate-800 p-8">
             @if($errors->any())
             <div class="mb-5 flex items-start gap-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-xl px-4 py-3 text-sm">
                 <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -58,7 +58,7 @@
                         </button>
                     </div>
                 </div>
-                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-primary-500 to-primary-700 hover:from-primary-600 hover:to-primary-800 text-white font-bold rounded-xl shadow-xl shadow-primary-500/30 transition text-sm flex items-center justify-center gap-2">
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-blue-500 to-primary-700 hover:from-primary-600 hover:to-primary-800 text-white font-bold rounded-xl shadow-xl shadow-primary-500/30 transition text-sm flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
                     Masuk
                 </button>

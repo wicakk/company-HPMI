@@ -10,6 +10,8 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('member_code')->unique();
             $table->string('phone')->nullable();
+            $table->string('nira')->nullable();
+            $table->string('jabatan')->nullable();
             $table->text('address')->nullable();
             $table->string('institution')->nullable();
             $table->string('specialty')->nullable();
