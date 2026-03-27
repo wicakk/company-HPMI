@@ -10,7 +10,7 @@ class HomeController extends Controller
     {
         $articles      = Article::with('category')->published()->latest('published_at')->take(6)->get();
         $events        = Event::open()->orderBy('start_date')->take(4)->get();
-        $announcements = Announcement::active()->orderByDesc('is_pinned')->latest('published_at')->take(3)->get();
+        $announcements = Announcement::active()->orderByDesc('is_pinned')->latest('published_at')->take(5)->get();
         $stats = [
             'members' => Member::where('status','premium')->count(),
             'events'  => Event::where('status','completed')->count(),
