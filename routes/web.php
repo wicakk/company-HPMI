@@ -26,6 +26,10 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\JournalController;
 use App\Http\Controllers\Admin\BankAccountController;
 
+
+use App\Http\Controllers\Admin\EbookController as AdminEbookController;
+use App\Http\Controllers\Member\EbookController as MemberEbookController;
+
 // ─── PUBLIC ROUTES ───────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/tentang', [AboutController::class, 'index'])->name('about');
@@ -71,6 +75,9 @@ Route::middleware(['auth', 'member'])->group(function () {
     Route::get('/member/kegiatan/{id}', [MemberEventController::class, 'show'])->name('member.events.show');
     Route::post('/member/kegiatan/{id}/daftar', [MemberEventController::class, 'register'])->name('member.events.register');
     Route::delete('/member/kegiatan/{id}/batal', [MemberEventController::class, 'cancel'])->name('member.events.cancel');
+
+    Route::get('/member/ebooks', [MemberEbookController::class, 'index'])->name('member.ebooks');
+    Route::get('/member/ebooks/{ebook}/download', [MemberEbookController::class, 'download'])->name('member.ebooks.download');
 });
 
 // ─── ADMIN ROUTES ─────────────────────────────────────────────────────
@@ -112,4 +119,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('/admin/categories', CategoryController::class)->names('admin.categories');
     Route::patch('/admin/categories/{category}/toggle-active', [CategoryController::class, 'toggleActive'])
      ->name('admin.categories.toggle-active');
+
+    Route::resource('/admin/ebooks', AdminEbookController::class)->names('admin.ebooks');
+    Route::patch('/admin/ebooks/{ebook}/toggle-publish', [AdminEbookController::class, 'togglePublish'])->name('admin.ebooks.toggle-publish');
+    Route::get('/admin/ebooks/{ebook}/download', [AdminEbookController::class, 'download'])->name('admin.ebooks.download');
 });

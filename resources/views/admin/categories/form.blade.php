@@ -74,26 +74,74 @@
         </div>
 
         {{-- Tipe & Sort Order --}}
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">
-              Tipe <span class="text-red-400">*</span>
+        {{-- Tipe (checklist multi-pilih) --}}
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-3">
+            Tipe <span class="text-red-400">*</span>
+          </label>
+
+          @php
+            $selectedTypes = old('type', $category?->type ?? []);
+            if (is_string($selectedTypes)) $selectedTypes = json_decode($selectedTypes, true) ?? [];
+            $tipes = [
+              'artikel' => ['Artikel & Berita', '📰', 'sky'],
+              'jurnal'  => ['Jurnal Ilmiah',    '📚', 'violet'],
+              'materi'  => ['Materi Edukasi',   '🎓', 'amber'],
+            ];
+          @endphp
+
+          <div class="space-y-2">
+            @foreach($tipes as $val => [$label, $icon, $color])
+            <label class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all select-none
+                          {{ in_array($val, (array)$selectedTypes)
+                            ? 'border-'.$color.'-400 bg-'.$color.'-50 dark:bg-'.$color.'-900/20'
+                            : 'border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 hover:border-slate-300 dark:hover:border-slate-500' }}"
+                  id="label-{{ $val }}">
+
+              {{-- Checkbox custom --}}
+              <div class="relative flex-shrink-0">
+                <input type="checkbox"
+                      name="type[]"
+                      value="{{ $val }}"
+                      id="type-{{ $val }}"
+                      {{ in_array($val, (array)$selectedTypes) ? 'checked' : '' }}
+                      class="sr-only peer"
+                      onchange="toggleTypeLabel('{{ $val }}', '{{ $color }}', this.checked)">
+                <div id="box-{{ $val }}"
+                    class="w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all
+                            {{ in_array($val, (array)$selectedTypes)
+                              ? 'bg-'.$color.'-500 border-'.$color.'-500'
+                              : 'border-slate-300 dark:border-slate-500 bg-white dark:bg-slate-700' }}">
+                  <svg class="{{ in_array($val, (array)$selectedTypes) ? '' : 'hidden' }} w-3 h-3 text-white" id="check-{{ $val }}"
+                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+              </div>
+
+              {{-- Label --}}
+              <span class="text-lg leading-none">{{ $icon }}</span>
+              <div class="flex-1">
+                <p class="text-sm font-semibold text-slate-800 dark:text-white">{{ $label }}</p>
+              </div>
+
+              {{-- Badge aktif --}}
+              <span id="badge-{{ $val }}"
+                    class="text-[10px] font-bold px-2 py-0.5 rounded-full transition-all
+                          {{ in_array($val, (array)$selectedTypes) ? 'bg-'.$color.'-100 dark:bg-'.$color.'-900/40 text-'.$color.'-600 dark:text-'.$color.'-400' : 'hidden' }}">
+                ✓ Dipilih
+              </span>
+
             </label>
-            <select name="type"
-              class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-500 transition cursor-pointer @error('type') border-red-400 @enderror">
-              <option value="">Pilih Tipe</option>
-              @foreach(['artikel' => 'Artikel', 'jurnal' => 'Jurnal', 'materi' => 'Materi'] as $val => $label)
-              <option value="{{ $val }}" {{ old('type', $category?->type) === $val ? 'selected' : '' }}>{{ $label }}</option>
-              @endforeach
-            </select>
-            @error('type')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+            @endforeach
           </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">Urutan</label>
-            <input type="number" name="sort_order" value="{{ old('sort_order', $category?->sort_order ?? 0) }}"
-                   min="0" placeholder="0"
-                   class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500 transition">
-          </div>
+
+          @error('type')
+          <p class="text-red-500 text-xs mt-2 flex items-center gap-1">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+            Pilih minimal 1 tipe
+          </p>
+          @enderror
         </div>
 
         {{-- Warna --}}

@@ -85,6 +85,7 @@
         ['route'=>'admin.articles.index','label'=>'Artikel & Berita','icon'=>'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'],
         ['route'=>'admin.materials.index','label'=>'Materi Edukasi','icon'=>'<path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>'],
         ['route'=>'admin.journals.index','label'=>'Jurnals','icon'=>'<path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>'],
+        ['route'=>'admin.ebooks.index','label'=>'Ebooks','icon'=>'<path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>'],
         ['route'=>'admin.announcements.index','label'=>'Pengumuman','icon'=>'<path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>'],
       ],
       'Lainnya' => [
