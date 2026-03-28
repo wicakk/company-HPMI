@@ -239,7 +239,7 @@
                         <option value="Anggota"   {{ $category === 'Anggota'   ? 'selected' : '' }}>Anggota</option>
                     </select>
                 </div>
-                <div>
+                <span class="flex gap-4">
                     <button type="submit"
                             class="flex items-center gap-2 bg-white text-primary-700 font-semibold px-6 py-3 rounded-2xl hover:bg-primary-50 transition">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -248,7 +248,14 @@
                         </svg>
                         Cari
                     </button>
-                </div>
+                    @if(!empty($keyword))
+                    <button type="button"
+                            onclick="window.location='{{ route('home') }}'"
+                            class="flex items-center gap-2 bg-white text-primary-700 font-semibold px-6 py-3 rounded-2xl hover:bg-primary-50 transition">
+                        Reset
+                    </button>
+                    @endif
+                </span>
             </form>
         </div>
     </div>
