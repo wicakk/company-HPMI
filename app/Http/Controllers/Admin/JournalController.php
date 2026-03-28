@@ -25,7 +25,7 @@ class JournalController extends Controller
             $query->where('is_published', $request->get('status') === 'published');
         }
 
-        $journals   = $query->paginate(12)->withQueryString();
+        $journals   = $query->paginate(10)->withQueryString();
         $categories = Journal::distinct()->pluck('category')->filter()->sort()->values();
         $stats = [
             'total'      => Journal::count(),
@@ -54,42 +54,37 @@ class JournalController extends Controller
         $validated = $request->validate([
             'title'        => 'required|string|max:255',
             'author'       => 'required|string|max:255',
-            'file'         => 'nullable|file|mimes:pdf,doc,docx|max:20480',
+            'file'         => 'required|file|mimes:pdf,doc,docx|max:20480',
             'abstract'     => 'nullable|string|max:2000',
             'category'     => 'nullable|string|max:100',
             'volume'       => 'nullable|string|max:50',
             'year'         => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
             'is_published' => 'nullable|boolean',
         ], [
-            // 'file.required'  => 'File jurnal wajib diupload.',
-            'file'  => 'File jurnal wajib diupload.',
+            'file.required'  => 'File jurnal wajib diupload.',
             'file.mimes'     => 'File harus berformat PDF, DOC, atau DOCX.',
             'file.max'       => 'Ukuran file maksimal 20 MB.',
         ]);
 
         $file     = $request->file('file');
-        // $origName = $file->getClientOriginalName();
-        // $ext      = strtolower($file->getClientOriginalExtension());
-        // $safeName = Str::slug(pathinfo($origName, PATHINFO_FILENAME)) . '_' . time() . '.' . $ext;
-        // $path     = $file->storeAs('journals', $safeName, 'public');
+        $origName = $file->getClientOriginalName();
+        $ext      = strtolower($file->getClientOriginalExtension());
+        $safeName = Str::slug(pathinfo($origName, PATHINFO_FILENAME)) . '_' . time() . '.' . $ext;
+        $path     = $file->storeAs('journals', $safeName, 'public');
 
         // Human readable file size
-        // $bytes    = $file->getSize();
-        // $fileSize = $bytes >= 1048576
-        //     ? round($bytes / 1048576, 1) . ' MB'
-        //     : round($bytes / 1024, 1) . ' KB';
+        $bytes    = $file->getSize();
+        $fileSize = $bytes >= 1048576
+            ? round($bytes / 1048576, 1) . ' MB'
+            : round($bytes / 1024, 1) . ' KB';
 
         Journal::create([
             'title'        => $validated['title'],
             'author'       => $validated['author'],
-            // 'file_path'    => $path,
-            // 'file_name'    => $origName,
-            // 'file_size'    => $fileSize,
-            // 'file_type'    => $ext,
-            'file_path'    => '',
-            'file_name'    => '',
-            'file_size'    => '',
-            'file_type'    => '',
+            'file_path'    => $path,
+            'file_name'    => $origName,
+            'file_size'    => $fileSize,
+            'file_type'    => $ext,
             'abstract'     => $validated['abstract'] ?? null,
             'category'     => $validated['category'] ?? null,
             'volume'       => $validated['volume'] ?? null,
@@ -156,14 +151,14 @@ class JournalController extends Controller
             }
 
             $file     = $request->file('file');
-            // $origName = $file->getClientOriginalName();
+            $origName = $file->getClientOriginalName();
             $ext      = strtolower($file->getClientOriginalExtension());
             $safeName = Str::slug(pathinfo($origName, PATHINFO_FILENAME)) . '_' . time() . '.' . $ext;
             $path     = $file->storeAs('journals', $safeName, 'public');
             $bytes    = $file->getSize();
 
             $data['file_path'] = $path;
-            // $data['file_name'] = $origName;
+            $data['file_name'] = $origName;
             $data['file_type'] = $ext;
             $data['file_size'] = $bytes >= 1048576
                 ? round($bytes / 1048576, 1) . ' MB'

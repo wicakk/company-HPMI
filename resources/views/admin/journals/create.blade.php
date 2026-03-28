@@ -122,60 +122,43 @@
           </div>
           <div class="p-6">
 
-            {{-- Drop zone --}}
-            <label class="block cursor-pointer"
-              @dragover.prevent="dragging = true"
-              @dragleave.prevent="dragging = false"
-              @drop.prevent="dragging = false; handleFile($event.dataTransfer.files[0]); $refs.fileInput.files = $event.dataTransfer.files">
+            <label for="fileInput" class="block cursor-pointer">
+              <div id="dropZone"
+                  class="border-2 border-dashed border-slate-200 dark:border-slate-600 rounded-2xl py-10 px-6 text-center hover:border-rose-400 hover:bg-rose-50/30 transition-all duration-200">
 
-              {{-- Has file preview --}}
-              <template x-if="file">
-                <div class="border-2 border-emerald-300 dark:border-emerald-700 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 p-5">
-                  <div class="flex items-center gap-4">
-                    {{-- Icon by type --}}
-                    <div class="w-14 h-14 rounded-xl flex items-center justify-center font-black text-sm flex-shrink-0"
-                         :class="fileType === 'PDF' ? 'bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400' : 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400'">
-                      <span x-text="fileType"></span>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <p class="text-sm font-semibold text-slate-800 dark:text-white truncate" x-text="fileName"></p>
-                      <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5" x-text="fileSize"></p>
-                    </div>
-                    <div class="flex items-center gap-1.5 flex-shrink-0">
-                      <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-                      <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Siap upload</span>
-                    </div>
-                  </div>
-                  <p class="text-xs text-slate-400 dark:text-slate-500 mt-3 text-center">Klik untuk ganti file</p>
+                {{-- Icon --}}
+                <div class="w-14 h-14 rounded-2xl bg-rose-50 dark:bg-rose-900/30 flex items-center justify-center mx-auto mb-4">
+                  <svg class="w-7 h-7 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
                 </div>
-              </template>
 
-              {{-- Empty state --}}
-              <template x-if="!file">
-                <div class="border-2 border-dashed rounded-2xl transition-all duration-200 py-10 px-6 text-center"
-                     :class="dragging
-                       ? 'border-rose-400 bg-rose-50 dark:bg-rose-900/10 scale-[1.01]'
-                       : 'border-slate-200 dark:border-slate-600 hover:border-rose-400 dark:hover:border-rose-500 hover:bg-rose-50/30 dark:hover:bg-rose-900/10'">
-                  <div class="w-14 h-14 rounded-2xl bg-rose-50 dark:bg-rose-900/30 flex items-center justify-center mx-auto mb-4 transition-transform"
-                       :class="dragging ? 'scale-110' : ''">
-                    <svg class="w-7 h-7 text-rose-500 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                  </div>
+                {{-- Empty state text --}}
+                <div id="emptyState">
                   <p class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Drag & drop atau <span class="text-rose-600 dark:text-rose-400">pilih file</span>
                   </p>
                   <p class="text-xs text-slate-400 dark:text-slate-500">PDF, DOC, DOCX — Maksimal <strong>20 MB</strong></p>
                 </div>
-              </template>
 
-              <input type="file" name="file" accept=".pdf,.doc,.docx" x-ref="fileInput" class="sr-only bg-black"
-                     @change="handleFile($event.target.files[0])" >
+                {{-- File preview (hidden by default) --}}
+                <div id="filePreview" class="hidden">
+                  <p id="fileNameText" class="text-sm font-semibold text-emerald-700 dark:text-emerald-400"></p>
+                  <p id="fileSizeText" class="text-xs text-slate-500 mt-0.5"></p>
+                  <p class="text-xs text-slate-400 mt-2">Klik untuk ganti file</p>
+                </div>
+
+              </div>
+
+              <input type="file" id="fileInput" name="file" accept=".pdf,.doc,.docx" class="sr-only">
             </label>
 
             @error('file')
             <p class="text-red-500 text-xs mt-2 flex items-center gap-1">
-              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+              </svg>
               {{ $message }}
             </p>
             @enderror
@@ -276,5 +259,14 @@
 
     </div>
   </form>
+  {{-- Pagination --}}
+  @if($journals->hasPages())
+  <div class="px-6 py-4 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between gap-4">
+    <p class="text-xs text-slate-500 dark:text-slate-400">
+      Menampilkan {{ $journals->firstItem() }}–{{ $journals->lastItem() }} dari {{ $journals->total() }} jurnal
+    </p>
+    {{ $journals->links() }}
+  </div>
+  @endif
 </div>
 @endsection
