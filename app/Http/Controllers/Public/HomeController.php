@@ -42,7 +42,8 @@ class HomeController extends Controller
         // ── Stats ──
         $stats = [
             'members'  => Member::count(),
-            'events'   => Event::where('status', 'completed')->count(),
+            // 'events'   => Event::where('status', 'completed')->count(),
+            'events'   => Event::all()->count(),
             'articles' => Article::where('status', 'published')->count(),
         ];
 

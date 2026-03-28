@@ -412,7 +412,7 @@
         </span>
         <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
             {{  $settings['hero_title']['value'] }}
-            <span class="text-accent-400">{{  $settings['hero_title_accent']['value'] }}</span>
+            <span class="text-accent-400"><br>{{  $settings['hero_title_accent']['value'] }}</span>
         </h1>
         <p class="text-xl text-primary-100 mb-10 max-w-2xl mx-auto">
             {{  $settings['hero_subtitle']['value'] }}
