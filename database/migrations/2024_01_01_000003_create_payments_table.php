@@ -18,9 +18,9 @@ return new class extends Migration {
             $table->timestamp('expired_at')->nullable();
             $table->text('notes')->nullable();
 
-            $table->string('sender_name')->nullable()->after('payment_method');
-            $table->date('transfer_date')->nullable()->after('sender_name');
-            $table->string('proof_path')->nullable()->after('transfer_date');
+            $table->string('sender_name')->nullable();
+            $table->date('transfer_date')->nullable();
+            $table->string('proof_path')->nullable();
             $table->timestamps();
         });
     }

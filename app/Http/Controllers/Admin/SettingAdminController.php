@@ -36,22 +36,21 @@ class SettingAdminController extends Controller
 
 
              // Tambahkan ini — siapkan data bank
-                $banks = collect(range(1, 5))->map(fn($i) => [
-                    'index'  => $i,
-                    'name'   => $settings["bank_{$i}_name"]?->value   ?? '',
-                    'number' => $settings["bank_{$i}_number"]?->value ?? '',
-                    'owner'  => $settings["bank_{$i}_owner"]?->value  ?? '',
-                    'active' => ($settings["bank_{$i}_active"]?->value ?? '0') === '1',
-                ]);
-        });
+             });
+             $banks = collect(range(1, 5))->map(fn($i) => [
+                 'index'  => $i,
+                 'name'   => $settings["bank_{$i}_name"]?->value   ?? '',
+                 'number' => $settings["bank_{$i}_number"]?->value ?? '',
+                 'owner'  => $settings["bank_{$i}_owner"]?->value  ?? '',
+                 'active' => ($settings["bank_{$i}_active"]?->value ?? '0') === '1',
+             ]);
 
-        return view('admin.settings.index', compact('settings', 'slides'));
+        return view('admin.settings.index', compact('settings', 'slides', 'banks'));
     }
 
     // ── Simpan semua pengaturan ke DB ─────────────────────────────
     public function update(Request $request)
     {
-        $request->validate();
         $request->validate([
             'banner_slide_1_image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'banner_slide_2_image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
