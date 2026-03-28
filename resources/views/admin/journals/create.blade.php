@@ -259,14 +259,6 @@
 
     </div>
   </form>
-  {{-- Pagination --}}
-  @if($journals->hasPages())
-  <div class="px-6 py-4 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between gap-4">
-    <p class="text-xs text-slate-500 dark:text-slate-400">
-      Menampilkan {{ $journals->firstItem() }}–{{ $journals->lastItem() }} dari {{ $journals->total() }} jurnal
-    </p>
-    {{ $journals->links() }}
-  </div>
-  @endif
+  
 </div>
 @endsection
