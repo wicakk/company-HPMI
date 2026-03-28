@@ -2,41 +2,41 @@
 @section('title', 'Dashboard Overview')
 
 @section('content')
-<div class="space-y-[20px]">
+<div class="space-y-6">
 
   {{-- ── HEADER ── --}}
   <div class="flex items-start justify-between">
     <div>
-      <h2 class="text-[22px] font-extrabold text-slate-800">Dashboard Overview</h2>
-      <p class="text-[13px] text-slate-500 mt-0.5">Selamat datang kembali, {{ auth()->user()->name }}. Ini ringkasan hari ini.</p>
+      <p class="text-xs font-bold uppercase tracking-widest text-blue-500 dark:text-blue-400 mb-1">Overview</p>
+      <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Dashboard</h2>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Selamat datang, <span class="font-semibold text-slate-700 dark:text-slate-300">{{ auth()->user()->name }}</span></p>
     </div>
-    <div class="flex items-center gap-2">
-      <a href="{{ route('admin.members.export') }}" class="h-9 px-4 rounded-[9px] border border-slate-200 bg-white text-[13px] font-semibold text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-[0_1px_3px_rgba(0,0,0,.04)]">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    <div class="flex items-center gap-2.5">
+      <a href="{{ route('admin.members.export') }}" class="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Export
       </a>
-      <a href="{{ route('admin.articles.create') }}" class="h-9 px-4 rounded-[9px] bg-[#1e5aff] text-[13px] font-semibold text-white hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-[0_2px_8px_rgba(30,90,255,.3)]">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <a href="{{ route('admin.articles.create') }}" class="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-sm font-semibold text-white transition-all shadow-sm shadow-blue-500/30">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Tambah Konten
       </a>
     </div>
   </div>
 
   {{-- ── STAT CARDS ROW 1 ── --}}
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-[14px]">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
 
     {{-- Total Anggota --}}
-    <div class="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.05)] p-5 relative overflow-hidden group hover:-translate-y-0.5 hover:shadow-md transition-all">
-      <div class="absolute top-0 right-0 w-24 h-24 rounded-full bg-[rgba(30,90,255,.06)] -translate-y-8 translate-x-8 group-hover:scale-110 transition-transform"></div>
-      <div class="flex items-start gap-3 relative z-10">
-        <div class="w-11 h-11 rounded-[11px] bg-[rgba(30,90,255,.1)] flex items-center justify-center text-[#1e5aff] flex-shrink-0">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+    <div class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-5 hover:shadow-lg hover:shadow-slate-200/60 dark:hover:shadow-slate-900/60 hover:-translate-y-0.5 transition-all duration-200">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 flex-shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
         </div>
-        <div>
-          <div class="text-[28px] font-extrabold text-slate-800 leading-none tracking-tight">{{ number_format($stats['totalMembers']) }}</div>
-          <div class="text-[12px] text-slate-500 mt-1 font-medium">Total Anggota</div>
-          <div class="text-[11px] font-semibold text-[#10b981] mt-2 flex items-center gap-1">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+        <div class="flex-1 min-w-0">
+          <div class="text-2xl font-black text-slate-900 dark:text-white leading-none tracking-tight">{{ number_format($stats['totalMembers']) }}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Total Anggota</div>
+          <div class="flex items-center gap-1 mt-2 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
             {{ $stats['activeMembers'] }} aktif saat ini
           </div>
         </div>
@@ -44,18 +44,17 @@
     </div>
 
     {{-- Anggota Aktif --}}
-    <div class="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.05)] p-5 relative overflow-hidden group hover:-translate-y-0.5 hover:shadow-md transition-all">
-      <div class="absolute top-0 right-0 w-24 h-24 rounded-full bg-[rgba(16,185,129,.06)] -translate-y-8 translate-x-8 group-hover:scale-110 transition-transform"></div>
-      <div class="flex items-start gap-3 relative z-10">
-        <div class="w-11 h-11 rounded-[11px] bg-[rgba(16,185,129,.1)] flex items-center justify-center text-[#10b981] flex-shrink-0">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <div class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-5 hover:shadow-lg hover:shadow-slate-200/60 dark:hover:shadow-slate-900/60 hover:-translate-y-0.5 transition-all duration-200">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 flex-shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         </div>
-        <div>
-          <div class="text-[28px] font-extrabold text-slate-800 leading-none tracking-tight">{{ number_format($stats['activeMembers']) }}</div>
-          <div class="text-[12px] text-slate-500 mt-1 font-medium">Anggota Aktif</div>
+        <div class="flex-1 min-w-0">
           @php $pct = $stats['totalMembers'] > 0 ? round($stats['activeMembers']/$stats['totalMembers']*100, 1) : 0; @endphp
-          <div class="text-[11px] font-semibold text-[#10b981] mt-2 flex items-center gap-1">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+          <div class="text-2xl font-black text-slate-900 dark:text-white leading-none tracking-tight">{{ number_format($stats['activeMembers']) }}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Anggota Aktif</div>
+          <div class="flex items-center gap-1 mt-2 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
             {{ $pct }}% dari total
           </div>
         </div>
@@ -63,21 +62,20 @@
     </div>
 
     {{-- Iuran Bulan Ini --}}
-    <div class="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.05)] p-5 relative overflow-hidden group hover:-translate-y-0.5 hover:shadow-md transition-all">
-      <div class="absolute top-0 right-0 w-24 h-24 rounded-full bg-[rgba(245,158,11,.06)] -translate-y-8 translate-x-8 group-hover:scale-110 transition-transform"></div>
-      <div class="flex items-start gap-3 relative z-10">
-        <div class="w-11 h-11 rounded-[11px] bg-[rgba(245,158,11,.1)] flex items-center justify-center text-[#f59e0b] flex-shrink-0">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+    <div class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-5 hover:shadow-lg hover:shadow-slate-200/60 dark:hover:shadow-slate-900/60 hover:-translate-y-0.5 transition-all duration-200">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400 flex-shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
         </div>
-        <div>
+        <div class="flex-1 min-w-0">
           @php
             $iuran = $stats['iuranBulanIni'];
             $iuranFmt = $iuran >= 1000000 ? 'Rp '.number_format($iuran/1000000,1).'jt' : 'Rp '.number_format($iuran,0,',','.');
           @endphp
-          <div class="text-[28px] font-extrabold text-slate-800 leading-none tracking-tight">{{ $iuranFmt }}</div>
-          <div class="text-[12px] text-slate-500 mt-1 font-medium">Iuran Bulan Ini</div>
-          <div class="text-[11px] font-semibold text-[#10b981] mt-2 flex items-center gap-1">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+          <div class="text-xl font-black text-slate-900 dark:text-white leading-none tracking-tight">{{ $iuranFmt }}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Iuran Bulan Ini</div>
+          <div class="flex items-center gap-1 mt-2 text-[11px] font-semibold {{ $stats['pendingPayments'] > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400' }}">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="{{ $stats['pendingPayments'] > 0 ? '18 9 12 15 6 9' : '18 15 12 9 6 15' }}"/></svg>
             {{ $stats['pendingPayments'] > 0 ? $stats['pendingPayments'].' belum dikonfirmasi' : 'Semua terkonfirmasi' }}
           </div>
         </div>
@@ -85,17 +83,16 @@
     </div>
 
     {{-- Kegiatan Aktif --}}
-    <div class="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.05)] p-5 relative overflow-hidden group hover:-translate-y-0.5 hover:shadow-md transition-all">
-      <div class="absolute top-0 right-0 w-24 h-24 rounded-full bg-[rgba(139,92,246,.06)] -translate-y-8 translate-x-8 group-hover:scale-110 transition-transform"></div>
-      <div class="flex items-start gap-3 relative z-10">
-        <div class="w-11 h-11 rounded-[11px] bg-[rgba(139,92,246,.1)] flex items-center justify-center text-[#8b5cf6] flex-shrink-0">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <div class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-5 hover:shadow-lg hover:shadow-slate-200/60 dark:hover:shadow-slate-900/60 hover:-translate-y-0.5 transition-all duration-200">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-xl bg-violet-50 dark:bg-violet-900/30 flex items-center justify-center text-violet-600 dark:text-violet-400 flex-shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         </div>
-        <div>
-          <div class="text-[28px] font-extrabold text-slate-800 leading-none tracking-tight">{{ number_format($stats['activeEvents']) }}</div>
-          <div class="text-[12px] text-slate-500 mt-1 font-medium">Kegiatan Aktif</div>
-          <div class="text-[11px] font-semibold text-[#10b981] mt-2 flex items-center gap-1">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+        <div class="flex-1 min-w-0">
+          <div class="text-2xl font-black text-slate-900 dark:text-white leading-none tracking-tight">{{ number_format($stats['activeEvents']) }}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Kegiatan Aktif</div>
+          <div class="flex items-center gap-1 mt-2 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
             {{ $stats['newEventsMonth'] }} kegiatan baru
           </div>
         </div>
@@ -105,74 +102,66 @@
   </div>
 
   {{-- ── STAT CARDS ROW 2 ── --}}
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-[14px]">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
 
-    {{-- Pending Aktivasi --}}
-    <a href="{{ route('admin.members.index') }}?status=pending" class="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.05)] p-5 relative overflow-hidden group hover:-translate-y-0.5 hover:shadow-md transition-all block">
-      <div class="absolute top-0 right-0 w-24 h-24 rounded-full bg-[rgba(239,68,68,.05)] -translate-y-8 translate-x-8 group-hover:scale-110 transition-transform"></div>
-      <div class="flex items-start gap-3 relative z-10">
-        <div class="w-11 h-11 rounded-[11px] bg-[rgba(239,68,68,.1)] flex items-center justify-center text-[#ef4444] flex-shrink-0">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <a href="{{ route('admin.members.index') }}?status=pending" class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-5 hover:shadow-lg hover:shadow-slate-200/60 dark:hover:shadow-slate-900/60 hover:-translate-y-0.5 transition-all duration-200 block">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-xl bg-red-50 dark:bg-red-900/30 flex items-center justify-center text-red-500 dark:text-red-400 flex-shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
-        <div>
-          <div class="text-[28px] font-extrabold text-slate-800 leading-none tracking-tight">{{ number_format($stats['pendingMembers']) }}</div>
-          <div class="text-[12px] text-slate-500 mt-1 font-medium">Pending Aktivasi</div>
-          <div class="text-[11px] font-semibold text-[#ef4444] mt-2 flex items-center gap-1">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 9 12 15 6 9"/></svg>
+        <div class="flex-1 min-w-0">
+          <div class="text-2xl font-black text-slate-900 dark:text-white leading-none tracking-tight">{{ number_format($stats['pendingMembers']) }}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Pending Aktivasi</div>
+          <div class="flex items-center gap-1 mt-2 text-[11px] font-semibold text-red-500 dark:text-red-400">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 9 12 15 6 9"/></svg>
             {{ $stats['pendingPayments'] }} belum dibayar
           </div>
         </div>
       </div>
     </a>
 
-    {{-- Total Artikel --}}
-    <div class="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.05)] p-5 relative overflow-hidden group hover:-translate-y-0.5 hover:shadow-md transition-all">
-      <div class="absolute top-0 right-0 w-24 h-24 rounded-full bg-[rgba(14,165,233,.06)] -translate-y-8 translate-x-8 group-hover:scale-110 transition-transform"></div>
-      <div class="flex items-start gap-3 relative z-10">
-        <div class="w-11 h-11 rounded-[11px] bg-[rgba(14,165,233,.1)] flex items-center justify-center text-[#0ea5e9] flex-shrink-0">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    <div class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-5 hover:shadow-lg hover:shadow-slate-200/60 dark:hover:shadow-slate-900/60 hover:-translate-y-0.5 transition-all duration-200">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-xl bg-sky-50 dark:bg-sky-900/30 flex items-center justify-center text-sky-600 dark:text-sky-400 flex-shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         </div>
-        <div>
-          <div class="text-[28px] font-extrabold text-slate-800 leading-none tracking-tight">{{ number_format($stats['totalArticles']) }}</div>
-          <div class="text-[12px] text-slate-500 mt-1 font-medium">Total Artikel</div>
-          <div class="text-[11px] font-semibold text-[#10b981] mt-2 flex items-center gap-1">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+        <div class="flex-1 min-w-0">
+          <div class="text-2xl font-black text-slate-900 dark:text-white leading-none tracking-tight">{{ number_format($stats['totalArticles']) }}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Total Artikel</div>
+          <div class="flex items-center gap-1 mt-2 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
             {{ $stats['newArticles'] }} artikel baru
           </div>
         </div>
       </div>
     </div>
 
-    {{-- Materi Edukasi --}}
-    <div class="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.05)] p-5 relative overflow-hidden group hover:-translate-y-0.5 hover:shadow-md transition-all">
-      <div class="absolute top-0 right-0 w-24 h-24 rounded-full bg-[rgba(16,185,129,.06)] -translate-y-8 translate-x-8 group-hover:scale-110 transition-transform"></div>
-      <div class="flex items-start gap-3 relative z-10">
-        <div class="w-11 h-11 rounded-[11px] bg-[rgba(16,185,129,.1)] flex items-center justify-center text-[#10b981] flex-shrink-0">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    <div class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-5 hover:shadow-lg hover:shadow-slate-200/60 dark:hover:shadow-slate-900/60 hover:-translate-y-0.5 transition-all duration-200">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 flex-shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
         </div>
-        <div>
-          <div class="text-[28px] font-extrabold text-slate-800 leading-none tracking-tight">{{ number_format($stats['totalMaterials']) }}</div>
-          <div class="text-[12px] text-slate-500 mt-1 font-medium">Materi Edukasi</div>
-          <div class="text-[11px] font-semibold text-[#10b981] mt-2 flex items-center gap-1">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+        <div class="flex-1 min-w-0">
+          <div class="text-2xl font-black text-slate-900 dark:text-white leading-none tracking-tight">{{ number_format($stats['totalMaterials']) }}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Materi Edukasi</div>
+          <div class="flex items-center gap-1 mt-2 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
             {{ $stats['newMaterials'] }} materi baru
           </div>
         </div>
       </div>
     </div>
 
-    {{-- Pengunjung --}}
-    <div class="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.05)] p-5 relative overflow-hidden group hover:-translate-y-0.5 hover:shadow-md transition-all">
-      <div class="absolute top-0 right-0 w-24 h-24 rounded-full bg-[rgba(236,72,153,.06)] -translate-y-8 translate-x-8 group-hover:scale-110 transition-transform"></div>
-      <div class="flex items-start gap-3 relative z-10">
-        <div class="w-11 h-11 rounded-[11px] bg-[rgba(236,72,153,.1)] flex items-center justify-center text-[#ec4899] flex-shrink-0">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    <div class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-5 hover:shadow-lg hover:shadow-slate-200/60 dark:hover:shadow-slate-900/60 hover:-translate-y-0.5 transition-all duration-200">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-xl bg-pink-50 dark:bg-pink-900/30 flex items-center justify-center text-pink-600 dark:text-pink-400 flex-shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </div>
-        <div>
-          <div class="text-[28px] font-extrabold text-slate-800 leading-none tracking-tight">{{ number_format($stats['pengunjung']) }}</div>
-          <div class="text-[12px] text-slate-500 mt-1 font-medium">Pengunjung Bulan Ini</div>
-          <div class="text-[11px] font-semibold text-[#10b981] mt-2 flex items-center gap-1">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+        <div class="flex-1 min-w-0">
+          <div class="text-2xl font-black text-slate-900 dark:text-white leading-none tracking-tight">{{ number_format($stats['pengunjung']) }}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Pengunjung Bulan Ini</div>
+          <div class="flex items-center gap-1 mt-2 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
             22% dari bulan lalu
           </div>
         </div>
@@ -182,161 +171,140 @@
   </div>
 
   {{-- ── CHART ROW ── --}}
-  <div class="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-[18px]">
+  <div class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5">
 
-    {{-- Bar Chart: Pertumbuhan Anggota --}}
-    <div class="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.06)] p-6">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-6">
       <div class="flex items-start justify-between mb-5">
         <div>
-          <h3 class="text-[14px] font-bold text-slate-800">Pertumbuhan Anggota</h3>
-          <p class="text-[12px] text-slate-500 mt-0.5">6 bulan terakhir</p>
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white">Pertumbuhan Anggota</h3>
+          <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">6 bulan terakhir</p>
         </div>
-        <div class="flex items-center gap-4 text-[12px]">
-          <span class="flex items-center gap-1.5 text-slate-500"><span class="w-3 h-3 rounded-full bg-[#1e5aff] inline-block"></span>Daftar</span>
-          <span class="flex items-center gap-1.5 text-slate-500"><span class="w-3 h-3 rounded-full bg-[#10b981] inline-block"></span>Aktif</span>
+        <div class="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block"></span>Daftar</span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>Aktif</span>
         </div>
       </div>
-      <div class="relative h-[200px]" id="barChartWrap">
+      <div class="relative h-[200px]">
         <canvas id="barChart"></canvas>
       </div>
     </div>
 
-    {{-- Donut: Status Keanggotaan --}}
-    <div class="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.06)] p-6">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-6">
       <div class="mb-4">
-        <h3 class="text-[14px] font-bold text-slate-800">Status Keanggotaan</h3>
-        <p class="text-[12px] text-slate-500 mt-0.5">Distribusi saat ini</p>
+        <h3 class="text-sm font-bold text-slate-900 dark:text-white">Status Keanggotaan</h3>
+        <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Distribusi saat ini</p>
       </div>
       <div class="flex items-center gap-5">
-        {{-- Donut SVG --}}
         <div class="relative flex-shrink-0">
+          @php
+            $r = 38; $cx = 50; $cy = 50;
+            $circ = 2 * M_PI * $r;
+            $aDash = $circ * $donutActive / 100;
+            $pOff  = -$aDash;
+            $pDash = $circ * $donutPending / 100;
+            $eOff  = -$aDash - $pDash;
+            $eDash = $circ * $donutExpired / 100;
+          @endphp
           <svg width="100" height="100" viewBox="0 0 100 100">
-            @php
-              $r = 38; $cx = 50; $cy = 50;
-              $circ = 2 * M_PI * $r;
-              // Aktif
-              $aOff  = 0;
-              $aDash = $circ * $donutActive / 100;
-              // Pending
-              $pOff  = -$aDash;
-              $pDash = $circ * $donutPending / 100;
-              // Expired
-              $eOff  = -$aDash - $pDash;
-              $eDash = $circ * $donutExpired / 100;
-            @endphp
-            <circle cx="{{ $cx }}" cy="{{ $cy }}" r="{{ $r }}" fill="none" stroke="#f1f5f9" stroke-width="14"/>
-            <circle cx="{{ $cx }}" cy="{{ $cy }}" r="{{ $r }}" fill="none" stroke="#1e5aff" stroke-width="14"
+            <circle cx="{{ $cx }}" cy="{{ $cy }}" r="{{ $r }}" fill="none" stroke="#f1f5f9" class="dark:[stroke:#1e293b]" stroke-width="13"/>
+            <circle cx="{{ $cx }}" cy="{{ $cy }}" r="{{ $r }}" fill="none" stroke="#3b82f6" stroke-width="13"
               stroke-dasharray="{{ $aDash }} {{ $circ }}" stroke-dashoffset="{{ $circ/4 }}" stroke-linecap="butt"/>
-            <circle cx="{{ $cx }}" cy="{{ $cy }}" r="{{ $r }}" fill="none" stroke="#10b981" stroke-width="14"
+            <circle cx="{{ $cx }}" cy="{{ $cy }}" r="{{ $r }}" fill="none" stroke="#10b981" stroke-width="13"
               stroke-dasharray="{{ $pDash }} {{ $circ }}" stroke-dashoffset="{{ $circ/4 + $pOff }}" stroke-linecap="butt"/>
-            <circle cx="{{ $cx }}" cy="{{ $cy }}" r="{{ $r }}" fill="none" stroke="#ef4444" stroke-width="14"
+            <circle cx="{{ $cx }}" cy="{{ $cy }}" r="{{ $r }}" fill="none" stroke="#ef4444" stroke-width="13"
               stroke-dasharray="{{ $eDash }} {{ $circ }}" stroke-dashoffset="{{ $circ/4 + $eOff }}" stroke-linecap="butt"/>
           </svg>
           <div class="absolute inset-0 flex flex-col items-center justify-center">
-            <span class="text-[18px] font-extrabold text-slate-800">{{ $donutActive }}%</span>
+            <span class="text-lg font-black text-slate-900 dark:text-white">{{ $donutActive }}%</span>
             <span class="text-[10px] text-slate-500">aktif</span>
           </div>
         </div>
-        {{-- Legend --}}
         <div class="flex-1 space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="flex items-center gap-2 text-[12.5px] text-slate-600"><span class="w-2.5 h-2.5 rounded-full bg-[#1e5aff]"></span>Aktif</span>
-            <span class="text-[13px] font-bold text-slate-800">{{ number_format($activeMembers) }}</span>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="flex items-center gap-2 text-[12.5px] text-slate-600"><span class="w-2.5 h-2.5 rounded-full bg-[#10b981]"></span>Pending</span>
-            <span class="text-[13px] font-bold text-slate-800">{{ number_format($pendingMembers) }}</span>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="flex items-center gap-2 text-[12.5px] text-slate-600"><span class="w-2.5 h-2.5 rounded-full bg-[#ef4444]"></span>Kadaluarsa</span>
-            <span class="text-[13px] font-bold text-slate-800">{{ number_format($expiredMembers) }}</span>
-          </div>
-          <div class="border-t border-slate-100 pt-3 space-y-2">
-            <div class="flex items-center gap-2">
-              <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                <div class="h-full bg-[#1e5aff] rounded-full" style="width:{{ $donutActive }}%"></div>
-              </div>
-              <span class="text-[11px] text-slate-500 w-7 text-right">{{ $donutActive }}%</span>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Aktif</span>
+              <span class="text-xs font-bold text-slate-900 dark:text-white">{{ number_format($activeMembers) }}</span>
             </div>
-            <div class="flex items-center gap-2">
-              <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                <div class="h-full bg-[#10b981] rounded-full" style="width:{{ $donutPending }}%"></div>
-              </div>
-              <span class="text-[11px] text-slate-500 w-7 text-right">{{ $donutPending }}%</span>
+            <div class="h-1 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width:{{ $donutActive }}%"></div></div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>Pending</span>
+              <span class="text-xs font-bold text-slate-900 dark:text-white">{{ number_format($pendingMembers) }}</span>
             </div>
-            <div class="flex items-center gap-2">
-              <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                <div class="h-full bg-[#ef4444] rounded-full" style="width:{{ $donutExpired }}%"></div>
-              </div>
-              <span class="text-[11px] text-[#ef4444] w-7 text-right">{{ $donutExpired }}%</span>
+            <div class="h-1 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 rounded-full" style="width:{{ $donutPending }}%"></div></div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400"><span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span>Kadaluarsa</span>
+              <span class="text-xs font-bold text-slate-900 dark:text-white">{{ number_format($expiredMembers) }}</span>
             </div>
+            <div class="h-1 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-red-500 rounded-full" style="width:{{ $donutExpired }}%"></div></div>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 
   {{-- ── BOTTOM ROW ── --}}
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-[18px]">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
-    {{-- Anggota Terbaru --}}
-    <div class="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.06)] overflow-hidden">
-      <div class="px-5 pt-5 pb-3.5 border-b border-slate-200 flex items-center justify-between">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden">
+      <div class="px-5 pt-5 pb-3.5 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
         <div>
-          <div class="text-[14px] font-bold text-slate-800">Anggota Terbaru</div>
-          <div class="text-[12px] text-slate-500 mt-0.5">Pendaftar 7 hari terakhir</div>
+          <div class="text-sm font-bold text-slate-900 dark:text-white">Anggota Terbaru</div>
+          <div class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Pendaftar 7 hari terakhir</div>
         </div>
-        <a href="{{ route('admin.members.index') }}" class="px-3 py-1.5 rounded-[8px] border border-slate-200 bg-white text-slate-600 text-[12px] font-semibold hover:bg-slate-50 transition-colors">Lihat semua</a>
+        <a href="{{ route('admin.members.index') }}" class="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline">Lihat semua →</a>
       </div>
-      <div>
-        @forelse($recentMembers as $member)
-        @php
-          $initials = collect(explode(' ', $member->user->name ?? 'User'))->take(2)->map(fn($w)=>strtoupper(substr($w,0,1)))->join('');
-          $avatarColors = ['bg-[rgba(30,90,255,.12)] text-[#1e5aff]','bg-[rgba(16,185,129,.12)] text-[#10b981]','bg-[rgba(245,158,11,.12)] text-[#f59e0b]','bg-[rgba(139,92,246,.12)] text-[#8b5cf6]','bg-[rgba(14,165,233,.12)] text-[#0ea5e9]'];
-          $avatarColor = $avatarColors[$loop->index % count($avatarColors)];
-        @endphp
-        <a href="{{ route('admin.members.show', $member->id) }}" class="flex items-center gap-3 px-4 py-3 {{ !$loop->last ? 'border-b border-slate-100' : '' }} hover:bg-slate-50 transition-colors">
-          <div class="w-[38px] h-[38px] rounded-[10px] {{ $avatarColor }} flex items-center justify-center font-bold text-[13px] flex-shrink-0">{{ $initials }}</div>
-          <div class="flex-1 min-w-0">
-            <div class="text-[13px] font-semibold text-slate-800 truncate">{{ $member->user->name ?? 'Unknown' }}</div>
-            <div class="text-[11px] text-slate-500">{{ $member->institution ?? $member->member_code }}</div>
-          </div>
-          @if($member->status === 'active')
-          <span class="inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[rgba(16,185,129,.12)] text-[#059669]">Aktif</span>
-          @elseif($member->status === 'pending')
-          <span class="inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[rgba(245,158,11,.12)] text-[#d97706]">Pending</span>
-          @else
-          <span class="inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-500">{{ ucfirst($member->status) }}</span>
-          @endif
-        </a>
-        @empty
-        <div class="px-4 py-8 text-center text-[13px] text-slate-400">Belum ada anggota terdaftar</div>
-        @endforelse
-      </div>
+      @forelse($recentMembers as $member)
+      @php
+        $initials = collect(explode(' ', $member->user->name ?? 'User'))->take(2)->map(fn($w)=>strtoupper(substr($w,0,1)))->join('');
+        $colors = [['bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'],['bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'],['bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400'],['bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400'],['bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400']];
+        $avatarColor = $colors[$loop->index % count($colors)][0];
+      @endphp
+      <a href="{{ route('admin.members.show', $member->id) }}" class="flex items-center gap-3 px-4 py-3 {{ !$loop->last ? 'border-b border-slate-50 dark:border-slate-700/50' : '' }} hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
+        <div class="w-9 h-9 rounded-xl {{ $avatarColor }} flex items-center justify-center font-bold text-xs flex-shrink-0">{{ $initials }}</div>
+        <div class="flex-1 min-w-0">
+          <div class="text-sm font-semibold text-slate-800 dark:text-white truncate">{{ $member->user->name ?? 'Unknown' }}</div>
+          <div class="text-xs text-slate-400 dark:text-slate-500">{{ $member->institution ?? $member->member_code }}</div>
+        </div>
+        @if($member->status === 'active')
+        <span class="inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">Aktif</span>
+        @elseif($member->status === 'pending')
+        <span class="inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">Pending</span>
+        @else
+        <span class="inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400">{{ ucfirst($member->status) }}</span>
+        @endif
+      </a>
+      @empty
+      <div class="px-4 py-10 text-center text-sm text-slate-400">Belum ada anggota terdaftar</div>
+      @endforelse
     </div>
 
-    {{-- Aktivitas Terbaru --}}
-    <div class="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,.06)] overflow-hidden">
-      <div class="px-5 pt-5 pb-3.5 border-b border-slate-200">
-        <div class="text-[14px] font-bold text-slate-800">Aktivitas Terbaru</div>
-        <div class="text-[12px] text-slate-500 mt-0.5">Log aktivitas sistem</div>
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden">
+      <div class="px-5 pt-5 pb-3.5 border-b border-slate-100 dark:border-slate-700">
+        <div class="text-sm font-bold text-slate-900 dark:text-white">Aktivitas Terbaru</div>
+        <div class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Log aktivitas sistem</div>
       </div>
       <div class="p-5 flex flex-col gap-3.5">
         @forelse($activities as $act)
         <div class="flex items-start gap-3">
-          <div class="w-8 h-8 rounded-[9px] {{ $act['color'] }} flex items-center justify-center flex-shrink-0">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">{!! $act['icon'] !!}</svg>
+          <div class="w-8 h-8 rounded-xl {{ $act['color'] }} flex items-center justify-center flex-shrink-0">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">{!! $act['icon'] !!}</svg>
           </div>
-          <div class="flex-1 min-w-0 text-[12.5px] text-slate-600 leading-relaxed">{!! $act['text'] !!}</div>
-          <div class="text-[10.5px] text-slate-400 font-mono flex-shrink-0">
+          <div class="flex-1 min-w-0 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{!! $act['text'] !!}</div>
+          <div class="text-[10px] text-slate-400 dark:text-slate-500 font-mono flex-shrink-0 pt-0.5">
             {{ $act['time'] ? \Carbon\Carbon::parse($act['time'])->diffForHumans(null, true) : '-' }}
           </div>
         </div>
         @empty
-        <div class="py-6 text-center text-[13px] text-slate-400">Belum ada aktivitas</div>
+        <div class="py-8 text-center text-sm text-slate-400">Belum ada aktivitas</div>
         @endforelse
       </div>
     </div>
+
   </div>
 
 </div>
@@ -347,81 +315,19 @@
 <script>
 const isDark = document.documentElement.classList.contains('dark');
 const gridColor = isDark ? 'rgba(255,255,255,.06)' : 'rgba(0,0,0,.05)';
-const labelColor = isDark ? '#64748b' : '#94a3b8';
-
+const labelColor = isDark ? '#475569' : '#94a3b8';
 const ctx = document.getElementById('barChart').getContext('2d');
-
-// Gradients
-const gradBlue = ctx.createLinearGradient(0, 0, 0, 200);
-gradBlue.addColorStop(0, 'rgba(30,90,255,.85)');
-gradBlue.addColorStop(1, 'rgba(30,90,255,.35)');
-
-const gradGreen = ctx.createLinearGradient(0, 0, 0, 200);
-gradGreen.addColorStop(0, 'rgba(16,185,129,.85)');
-gradGreen.addColorStop(1, 'rgba(16,185,129,.35)');
-
+const gradBlue = ctx.createLinearGradient(0,0,0,200);
+gradBlue.addColorStop(0,'rgba(59,130,246,.9)');gradBlue.addColorStop(1,'rgba(59,130,246,.3)');
+const gradGreen = ctx.createLinearGradient(0,0,0,200);
+gradGreen.addColorStop(0,'rgba(16,185,129,.9)');gradGreen.addColorStop(1,'rgba(16,185,129,.3)');
 new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: @json($chartLabels),
-    datasets: [
-      {
-        label: 'Daftar',
-        data: @json($chartDaftar),
-        backgroundColor: gradBlue,
-        borderRadius: 6,
-        borderSkipped: false,
-        barPercentage: 0.55,
-        categoryPercentage: 0.7,
-      },
-      {
-        label: 'Aktif',
-        data: @json($chartAktif),
-        backgroundColor: gradGreen,
-        borderRadius: 6,
-        borderSkipped: false,
-        barPercentage: 0.55,
-        categoryPercentage: 0.7,
-      },
-    ],
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        backgroundColor: '#0f1b2d',
-        titleColor: '#94a3b8',
-        bodyColor: '#f1f5f9',
-        borderColor: '#1e2d42',
-        borderWidth: 1,
-        padding: 10,
-        cornerRadius: 8,
-        callbacks: {
-          label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.y + ' orang',
-        }
-      },
-    },
-    scales: {
-      x: {
-        grid: { display: false },
-        border: { display: false },
-        ticks: { color: labelColor, font: { size: 11, family: 'Plus Jakarta Sans' } },
-      },
-      y: {
-        beginAtZero: true,
-        grid: { color: gridColor },
-        border: { display: false, dash: [4,4] },
-        ticks: {
-          color: labelColor,
-          font: { size: 11, family: 'Plus Jakarta Sans' },
-          stepSize: 30,
-          callback: v => v === 0 ? '0' : v,
-        },
-      },
-    },
-  },
+  type:'bar',
+  data:{ labels:@json($chartLabels), datasets:[
+    {label:'Daftar',data:@json($chartDaftar),backgroundColor:gradBlue,borderRadius:6,borderSkipped:false,barPercentage:.55,categoryPercentage:.7},
+    {label:'Aktif',data:@json($chartAktif),backgroundColor:gradGreen,borderRadius:6,borderSkipped:false,barPercentage:.55,categoryPercentage:.7},
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:isDark?'#0f172a':'#1e293b',titleColor:'#64748b',bodyColor:'#f1f5f9',borderColor:isDark?'#1e293b':'#334155',borderWidth:1,padding:10,cornerRadius:8,callbacks:{label:c=>' '+c.dataset.label+': '+c.parsed.y+' orang'}}},scales:{x:{grid:{display:false},border:{display:false},ticks:{color:labelColor,font:{size:11}}},y:{beginAtZero:true,grid:{color:gridColor},border:{display:false,dash:[4,4]},ticks:{color:labelColor,font:{size:11},stepSize:30}}}},
 });
 </script>
 @endpush
