@@ -27,11 +27,12 @@ class CategoryController extends Controller
             $query->where('is_active', $request->status === 'active');
         }
 
-        $categories = $query->orderBy('sort_order')->orderBy('name')->paginate(10)->withQueryString();
+        // $categories = $query->orderBy('sort_order')->orderBy('name')->paginate(10)->withQueryString();
+        $categories = $query->paginate(10)->withQueryString();
 
         $stats = [
             'total'   => Category::count(),
-            'aktif'   => Category::where('is_active', true)->count(),
+            // 'aktif'   => Category::where('is_active', true)->count(),
             'artikel' => Category::where('type', 'artikel')->count(),
             'jurnal'  => Category::where('type', 'jurnal')->count(),
             'materi'  => Category::where('type', 'materi')->count(),
