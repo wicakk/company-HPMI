@@ -408,14 +408,14 @@
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style="z-index:2;">
         <span class="inline-block bg-white/20 backdrop-blur text-sm font-medium px-4 py-1.5 rounded-full mb-6">
-            {{ $s('hero_badge_text', 'Organisasi Profesi Keperawatan Indonesia') }}
+            {{  $settings['hero_badge_text']['value'] }}
         </span>
         <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            {{ $s('hero_title', 'Himpunan Perawat') }}<br>
-            <span class="text-accent-400">{{ $s('hero_title_accent', 'Manajer Indonesia') }}</span>
+            {{  $settings['hero_title']['value'] }}
+            <span class="text-accent-400">{{  $settings['hero_title_accent']['value'] }}</span>
         </h1>
         <p class="text-xl text-primary-100 mb-10 max-w-2xl mx-auto">
-            {{ $s('hero_subtitle', 'Bersama membangun kompetensi dan profesionalisme perawat manajer di seluruh Indonesia.') }}
+            {{  $settings['hero_subtitle']['value'] }}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
             @if($s('feature_registration', '1') === '1')
