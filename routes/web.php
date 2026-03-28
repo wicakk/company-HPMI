@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\SettingAdminController;
 use App\Http\Controllers\Admin\ContactAdminController;
 use App\Http\Controllers\Admin\OrgStructureAdminController;
 use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\JournalController;
 
 // ─── PUBLIC ROUTES ───────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -131,4 +132,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::post('/analytics/duration', [AnalyticsController::class, 'duration'])
         ->name('analytics.duration');
+});
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+
+    // CRUD Jurnal
+    Route::resource('journals', JournalController::class);
+
+    // Extra actions
+    Route::get('journals/{journal}/download',
+        [JournalController::class, 'download'])->name('journals.download');
+
+    Route::patch('journals/{journal}/toggle-publish',
+        [JournalController::class, 'togglePublish'])->name('journals.toggle-publish');
+
 });
