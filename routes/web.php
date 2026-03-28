@@ -45,6 +45,8 @@ Route::prefix('kontak')->group(function () {
     Route::get('/', [ContactController::class, 'index'])->name('contact');
     Route::post('/', [ContactController::class, 'send'])->name('contact.send');
 });
+Route::get('home/research', [HomeController::class, 'researchSearch'])
+    ->name('research.search');
 
 // ─── AUTH ROUTES ─────────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {

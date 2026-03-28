@@ -5,11 +5,25 @@
 {{-- + Research Data search box --}}
 
 @extends('layouts.app')
-@section('title', 'Beranda - ' . ($settings['org_name']?->value ?? 'HPMI'))
 
 @php
     $s = fn(string $key, string $default = '') => $settings[$key]?->value ?? $default;
+
+    $keyword  = $keyword  ?? '';
+    $category = $category ?? 'semua';
+
+    $articles = $articles ?? collect();
+    $events   = $events   ?? collect();
+    $members  = $members  ?? collect();
+
+    // ✅ FIX DI SINI
+    $totalResults = $articles->count() + $events->count() + $members->count();
 @endphp
+
+@section('title', $keyword 
+    ? 'Hasil Pencarian: ' . $keyword . ' - ' . $s('org_name', 'HPMI')
+    : 'Beranda - ' . $s('org_name', 'HPMI')
+)
 
 @section('content')
 
@@ -18,7 +32,7 @@
      Data dinamis dari $bannerSlides (controller)
      Fallback: slide statis jika $bannerSlides kosong
 ════════════════════════════════════════════════ --}}
-<div class="relative w-full overflow-hidden select-none py-20"
+<div class="relative w-full overflow-hidden select-none py-16"
      id="heroBannerWrap"
      style="background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 40px 40px; background-color: #f8fafc;">
 
@@ -197,41 +211,182 @@
     {{-- Dot indicators --}}
     <div class="flex justify-center gap-2 mt-4 relative z-10" id="bannerDots"></div>
 
-    {{-- ── Research Data Search Box (doc2) ── --}}
-    <div class="mt-6 max-w-5xl mx-auto px-4 relative z-10">
-        <div class="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-2xl border border-gray-100 dark:border-gray-800">
-            <h3 class="text-gray-900 dark:text-white text-lg md:text-xl font-semibold mb-4">
-                Research Data
-            </h3>
-            <div class="flex flex-col md:flex-row gap-4">
-                {{-- Input --}}
+</div>
+{{-- ── Research Data Search Box (doc2) ── --}}
+<div class="relative w-full overflow-hidden select-none "
+     id="heroBannerWrap"
+     style="background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 40px 40px; background-color: #f8fafc;">
+    <div class="py-6 my-6 mx-12 rounded-2xl bg-gradient-to-br from-primary-700 to-primary-800 text-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-2xl font-bold mb-6">Research Data</h1>
+
+            {{-- Search form (ulang dari home, agar bisa refinement) --}}
+            <form method="GET" action="{{ route('research.search') }}" class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1">
-                    <input type="text"
-                           placeholder="Masukkan data penelitian / ID / keyword..."
-                           class="w-full rounded-2xl px-5 py-3 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition">
+                    <input type="text" name="q" value="{{ $keyword }}"
+                        placeholder="Masukkan data penelitian / ID / keyword..."
+                        class="w-full rounded-2xl px-5 py-3 bg-white/15 backdrop-blur border border-white/20
+                                text-white placeholder-white/60
+                                focus:outline-none focus:ring-2 focus:ring-white/50 transition">
                 </div>
-                {{-- Select --}}
                 <div>
-                    <select class="rounded-2xl px-4 py-3 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition">
-                        <option>Semua Kategori</option>
-                        <option>Penelitian</option>
-                        <option>Event</option>
-                        <option>Anggota</option>
+                    <select name="category"
+                            class="rounded-2xl px-4 py-3 bg-white/15 backdrop-blur border border-white/20
+                                text-white focus:outline-none focus:ring-2 focus:ring-white/50 transition">
+                        <option value="semua"     {{ $category === 'semua'     ? 'selected' : '' }}>Semua Kategori</option>
+                        <option value="Penelitian"{{ $category === 'Penelitian'? 'selected' : '' }}>Penelitian</option>
+                        <option value="Event"     {{ $category === 'Event'     ? 'selected' : '' }}>Event</option>
+                        <option value="Anggota"   {{ $category === 'Anggota'   ? 'selected' : '' }}>Anggota</option>
                     </select>
                 </div>
-                {{-- Button --}}
                 <div>
-                    <button class="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-medium px-6 py-3 rounded-2xl transition">
+                    <button type="submit"
+                            class="flex items-center gap-2 bg-white text-primary-700 font-semibold px-6 py-3 rounded-2xl hover:bg-primary-50 transition">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
                         </svg>
-                        Cari Data
+                        Cari
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 
+    {{-- ── Results Body ── --}}
+    @if(!empty($isSearch) && $isSearch)
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+
+        {{-- Jika belum ada keyword --}}
+        @if($keyword === '')
+        <div class="text-center py-20 text-gray-400 dark:text-gray-500">
+            <svg class="w-16 h-16 mx-auto mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+            </svg>
+            <p class="text-lg font-medium">Masukkan keyword untuk mulai mencari</p>
+        </div>
+
+        {{-- Jika ada keyword tapi tidak ada hasil --}}
+        @elseif($totalResults === 0)
+        <div class="text-center py-20">
+            <svg class="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <p class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                Tidak ada hasil untuk <span class="text-primary-600 dark:text-primary-400">"{{ $keyword }}"</span>
+            </p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Coba gunakan kata kunci lain atau pilih kategori berbeda.</p>
+        </div>
+
+        @else
+
+        {{-- Ringkasan hasil --}}
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+            Ditemukan <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $totalResults }} hasil</span>
+            untuk <span class="font-semibold text-primary-600 dark:text-primary-400">"{{ $keyword }}"</span>
+            @if($category !== 'semua') <span>· Kategori: {{ $category }}</span> @endif
+        </p>
+
+        {{-- ── Artikel / Penelitian ── --}}
+        @if($articles->count())
+        <div>
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-primary-500 inline-block"></span>
+                Artikel &amp; Penelitian
+                <span class="ml-1 text-xs font-normal text-gray-400">({{ $articles->count() }})</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @foreach($articles as $article)
+                <a href="{{ route('articles.show', $article->slug) }}"
+                class="flex gap-4 p-4 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 hover:shadow-md hover:border-primary-200 dark:hover:border-primary-700 transition group">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        @if($article->category)
+                        <span class="text-xs font-medium text-primary-500 dark:text-primary-400">{{ $article->category->name }}</span>
+                        @endif
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition line-clamp-2 mt-0.5">
+                            {{ $article->title }}
+                        </h3>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                            {{ $article->published_at?->format('d M Y') }}
+                        </p>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        {{-- ── Events ── --}}
+        @if($events->count())
+        <div>
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-sky-500 inline-block"></span>
+                Kegiatan / Event
+                <span class="ml-1 text-xs font-normal text-gray-400">({{ $events->count() }})</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @foreach($events as $event)
+                <a href="{{ route('events.show', $event->slug) }}"
+                class="flex gap-4 p-4 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 hover:shadow-md hover:border-sky-200 dark:hover:border-sky-800 transition group">
+                    <div class="flex-shrink-0 w-12 h-12 bg-primary-600 rounded-xl flex flex-col items-center justify-center text-white">
+                        <span class="text-xs font-medium leading-none">{{ $event->start_date->format('M') }}</span>
+                        <span class="text-lg font-bold leading-none">{{ $event->start_date->format('d') }}</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition line-clamp-2">
+                            {{ $event->title }}
+                        </h3>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                            {{ $event->location ?? 'Online' }}
+                            @if($event->is_free)
+                            · <span class="text-green-500">Gratis</span>
+                            @endif
+                        </p>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        {{-- ── Anggota ── --}}
+        @if($members->count())
+        <div>
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+                Anggota
+                <span class="ml-1 text-xs font-normal text-gray-400">({{ $members->count() }})</span>
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                @foreach($members as $member)
+                <div class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700">
+                    <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-sm flex-shrink-0">
+                        {{ strtoupper(substr($member->name, 0, 1)) }}
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $member->name }}</p>
+                        @if(!empty($member->profession))
+                        <p class="text-xs text-gray-400 dark:text-gray-500 truncate">{{ $member->profession }}</p>
+                        @endif
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        @endif {{-- end if totalResults --}}
+
+    </div>
+    @endif
 </div>
 {{-- END BANNER SLIDER --}}
 

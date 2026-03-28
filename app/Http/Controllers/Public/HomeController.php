@@ -1,8 +1,9 @@
 <?php
+
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Article, Event, Announcement, Member, SiteSetting};
+use App\Models\{Article, Event, Announcement, Member, SiteSetting, User};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,40 +32,44 @@ class HomeController extends Controller
 
             return [
                 'image'    => $imageUrl,
-                'title'    => $settings['banner_slide_'.$i.'_title']?->value    ?? '',
+                'title'    => $settings['banner_slide_'.$i.'_title']?->value ?? '',
                 'subtitle' => $settings['banner_slide_'.$i.'_subtitle']?->value ?? '',
-                'link'     => $settings['banner_slide_'.$i.'_link']?->value     ?? '#',
-                'color'    => $settings['banner_slide_'.$i.'_color']?->value    ?? '#1a4e8a',
+                'link'     => $settings['banner_slide_'.$i.'_link']?->value ?? '#',
+                'color'    => $settings['banner_slide_'.$i.'_color']?->value ?? '#1a4e8a',
             ];
         })->filter()->values();
 
         // ── Stats ──
         $stats = [
-            'members'  => \App\Models\User::count(),
-            'events'   => Event::where('status', 'completed')->count(),  // FIX: where() lengkap
+            'members'  => Member::count(),
+            'events'   => Event::where('status', 'completed')->count(),
             'articles' => Article::where('status', 'published')->count(),
         ];
 
-        // ── Articles ──
+        // ── Articles (Homepage) ──
         $articles = Article::with('category')
-                        ->where('status', 'published')
-                        ->orderByDesc('published_at')
-                        ->limit(3)
-                        ->get();
+            ->where('status', 'published')
+            ->latest('published_at')
+            ->limit(3)
+            ->get();
 
-        // ── Events mendatang ──
-        // FIX: status 'open' bukan 'published', dan filter start_date >= sekarang
+        // ── Events (Homepage) ──
         $events = Event::where('status', 'open')
-                       ->where('start_date', '>=', now())
-                       ->orderBy('start_date')
-                       ->limit(4)
-                       ->get();
+            ->where('start_date', '>=', now())
+            ->orderBy('start_date')
+            ->limit(4)
+            ->get();
 
         // ── Announcements ──
         $announcements = Announcement::orderByDesc('is_pinned')
-                            ->orderByDesc('created_at')
-                            ->limit(10)
-                            ->get();
+            ->orderByDesc('created_at')
+            ->limit(10)
+            ->get();
+
+        // ── Default search state (PENTING biar Blade aman) ──
+        $keyword  = '';
+        $category = 'semua';
+        $members  = collect();
 
         return view('public.home', compact(
             'settings',
@@ -73,16 +78,12 @@ class HomeController extends Controller
             'articles',
             'events',
             'announcements',
+            'keyword',
+            'category',
+            'members'
         ));
     }
 
-    /**
-     * Endpoint pencarian Research Data.
-     * Dipanggil dari form GET di home view.
-     * Route: GET /research-search  → name: 'research.search'
-     *
-     * Query params: q (keyword), category (Penelitian|Event|Anggota|semua)
-     */
     public function researchSearch(Request $request)
     {
         $keyword  = trim($request->input('q', ''));
@@ -93,7 +94,8 @@ class HomeController extends Controller
         $members  = collect();
 
         if ($keyword !== '') {
-            // Cari artikel
+
+            // ── Articles ──
             if (in_array($category, ['semua', 'Penelitian'])) {
                 $articles = Article::with('category')
                     ->where('status', 'published')
@@ -102,44 +104,54 @@ class HomeController extends Controller
                           ->orWhere('excerpt', 'like', "%{$keyword}%")
                           ->orWhere('content', 'like', "%{$keyword}%");
                     })
-                    ->orderByDesc('published_at')
+                    ->latest('published_at')
                     ->limit(6)
                     ->get();
             }
 
-            // Cari event
+            // ── Events ──
             if (in_array($category, ['semua', 'Event'])) {
                 $events = Event::where(function ($q) use ($keyword) {
                         $q->where('title', 'like', "%{$keyword}%")
                           ->orWhere('description', 'like', "%{$keyword}%")
                           ->orWhere('location', 'like', "%{$keyword}%");
                     })
-                    ->orderByDesc('start_date')
+                    ->latest('start_date')
                     ->limit(6)
                     ->get();
             }
 
-            // Cari anggota (nama publik saja)
+            // ── Members ──
             if (in_array($category, ['semua', 'Anggota'])) {
-                $members = \App\Models\User::where('name', 'like', "%{$keyword}%")
+                $members = User::where('name', 'like', "%{$keyword}%")
                     ->limit(6)
                     ->get();
             }
         }
 
-        $settings      = SiteSetting::all()->keyBy('key');
-        $announcements = collect();
-        $bannerSlides  = collect();
+        // ── Shared data (WAJIB biar Blade tidak error) ──
+        $settings = SiteSetting::all()->keyBy('key');
+
         $stats = [
-            'members'  => \App\Models\User::count(),
+            'members'  => Member::count(),
             'events'   => Event::where('status', 'completed')->count(),
             'articles' => Article::where('status', 'published')->count(),
         ];
 
-        return view('public.research-search', compact(
-            'keyword', 'category',
-            'articles', 'events', 'members',
-            'settings', 'stats',
+        // ❗ penting: tetap kirim walaupun kosong
+        $announcements = collect();
+        $bannerSlides  = collect();
+
+        return view('public.home', compact(
+            'keyword',
+            'category',
+            'articles',
+            'events',
+            'members',
+            'settings',
+            'stats',
+            'announcements',
+            'bannerSlides'
         ));
     }
 }
