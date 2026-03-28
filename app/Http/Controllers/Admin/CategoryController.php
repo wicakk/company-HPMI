@@ -1,4 +1,3 @@
-// app/Http/Controllers/Admin/CategoryController.php
 <?php
 
 namespace App\Http\Controllers\Admin;
