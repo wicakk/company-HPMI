@@ -20,6 +20,34 @@ return new class extends Migration
 
         // Seed default values
         $defaults = [
+            // Rekening Bank
+            ['key' => 'bank_count',      'value' => '3', 'group' => 'bank', 'type' => 'number'],
+
+            ['key' => 'bank_1_name',     'value' => 'BCA',              'group' => 'bank'],
+            ['key' => 'bank_1_number',   'value' => '1234567890',        'group' => 'bank'],
+            ['key' => 'bank_1_owner',    'value' => 'HPMI Pusat',        'group' => 'bank'],
+            ['key' => 'bank_1_active',   'value' => '1',                 'group' => 'bank', 'type' => 'boolean'],
+
+            ['key' => 'bank_2_name',     'value' => 'Mandiri',           'group' => 'bank'],
+            ['key' => 'bank_2_number',   'value' => '0987654321',        'group' => 'bank'],
+            ['key' => 'bank_2_owner',    'value' => 'HPMI Pusat',        'group' => 'bank'],
+            ['key' => 'bank_2_active',   'value' => '1',                 'group' => 'bank', 'type' => 'boolean'],
+
+            ['key' => 'bank_3_name',     'value' => 'BNI',               'group' => 'bank'],
+            ['key' => 'bank_3_number',   'value' => '1122334455',        'group' => 'bank'],
+            ['key' => 'bank_3_owner',    'value' => 'HPMI Pusat',        'group' => 'bank'],
+            ['key' => 'bank_3_active',   'value' => '1',                 'group' => 'bank', 'type' => 'boolean'],
+
+            ['key' => 'bank_4_name',     'value' => '',                  'group' => 'bank'],
+            ['key' => 'bank_4_number',   'value' => '',                  'group' => 'bank'],
+            ['key' => 'bank_4_owner',    'value' => '',                  'group' => 'bank'],
+            ['key' => 'bank_4_active',   'value' => '0',                 'group' => 'bank', 'type' => 'boolean'],
+
+            ['key' => 'bank_5_name',     'value' => '',                  'group' => 'bank'],
+            ['key' => 'bank_5_number',   'value' => '',                  'group' => 'bank'],
+            ['key' => 'bank_5_owner',    'value' => '',                  'group' => 'bank'],
+            ['key' => 'bank_5_active',   'value' => '0',                 'group' => 'bank', 'type' => 'boolean'],
+
             // Organisasi
             ['key' => 'org_name',        'value' => 'Himpunan Perawat Manajer Indonesia', 'group' => 'general'],
             ['key' => 'org_tagline',     'value' => 'Bersama Membangun Keperawatan Manajerial Indonesia', 'group' => 'general'],

@@ -33,6 +33,16 @@ class SettingAdminController extends Controller
                 'color'        => $settings['banner_slide_'.$i.'_color']?->value    ?? '#1a4e8a',
                 'active'       => ($settings['banner_slide_'.$i.'_active']?->value  ?? '1') === '1',
             ];
+
+
+             // Tambahkan ini — siapkan data bank
+                $banks = collect(range(1, 5))->map(fn($i) => [
+                    'index'  => $i,
+                    'name'   => $settings["bank_{$i}_name"]?->value   ?? '',
+                    'number' => $settings["bank_{$i}_number"]?->value ?? '',
+                    'owner'  => $settings["bank_{$i}_owner"]?->value  ?? '',
+                    'active' => ($settings["bank_{$i}_active"]?->value ?? '0') === '1',
+                ]);
         });
 
         return view('admin.settings.index', compact('settings', 'slides'));
@@ -41,6 +51,7 @@ class SettingAdminController extends Controller
     // ── Simpan semua pengaturan ke DB ─────────────────────────────
     public function update(Request $request)
     {
+        $request->validate();
         $request->validate([
             'banner_slide_1_image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'banner_slide_2_image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
@@ -50,12 +61,25 @@ class SettingAdminController extends Controller
         ], [
             'banner_slide_*.image' => 'File harus berupa gambar (JPG, PNG, atau WEBP).',
             'banner_slide_*.max'   => 'Ukuran file maksimal 5 MB.',
+        ],[
+            'bank_1_number' => 'nullable|string|max:30',
+            'bank_2_number' => 'nullable|string|max:30',
+            'bank_3_number' => 'nullable|string|max:30',
+            'bank_4_number' => 'nullable|string|max:30',
+            'bank_5_number' => 'nullable|string|max:30',
         ]);
+
+        for ($i = 1; $i <= 5; $i++) {
+            if (!$request->has("bank_{$i}_active")) {
+                SiteSetting::set("bank_{$i}_active", '0');
+            }
+        }
 
         // ── 1. Proses upload gambar banner (slide 1–5) ────────────
         for ($i = 1; $i <= 5; $i++) {
             $fileKey    = "banner_slide_{$i}_image_file";
             $settingKey = "banner_slide_{$i}_image";
+            
 
             if ($request->hasFile($fileKey) && $request->file($fileKey)->isValid()) {
                 // Hapus file lama jika ada

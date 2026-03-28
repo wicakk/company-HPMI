@@ -4,15 +4,25 @@ namespace App\Http\Controllers\Member;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use App\Models\SiteSetting;
 
 class PaymentController extends Controller
 {
-    public function index()
+   public function index()
     {
         $user    = auth()->user();
         $member  = $user->member;
-        $pending = $member?->payments()->where('status', 'pending')->latest()->first();
-        return view('member.payment.index', compact('member', 'pending', 'user'));
+        $pending = $member?->payments()->whereIn('status', ['pending','waiting'])->latest()->first();
+
+        // Ambil bank dari site_settings
+        $banks = collect(range(1, 5))->map(fn($i) => [
+            'bank_name'      => SiteSetting::get("bank_{$i}_name"),
+            'account_number' => SiteSetting::get("bank_{$i}_number"),
+            'account_name'   => SiteSetting::get("bank_{$i}_owner"),
+            'active'         => SiteSetting::get("bank_{$i}_active") === '1',
+        ])->filter(fn($b) => $b['active'] && $b['bank_name']);
+
+        return view('member.payment.index', compact('user', 'member', 'pending', 'banks'));
     }
 
     /** Ajukan upgrade premium - buat tagihan VA */

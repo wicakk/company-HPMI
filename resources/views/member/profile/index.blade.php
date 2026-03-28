@@ -59,7 +59,7 @@
             <div class="w-2 h-4 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
             <h2 class="font-bold text-slate-900 dark:text-white text-sm">Ubah Password</h2>
         </div>
-        <form method="POST" action="{{ route('member.profile.password') }}" class="p-6">
+        <form method="POST" action="{{ route('member.profile') }}" class="p-6">
             @csrf @method('PUT')
             <div class="space-y-4">
                 <div>

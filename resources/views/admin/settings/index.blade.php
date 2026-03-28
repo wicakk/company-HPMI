@@ -392,6 +392,144 @@
         </div>
       </div>
 
+      {{-- ── Rekening Bank Pembayaran ── --}}
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 flex-shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white">Rekening Bank Pembayaran</h3>
+            <p class="text-xs text-slate-400 mt-0.5">Tampil di halaman upgrade premium member</p>
+          </div>
+        </div>
+
+        {{-- Tab bank --}}
+        <div class="flex border-b border-slate-100 dark:border-slate-700 overflow-x-auto" id="bankTabs">
+          @foreach($banks as $bank)
+          <button type="button"
+            onclick="showBank({{ $bank['index'] }})"
+            id="bank-tab-{{ $bank['index'] }}"
+            class="bank-tab relative flex items-center gap-2 px-5 py-3 text-xs font-semibold whitespace-nowrap transition-all flex-shrink-0
+              {{ $bank['index'] === 1
+                ? 'border-b-2 border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-emerald-50/50'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700' }}">
+            <span class="w-5 h-5 rounded-full text-[10px] font-black flex items-center justify-center
+              {{ $bank['active'] ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 dark:bg-slate-700 text-slate-400' }}">
+              {{ $bank['index'] }}
+            </span>
+            {{ $bank['name'] ?: 'Bank '.$bank['index'] }}
+            @if($bank['active'])
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 absolute top-2 right-2"></span>
+            @else
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600 absolute top-2 right-2"></span>
+            @endif
+          </button>
+          @endforeach
+        </div>
+
+        {{-- Panel tiap bank --}}
+        <div class="p-6">
+          @foreach($banks as $bank)
+          <div id="bank-panel-{{ $bank['index'] }}"
+              class="bank-panel space-y-4 {{ $bank['index'] !== 1 ? 'hidden' : '' }}">
+
+            {{-- Toggle aktif --}}
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-700">
+              <div>
+                <p class="text-sm font-semibold text-slate-800 dark:text-white">Rekening {{ $bank['index'] }}</p>
+                <p class="text-xs text-slate-400 mt-0.5">Aktifkan agar tampil di halaman pembayaran</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                <input type="hidden" name="bank_{{ $bank['index'] }}_active" value="0">
+                <input type="checkbox"
+                  name="bank_{{ $bank['index'] }}_active"
+                  value="1"
+                  {{ $bank['active'] ? 'checked' : '' }}
+                  class="sr-only peer"
+                  onchange="updateBankTab({{ $bank['index'] }}, this.checked)">
+                <div class="w-10 h-[22px] bg-slate-200 dark:bg-slate-600 peer-checked:bg-emerald-500 rounded-full transition-colors"></div>
+                <div class="absolute left-0.5 top-0.5 w-[18px] h-[18px] bg-white rounded-full shadow-sm transition-transform peer-checked:translate-x-[18px]"></div>
+              </label>
+            </div>
+
+            {{-- Nama Bank --}}
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">
+                Nama Bank / E-Wallet <span class="text-red-400">*</span>
+              </label>
+              <input type="text"
+                    name="bank_{{ $bank['index'] }}_name"
+                    value="{{ $bank['name'] }}"
+                    placeholder="cth: BCA, BNI, Mandiri, DANA, GoPay..."
+                    oninput="updateBankTabName({{ $bank['index'] }}, this.value)"
+                    class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+            </div>
+
+            {{-- Nomor Rekening --}}
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">
+                Nomor Rekening / Nomor HP <span class="text-red-400">*</span>
+              </label>
+              <input type="text"
+                    name="bank_{{ $bank['index'] }}_number"
+                    value="{{ $bank['number'] }}"
+                    placeholder="cth: 1234567890"
+                    class="w-full px-4 py-2.5 text-sm font-mono border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+            </div>
+
+            {{-- Nama Pemilik --}}
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">
+                Nama Pemilik Rekening <span class="text-red-400">*</span>
+              </label>
+              <input type="text"
+                    name="bank_{{ $bank['index'] }}_owner"
+                    value="{{ $bank['owner'] }}"
+                    placeholder="cth: HPMI Pusat"
+                    class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+            </div>
+
+            {{-- Preview card --}}
+            <div class="rounded-xl border border-slate-100 dark:border-slate-700 overflow-hidden">
+              <div class="px-3 py-2 bg-slate-50 dark:bg-slate-700/50 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-red-400"></span>
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span class="text-xs text-slate-400 ml-1">Preview tampilan di member</span>
+              </div>
+              <div class="px-5 py-4 flex items-center gap-4 bg-white dark:bg-slate-800">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center font-black text-slate-600 dark:text-slate-300 text-xs flex-shrink-0"
+                    id="bank-preview-logo-{{ $bank['index'] }}">
+                  {{ $bank['name'] ? strtoupper(substr($bank['name'], 0, 3)) : '—' }}
+                </div>
+                <div class="flex-1">
+                  <p class="text-xs font-bold text-slate-400 uppercase tracking-wide"
+                    id="bank-preview-name-{{ $bank['index'] }}">
+                    {{ $bank['name'] ?: 'Nama Bank' }}
+                  </p>
+                  <p class="font-mono font-black text-slate-900 dark:text-white text-base mt-0.5"
+                    id="bank-preview-number-{{ $bank['index'] }}">
+                    {{ $bank['number'] ?: '————————' }}
+                  </p>
+                  <p class="text-xs text-slate-500 mt-0.5"
+                    id="bank-preview-owner-{{ $bank['index'] }}">
+                    a.n. {{ $bank['owner'] ?: 'Nama Pemilik' }}
+                  </p>
+                </div>
+                <div class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-500">
+                  📋 Salin
+                </div>
+              </div>
+            </div>
+
+          </div>
+          @endforeach
+        </div>
+      </div>
+
       {{-- ── Media Sosial ── --}}
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-6">
         <div class="flex items-center gap-3 mb-5">
@@ -633,6 +771,62 @@ document.querySelectorAll('[id^="active-"]').forEach(checkbox => {
         thumb.style.transform = 'translateX(0)';
       }
     }
+  });
+});
+// ── Tab bank ────────────────────────────────────────────────────
+function showBank(index) {
+  document.querySelectorAll('.bank-panel').forEach(p => p.classList.add('hidden'));
+  document.querySelectorAll('.bank-tab').forEach(t => {
+    t.classList.remove('border-b-2', 'border-emerald-500', 'text-emerald-600', 'dark:text-emerald-400', 'bg-emerald-50/50');
+    t.classList.add('text-slate-500', 'dark:text-slate-400');
+  });
+  document.getElementById('bank-panel-' + index)?.classList.remove('hidden');
+  const tab = document.getElementById('bank-tab-' + index);
+  if (tab) {
+    tab.classList.add('border-b-2', 'border-emerald-500', 'text-emerald-600', 'dark:text-emerald-400', 'bg-emerald-50/50');
+    tab.classList.remove('text-slate-500', 'dark:text-slate-400');
+  }
+}
+
+// ── Update preview live saat mengetik ───────────────────────────
+function updateBankTabName(index, value) {
+  // Update label di tab
+  const tab = document.getElementById('bank-tab-' + index);
+  if (tab) {
+    const span = tab.querySelector('span:first-child');
+    const label = tab.childNodes[tab.childNodes.length - 1];
+    tab.childNodes.forEach(node => {
+      if (node.nodeType === 3) node.textContent = ' ' + (value || 'Bank ' + index);
+    });
+  }
+  // Update preview
+  const previewName   = document.getElementById('bank-preview-name-' + index);
+  const previewLogo   = document.getElementById('bank-preview-logo-' + index);
+  if (previewName) previewName.textContent = value || 'Nama Bank';
+  if (previewLogo) previewLogo.textContent = value ? value.substring(0, 3).toUpperCase() : '—';
+}
+
+function updateBankTab(index, active) {
+  const dot = document.querySelector(`#bank-tab-${index} span.rounded-full.absolute`);
+  if (dot) {
+    dot.classList.toggle('bg-emerald-500', active);
+    dot.classList.toggle('bg-slate-300', !active);
+  }
+}
+
+// Live preview nomor & pemilik
+document.querySelectorAll('[name^="bank_"][name$="_number"]').forEach(input => {
+  input.addEventListener('input', function() {
+    const index = this.name.match(/bank_(\d+)_number/)[1];
+    const el = document.getElementById('bank-preview-number-' + index);
+    if (el) el.textContent = this.value || '————————';
+  });
+});
+document.querySelectorAll('[name^="bank_"][name$="_owner"]').forEach(input => {
+  input.addEventListener('input', function() {
+    const index = this.name.match(/bank_(\d+)_owner/)[1];
+    const el = document.getElementById('bank-preview-owner-' + index);
+    if (el) el.textContent = 'a.n. ' + (this.value || 'Nama Pemilik');
   });
 });
 </script>

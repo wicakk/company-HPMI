@@ -22,32 +22,21 @@ use App\Http\Controllers\Admin\SettingAdminController;
 use App\Http\Controllers\Admin\ContactAdminController;
 use App\Http\Controllers\Admin\OrgStructureAdminController;
 use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\JournalController;
+use App\Http\Controllers\Admin\BankAccountController;
 
 // ─── PUBLIC ROUTES ───────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-Route::prefix('tentang')->group(function () {
-    Route::get('/', [AboutController::class, 'index'])->name('about');
-    Route::get('/struktur-organisasi', [AboutController::class, 'structure'])->name('about.structure');
-});
-
-Route::prefix('artikel')->group(function () {
-    Route::get('/', [ArticleController::class, 'index'])->name('articles.index');
-    Route::get('/{slug}', [ArticleController::class, 'show'])->name('articles.show');
-});
-
-Route::prefix('kegiatan')->group(function () {
-    Route::get('/', [PublicEventController::class, 'index'])->name('events.index');
-    Route::get('/{slug}', [PublicEventController::class, 'show'])->name('events.show');
-});
-
-Route::prefix('kontak')->group(function () {
-    Route::get('/', [ContactController::class, 'index'])->name('contact');
-    Route::post('/', [ContactController::class, 'send'])->name('contact.send');
-});
-Route::get('home/research', [HomeController::class, 'researchSearch'])
-    ->name('research.search');
+Route::get('/tentang', [AboutController::class, 'index'])->name('about');
+Route::get('/tentang/struktur-organisasi', [AboutController::class, 'structure'])->name('about.structure');
+Route::get('/artikel', [ArticleController::class, 'index'])->name('articles.index');
+Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('articles.show');
+Route::get('/kegiatan', [PublicEventController::class, 'index'])->name('events.index');
+Route::get('/kegiatan/{slug}', [PublicEventController::class, 'show'])->name('events.show');
+Route::get('/kontak', [ContactController::class, 'index'])->name('contact');
+Route::post('/kontak', [ContactController::class, 'send'])->name('contact.send');
+Route::get('/home/research', [HomeController::class, 'researchSearch'])->name('research.search');
 
 // ─── AUTH ROUTES ─────────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
@@ -58,92 +47,69 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
-
+Route::resource('/admin/bank-accounts', BankAccountController::class)->names('admin.bank-accounts');
 // ─── MEMBER ROUTES ────────────────────────────────────────────────────
-Route::prefix('member')
-    ->middleware(['auth', 'member'])
-    ->name('member.')
-    ->group(function () {
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::middleware(['auth', 'member'])->group(function () {
+    Route::get('/member/dashboard', [DashboardController::class, 'index'])->name('member.dashboard');
 
-    Route::prefix('pembayaran')->group(function () {
-        Route::get('/', [PaymentController::class, 'index'])->name('payment');
-        Route::post('/', [PaymentController::class, 'pay'])->name('payment.pay');
-        Route::post('/{id}/confirm', [PaymentController::class, 'confirm'])->name('payment.confirm');
-        Route::get('/history', [PaymentController::class, 'history'])->name('payment.history');
-    });
+    // Payment — nama berbeda untuk GET dan POST
+    Route::get('/member/pembayaran', [PaymentController::class, 'index'])->name('member.payment');
+    Route::post('/member/pembayaran', [PaymentController::class, 'pay'])->name('member.payment.pay'); // ← fix duplikat nama
+    Route::post('/member/pembayaran/{id}/confirm', [PaymentController::class, 'confirm'])->name('member.payment.confirm');
+    Route::get('/member/pembayaran/history', [PaymentController::class, 'history'])->name('member.payment.history');
 
-    Route::prefix('materi')->group(function () {
-        Route::get('/', [MaterialController::class, 'index'])->name('member.materials');
-        Route::get('/{id}', [MaterialController::class, 'show'])->name('member.materials.show');
-        Route::get('/{id}/download', [MaterialController::class, 'download'])->name('member.materials.download');
-    });
+    // Profile
+    Route::get('/member/profile', [ProfileController::class, 'index'])->name('member.profile');  // ← fix dari member.profile.index
+    Route::put('/member/profile', [ProfileController::class, 'update'])->name('member.profile.update');
 
-    Route::prefix('kegiatan')->group(function () {
-        Route::get('/', [MemberEventController::class, 'index'])->name('member.events');
-        Route::get('/{id}', [MemberEventController::class, 'show'])->name('member.events.show');
-        Route::post('/{id}/daftar', [MemberEventController::class, 'register'])->name('member.events.register');
-        Route::delete('/{id}/batal', [MemberEventController::class, 'cancel'])->name('member.events.cancel');
-    });
+    Route::get('/member/materi', [MaterialController::class, 'index'])->name('member.materials');
+    Route::get('/member/materi/{id}', [MaterialController::class, 'show'])->name('member.materials.show');
+    Route::get('/member/materi/{id}/download', [MaterialController::class, 'download'])->name('member.materials.download');
+
+    Route::get('/member/kegiatan', [MemberEventController::class, 'index'])->name('member.events');
+    Route::get('/member/kegiatan/{id}', [MemberEventController::class, 'show'])->name('member.events.show');
+    Route::post('/member/kegiatan/{id}/daftar', [MemberEventController::class, 'register'])->name('member.events.register');
+    Route::delete('/member/kegiatan/{id}/batal', [MemberEventController::class, 'cancel'])->name('member.events.cancel');
 });
 
 // ─── ADMIN ROUTES ─────────────────────────────────────────────────────
-Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-    Route::resource('artikel', ArticleAdminController::class)->names('admin.articles');
-    Route::resource('kegiatan', EventAdminController::class)->names('admin.events');
-    Route::resource('materi', MaterialAdminController::class)->names('admin.materials');
-    Route::resource('pengumuman', AnnouncementAdminController::class)->names('admin.announcements');
-    Route::resource('struktur-organisasi', OrgStructureAdminController::class)->names('admin.org');
+    Route::resource('/admin/artikel', ArticleAdminController::class)->names('admin.articles');
+    Route::resource('/admin/kegiatan', EventAdminController::class)->names('admin.events');
+    Route::resource('/admin/materi', MaterialAdminController::class)->names('admin.materials');
+    Route::resource('/admin/pengumuman', AnnouncementAdminController::class)->names('admin.announcements');
+    Route::resource('/admin/struktur-organisasi', OrgStructureAdminController::class)->names('admin.org');
 
-    Route::prefix('anggota')->group(function () {
-        Route::get('/', [MemberAdminController::class, 'index'])->name('admin.members.index');
-        Route::get('/export/excel', [MemberAdminController::class, 'exportExcel'])->name('admin.members.export'); // ← pindah ke sini
-        Route::get('/{id}', [MemberAdminController::class, 'show'])->name('admin.members.show');
-        Route::put('/{id}/status', [MemberAdminController::class, 'updateStatus'])->name('admin.members.status');
-    });
+    Route::get('/admin/anggota', [MemberAdminController::class, 'index'])->name('admin.members.index');
+    Route::get('/admin/anggota/export/excel', [MemberAdminController::class, 'exportExcel'])->name('admin.members.export');
+    Route::get('/admin/anggota/{id}', [MemberAdminController::class, 'show'])->name('admin.members.show');
+    Route::put('/admin/anggota/{id}/status', [MemberAdminController::class, 'updateStatus'])->name('admin.members.status');
 
-    Route::prefix('pembayaran')->group(function () {
-        Route::get('/', [MemberAdminController::class, 'payments'])->name('admin.payments.index');
-        Route::put('/{id}/konfirmasi', [MemberAdminController::class, 'confirmPayment'])->name('admin.payments.confirm');
-        Route::put('{id}/tolak', [MemberAdminController::class, 'rejectPayment'])->name('admin.payments.reject');
-    });
+    Route::get('/admin/pembayaran', [MemberAdminController::class, 'payments'])->name('admin.payments.index');
+    Route::put('/admin/pembayaran/{id}/konfirmasi', [MemberAdminController::class, 'confirmPayment'])->name('admin.payments.confirm');
+    Route::put('/admin/pembayaran/{id}/tolak', [MemberAdminController::class, 'rejectPayment'])->name('admin.payments.reject');
 
-    Route::prefix('pesan')->group(function () {
-        Route::get('/', [ContactAdminController::class, 'index'])->name('admin.contact.index');
-        Route::get('/{id}', [ContactAdminController::class, 'show'])->name('admin.contact.show');
-        Route::put('/{id}/balas', [ContactAdminController::class, 'reply'])->name('admin.contact.reply');
-        Route::delete('/{id}', [ContactAdminController::class, 'destroy'])->name('admin.contact.destroy');
-    });
+    Route::get('/admin/pesan', [ContactAdminController::class, 'index'])->name('admin.contact.index');
+    Route::get('/admin/pesan/{id}', [ContactAdminController::class, 'show'])->name('admin.contact.show');
+    Route::put('/admin/pesan/{id}/balas', [ContactAdminController::class, 'reply'])->name('admin.contact.reply');
+    Route::delete('/admin/pesan/{id}', [ContactAdminController::class, 'destroy'])->name('admin.contact.destroy');
 
-    // ✅ Settings Routes - PENTING!
-    Route::get('/pengaturan', [SettingAdminController::class, 'index'])->name('admin.settings.index');
-    Route::put('/pengaturan', [SettingAdminController::class, 'update'])->name('admin.settings.update');
-});
+    Route::get('/admin/pengaturan', [SettingAdminController::class, 'index'])->name('admin.settings.index');
+    Route::put('/admin/pengaturan', [SettingAdminController::class, 'update'])->name('admin.settings.update');
 
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/analytics', [AnalyticsController::class, 'index'])
-        ->name('analytics.index');
+    Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('admin.analytics.index');
+    Route::get('/admin/analytics/realtime', [AnalyticsController::class, 'realtime'])->name('admin.analytics.realtime');
+    Route::post('/admin/analytics/duration', [AnalyticsController::class, 'duration'])->name('admin.analytics.duration');
 
-    Route::get('/analytics/realtime', [AnalyticsController::class, 'realtime'])
-        ->name('analytics.realtime');
+    Route::resource('/admin/journals', JournalController::class)->names('admin.journals');
+    Route::get('/admin/journals/{journal}/download', [JournalController::class, 'download'])->name('admin.journals.download');
+    Route::patch('/admin/journals/{journal}/toggle-publish', [JournalController::class, 'togglePublish'])->name('admin.journals.toggle-publish');
 
-    Route::post('/analytics/duration', [AnalyticsController::class, 'duration'])
-        ->name('analytics.duration');
-});
 
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
-
-    // CRUD Jurnal
-    Route::resource('journals', JournalController::class);
-
-    // Extra actions
-    Route::get('journals/{journal}/download',
-        [JournalController::class, 'download'])->name('journals.download');
-
-    Route::patch('journals/{journal}/toggle-publish',
-        [JournalController::class, 'togglePublish'])->name('journals.toggle-publish');
-
+    Route::resource('/admin/categories', CategoryController::class)->names('admin.categories');
+    Route::patch('/admin/categories/{category}/toggle-active', [CategoryController::class, 'toggleActive'])
+     ->name('admin.categories.toggle-active');
 });
