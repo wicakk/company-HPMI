@@ -138,21 +138,21 @@
             <div>
               <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">Status</label>
               <select name="status" class="w-full px-3 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500 dark:focus:ring-violet-400 transition cursor-pointer">
-                <option value="draft"     {{ old('status', \$event->status)=='draft'?'selected':"" }}>📝 Draft</option>
-                <option value="open"      {{ old('status', \$event->status)=='open'?'selected':"" }}>✅ Buka Pendaftaran</option>
-                <option value="closed"    {{ old('status', \$event->status)=='closed'?'selected':"" }}>🔒 Tutup Pendaftaran</option>
-                <option value="completed" {{ old('status', \$event->status)=='completed'?'selected':"" }}>🏆 Selesai</option>
+                  <option value="draft"     {{ old('status', $event->status)=='draft'     ? 'selected' : '' }}>📝 Draft</option>
+                  <option value="open"      {{ old('status', $event->status)=='open'      ? 'selected' : '' }}>✅ Buka Pendaftaran</option>
+                  <option value="closed"    {{ old('status', $event->status)=='closed'    ? 'selected' : '' }}>🔒 Tutup Pendaftaran</option>
+                  <option value="completed" {{ old('status', $event->status)=='completed' ? 'selected' : '' }}>🏆 Selesai</option>
               </select>
             </div>
             <div>
               <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">Tipe</label>
               <select name="type" class="w-full px-3 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500 dark:focus:ring-violet-400 transition cursor-pointer">
-                <option value="seminar"  {{ old('type', \$event->type)=='seminar'?'selected':"" }}>Seminar</option>
-                <option value="workshop" {{ old('type', \$event->type)=='workshop'?'selected':"" }}>Workshop</option>
-                <option value="webinar"  {{ old('type', \$event->type)=='webinar'?'selected':"" }}>Webinar</option>
-                <option value="training" {{ old('type', \$event->type)=='training'?'selected':"" }}>Pelatihan</option>
-                <option value="rapat"    {{ old('type', \$event->type)=='rapat'?'selected':"" }}>Rapat</option>
-                <option value="other"    {{ old('type', \$event->type)=='other'?'selected':"" }}>Lainnya</option>
+                  <option value="seminar"  {{ old('type', $event->type)=='seminar'  ? 'selected' : '' }}>Seminar</option>
+                  <option value="workshop" {{ old('type', $event->type)=='workshop' ? 'selected' : '' }}>Workshop</option>
+                  <option value="webinar"  {{ old('type', $event->type)=='webinar'  ? 'selected' : '' }}>Webinar</option>
+                  <option value="training" {{ old('type', $event->type)=='training' ? 'selected' : '' }}>Pelatihan</option>
+                  <option value="rapat"    {{ old('type', $event->type)=='rapat'    ? 'selected' : '' }}>Rapat</option>
+                  <option value="other"    {{ old('type', $event->type)=='other'    ? 'selected' : '' }}>Lainnya</option>
               </select>
             </div>
             <div>

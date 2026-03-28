@@ -1,3 +1,9 @@
+{{-- resources/views/home.blade.php --}}
+{{-- Menggabungkan: struktur dinamis (doc1) + UI style (doc2) --}}
+{{-- Banner: card 3D peek dari $bannerSlides, fallback slide statis --}}
+{{-- + Section Announcements dengan filter tab --}}
+{{-- + Research Data search box --}}
+
 @extends('layouts.app')
 @section('title', 'Beranda - ' . ($settings['org_name']?->value ?? 'HPMI'))
 
@@ -7,188 +13,231 @@
 
 @section('content')
 
-{{-- =============================================
-     SLIDESHOW BANNER — style gambar 2
-     (full-width, center slide besar, nav panah, dots)
-     ============================================= --}}
-<div class="relative w-full overflow-hidden bg-white dark:bg-gray-950 py-24 select-none" id="heroBannerWrap"
-     style="background-image: linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px); background-size: 40px 40px; background-color: #f8fafc;">
-    {{-- dark mode grid override via inline style won't work for dark, handled with pseudo via overlay --}}
+{{-- ════════════════════════════════════════════════
+     HERO BANNER SLIDER — Style card 3D peek (doc2)
+     Data dinamis dari $bannerSlides (controller)
+     Fallback: slide statis jika $bannerSlides kosong
+════════════════════════════════════════════════ --}}
+<div class="relative w-full overflow-hidden select-none py-20"
+     id="heroBannerWrap"
+     style="background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 40px 40px; background-color: #f8fafc;">
+
+    {{-- Dark mode grid overlay --}}
     <div class="absolute inset-0 pointer-events-none dark:opacity-100 opacity-0"
          style="background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 40px 40px; background-color: #030712; z-index:0;"></div>
 
     {{-- Slides track --}}
-    <div class="relative flex items-center justify-center" id="bannerTrack" style="min-height:320px;">
+    <div class="relative flex items-center justify-center" id="bannerTrack" style="min-height:288px;">
 
-        {{-- === SLIDE ITEMS ===
-             Tambahkan / ubah konten slide di sini.
-             Tiap slide: <div class="banner-slide" data-index="N"> ... </div>
-             Gunakan gambar nyata atau gradient sebagai background.
-        --}}
+        @php
+            $hasSlides = isset($bannerSlides) && $bannerSlides->count() > 0;
 
-        <div class="banner-slide absolute rounded-3xl overflow-hidden shadow-2xl transition-all duration-500"
-             data-index="0"
-             style="background:linear-gradient(135deg,#1a4e8a,#0d2d57); width:68%; max-width:860px;">
-            <div class="flex items-center h-56 md:h-72 px-10 gap-8">
-                <div class="flex-1 text-white">
-                    <p class="text-xs font-semibold uppercase tracking-widest text-blue-300 mb-2">Program Unggulan</p>
-                    <h2 class="text-2xl md:text-3xl font-bold leading-snug mb-3">Pelatihan Manajerial<br>Keperawatan 2025</h2>
-                    <p class="text-sm text-blue-100 mb-5 max-w-xs">Tingkatkan kompetensi manajerial Anda bersama praktisi terbaik.</p>
-                    <a href="#" class="inline-flex items-center gap-2 bg-white text-blue-800 font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-blue-50 transition">
-                        Daftar Sekarang
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                    </a>
-                </div>
-                <div class="hidden md:flex flex-shrink-0 w-40 h-40 items-center justify-center">
-                    <svg class="w-36 h-36 text-blue-300/40" fill="currentColor" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30"/><path fill="#fff" d="M20 44V22l24 11-24 11z" opacity=".7"/></svg>
+            // Slide statis sebagai fallback jika tidak ada data dari controller
+            $staticSlides = [
+                [
+                    'title'    => 'Pelatihan Manajerial Keperawatan 2025',
+                    'subtitle' => 'Tingkatkan kompetensi manajerial Anda bersama praktisi terbaik.',
+                    'badge'    => 'Program Unggulan',
+                    'link'     => '#',
+                    'link_text'=> 'Daftar Sekarang',
+                    'color'    => '#1a4e8a',
+                    'color2'   => '#0d2d57',
+                    'accent'   => '#93c5fd',
+                    'image'    => null,
+                ],
+                [
+                    'title'    => 'Seminar Nasional Keperawatan 2025',
+                    'subtitle' => 'Forum pertemuan dan diskusi perawat manajer se-Indonesia.',
+                    'badge'    => 'Kesehatan',
+                    'link'     => '#',
+                    'link_text'=> 'Info Selengkapnya',
+                    'color'    => '#0f5e3a',
+                    'color2'   => '#07381f',
+                    'accent'   => '#6ee7b7',
+                    'image'    => null,
+                ],
+                [
+                    'title'    => 'Aksi Donor Darah Bersama HPMI',
+                    'subtitle' => 'Satu tetes darah, satu nyawa terselamatkan.',
+                    'badge'    => 'Donor',
+                    'link'     => '#',
+                    'link_text'=> 'Ikut Berpartisipasi',
+                    'color'    => '#7c2d12',
+                    'color2'   => '#4a1007',
+                    'accent'   => '#fca5a5',
+                    'image'    => null,
+                ],
+                [
+                    'title'    => 'Workshop RS Akreditasi Nasional',
+                    'subtitle' => 'Persiapkan RS Anda menuju standar akreditasi internasional.',
+                    'badge'    => 'Workshop',
+                    'link'     => '#',
+                    'link_text'=> 'Daftar Workshop',
+                    'color'    => '#4c1d95',
+                    'color2'   => '#2e1065',
+                    'accent'   => '#c4b5fd',
+                    'image'    => null,
+                ],
+                [
+                    'title'    => 'Kunjungan RS Anggota Wilayah Jawa Timur',
+                    'subtitle' => 'Saling berbagi praktik terbaik manajemen keperawatan.',
+                    'badge'    => 'Kunjungan',
+                    'link'     => '#',
+                    'link_text'=> 'Lihat Jadwal',
+                    'color'    => '#0e7490',
+                    'color2'   => '#083344',
+                    'accent'   => '#67e8f9',
+                    'image'    => null,
+                ],
+            ];
+        @endphp
+
+        {{-- ── Render slide dinamis dari controller ── --}}
+        @if($hasSlides)
+            @foreach($bannerSlides as $idx => $slide)
+            <div class="banner-slide absolute rounded-3xl overflow-hidden shadow-2xl"
+                 data-index="{{ $idx }}"
+                 style="background: linear-gradient(135deg, {{ $slide['color'] }}, {{ $slide['color'] }}99);
+                        width: 68%; max-width: 860px;
+                        transition: transform .5s cubic-bezier(.4,0,.2,1), opacity .5s ease;">
+
+                {{-- Gambar jika ada --}}
+                @if(!empty($slide['image']))
+                <img src="{{ $slide['image'] }}"
+                     alt="{{ $slide['title'] }}"
+                     class="absolute inset-0 w-full h-full object-cover"
+                     loading="{{ $idx === 0 ? 'eager' : 'lazy' }}">
+                <div class="absolute inset-0"
+                     style="background: linear-gradient(135deg, {{ $slide['color'] }}cc 0%, {{ $slide['color'] }}66 60%, transparent 100%);"></div>
+                @endif
+
+                <div class="relative flex items-center h-56 md:h-72 px-10 gap-8 z-10">
+                    <div class="flex-1 text-white">
+                        @if(!empty($slide['badge']) || !empty($slide['title']))
+                        <p class="text-xs font-semibold uppercase tracking-widest mb-2"
+                           style="color: {{ $slide['accent'] ?? '#93c5fd' }};">
+                            {{ $slide['badge'] ?? '' }}
+                        </p>
+                        @endif
+                        @if(!empty($slide['title']))
+                        <h2 class="text-2xl md:text-3xl font-bold leading-snug mb-3">
+                            {!! nl2br(e($slide['title'])) !!}
+                        </h2>
+                        @endif
+                        @if(!empty($slide['subtitle']))
+                        <p class="text-sm mb-5 max-w-xs opacity-80 leading-relaxed">
+                            {{ $slide['subtitle'] }}
+                        </p>
+                        @endif
+                        @if(!empty($slide['link']) && $slide['link'] !== '#')
+                        <a href="{{ $slide['link'] }}"
+                           class="inline-flex items-center gap-2 bg-white font-semibold text-sm px-5 py-2.5 rounded-xl transition hover:opacity-90"
+                           style="color: {{ $slide['color'] }};">
+                            Selengkapnya
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                        @endif
+                    </div>
                 </div>
             </div>
-        </div>
+            @endforeach
 
-        <div class="banner-slide absolute rounded-3xl overflow-hidden shadow-2xl transition-all duration-500"
-             data-index="1"
-             style="background:linear-gradient(135deg,#0f5e3a,#07381f); width:68%; max-width:860px;">
-            <div class="flex items-center h-56 md:h-72 px-10 gap-8">
-                <div class="flex-1 text-white">
-                    <p class="text-xs font-semibold uppercase tracking-widest text-green-300 mb-2">Kesehatan</p>
-                    <h2 class="text-2xl md:text-3xl font-bold leading-snug mb-3">Seminar Nasional<br>Keperawatan 2025</h2>
-                    <p class="text-sm text-green-100 mb-5 max-w-xs">Forum pertemuan dan diskusi perawat manajer se-Indonesia.</p>
-                    <a href="#" class="inline-flex items-center gap-2 bg-white text-green-800 font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-green-50 transition">
-                        Info Selengkapnya
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                    </a>
-                </div>
-                <div class="hidden md:flex flex-shrink-0 w-40 h-40 items-center justify-center">
-                    <svg class="w-36 h-36 text-green-300/30" fill="currentColor" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30"/><path fill="#fff" d="M24 18h4v10h10v4H28v10h-4V32H14v-4h10V18z" opacity=".8"/></svg>
+        {{-- ── Fallback: slide statis ── --}}
+        @else
+            @foreach($staticSlides as $idx => $slide)
+            <div class="banner-slide absolute rounded-3xl overflow-hidden shadow-2xl"
+                 data-index="{{ $idx }}"
+                 style="background: linear-gradient(135deg, {{ $slide['color'] }}, {{ $slide['color2'] }});
+                        width: 68%; max-width: 860px;
+                        transition: transform .5s cubic-bezier(.4,0,.2,1), opacity .5s ease;">
+                <div class="flex items-center h-56 md:h-72 px-10 gap-8">
+                    <div class="flex-1 text-white">
+                        <p class="text-xs font-semibold uppercase tracking-widest mb-2"
+                           style="color: {{ $slide['accent'] }};">
+                            {{ $slide['badge'] }}
+                        </p>
+                        <h2 class="text-2xl md:text-3xl font-bold leading-snug mb-3">
+                            {!! nl2br(e($slide['title'])) !!}
+                        </h2>
+                        <p class="text-sm mb-5 max-w-xs opacity-80 leading-relaxed">
+                            {{ $slide['subtitle'] }}
+                        </p>
+                        <a href="{{ $slide['link'] }}"
+                           class="inline-flex items-center gap-2 bg-white font-semibold text-sm px-5 py-2.5 rounded-xl transition hover:opacity-90"
+                           style="color: {{ $slide['color'] }};">
+                            {{ $slide['link_text'] }}
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+            @endforeach
+        @endif
 
-        <div class="banner-slide absolute rounded-3xl overflow-hidden shadow-2xl transition-all duration-500"
-             data-index="2"
-             style="background:linear-gradient(135deg,#7c2d12,#4a1007); width:68%; max-width:860px;">
-            <div class="flex items-center h-56 md:h-72 px-10 gap-8">
-                <div class="flex-1 text-white">
-                    <p class="text-xs font-semibold uppercase tracking-widest text-orange-300 mb-2">Donor</p>
-                    <h2 class="text-2xl md:text-3xl font-bold leading-snug mb-3">Aksi Donor Darah<br>Bersama HPMI</h2>
-                    <p class="text-sm text-orange-100 mb-5 max-w-xs">Satu tetes darah, satu nyawa terselamatkan.</p>
-                    <a href="#" class="inline-flex items-center gap-2 bg-white text-red-800 font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-red-50 transition">
-                        Ikut Berpartisipasi
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                    </a>
-                </div>
-                <div class="hidden md:flex flex-shrink-0 w-40 h-40 items-center justify-center">
-                    <svg class="w-36 h-36 text-red-300/30" fill="currentColor" viewBox="0 0 64 64"><path d="M32 8 C32 8 12 26 12 38 a20 20 0 0 0 40 0 C52 26 32 8 32 8z"/></svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="banner-slide absolute rounded-3xl overflow-hidden shadow-2xl transition-all duration-500"
-             data-index="3"
-             style="background:linear-gradient(135deg,#4c1d95,#2e1065); width:68%; max-width:860px;">
-            <div class="flex items-center h-56 md:h-72 px-10 gap-8">
-                <div class="flex-1 text-white">
-                    <p class="text-xs font-semibold uppercase tracking-widest text-purple-300 mb-2">Workshop</p>
-                    <h2 class="text-2xl md:text-3xl font-bold leading-snug mb-3">Workshop Rumah Sakit<br>Akreditasi Nasional</h2>
-                    <p class="text-sm text-purple-100 mb-5 max-w-xs">Persiapkan RS Anda menuju standar akreditasi internasional.</p>
-                    <a href="#" class="inline-flex items-center gap-2 bg-white text-purple-800 font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-purple-50 transition">
-                        Daftar Workshop
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                    </a>
-                </div>
-                <div class="hidden md:flex flex-shrink-0 w-40 h-40 items-center justify-center">
-                    <svg class="w-36 h-36 text-purple-300/30" fill="none" stroke="currentColor" viewBox="0 0 64 64"><rect x="8" y="12" width="48" height="36" rx="4" stroke-width="3"/><path d="M8 22h48" stroke-width="3"/></svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="banner-slide absolute rounded-3xl overflow-hidden shadow-2xl transition-all duration-500"
-             data-index="4"
-             style="background:linear-gradient(135deg,#0e7490,#083344); width:68%; max-width:860px;">
-            <div class="flex items-center h-56 md:h-72 px-10 gap-8">
-                <div class="flex-1 text-white">
-                    <p class="text-xs font-semibold uppercase tracking-widest text-cyan-300 mb-2">Kunjungan</p>
-                    <h2 class="text-2xl md:text-3xl font-bold leading-snug mb-3">Kunjungan RS Anggota<br>Wilayah Jawa Timur</h2>
-                    <p class="text-sm text-cyan-100 mb-5 max-w-xs">Saling berbagi praktik terbaik manajemen keperawatan.</p>
-                    <a href="#" class="inline-flex items-center gap-2 bg-white text-cyan-800 font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-cyan-50 transition">
-                        Lihat Jadwal
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                    </a>
-                </div>
-                <div class="hidden md:flex flex-shrink-0 w-40 h-40 items-center justify-center">
-                    <svg class="w-36 h-36 text-cyan-300/30" fill="none" stroke="currentColor" viewBox="0 0 64 64"><circle cx="32" cy="28" r="12" stroke-width="3"/><path d="M12 56c0-11 8.95-20 20-20s20 8.95 20 20" stroke-width="3"/></svg>
-                </div>
-            </div>
-        </div>
-
-    </div>
+    </div>{{-- /bannerTrack --}}
 
     {{-- Prev / Next arrows --}}
     <button id="bannerPrev"
             class="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 bg-white dark:bg-gray-800 rounded-full shadow-lg flex items-center justify-center text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition z-20">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
     </button>
     <button id="bannerNext"
             class="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 bg-white dark:bg-gray-800 rounded-full shadow-lg flex items-center justify-center text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition z-20">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
     </button>
 
     {{-- Dot indicators --}}
-    
-    <div class="flex justify-center gap-2 " id="bannerDots">
-        {{-- dots generated by JS --}}
-        
-    </div>
-    {{-- === RESEARCH DATA (Blocksafu Style) === --}}
-        <div class=" mt-4 max-w-5xl mx-auto px-2">
-            
-            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-2xl">
+    <div class="flex justify-center gap-2 mt-4 relative z-10" id="bannerDots"></div>
 
-                {{-- Title --}}
-                <h3 class="text-dark text-lg md:text-xl font-semibold ">
-                    Research Data
-                </h3>
-
-                {{-- Input + Action --}}
-                <div class="flex flex-col md:flex-row gap-4">
-
-                    {{-- Input --}}
-                    <div class="flex-1">
-                        <input type="text"
-                            placeholder="Masukkan data penelitian / ID / keyword..."
-                            class="w-full rounded-2xl px-5 py-3 bg-blu-800 text-white placeholder-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-                    </div>
-
-                    {{-- Select --}}
-                    <div>
-                        <select class="rounded-2xl px-4 py-3 bg-gray-800 text-white border border-gray-700 focus:outline-none">
-                            <option>Semua Kategori</option>
-                            <option>Penelitian</option>
-                            <option>Event</option>
-                            <option>Anggota</option>
-                        </select>
-                    </div>
-
-                    {{-- Button --}}
-                    <div>
-                        <button class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-2xl transition">
-                            🔍 Cari Data
-                        </button>
-                    </div>
-
+    {{-- ── Research Data Search Box (doc2) ── --}}
+    <div class="mt-6 max-w-5xl mx-auto px-4 relative z-10">
+        <div class="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-2xl border border-gray-100 dark:border-gray-800">
+            <h3 class="text-gray-900 dark:text-white text-lg md:text-xl font-semibold mb-4">
+                Research Data
+            </h3>
+            <div class="flex flex-col md:flex-row gap-4">
+                {{-- Input --}}
+                <div class="flex-1">
+                    <input type="text"
+                           placeholder="Masukkan data penelitian / ID / keyword..."
+                           class="w-full rounded-2xl px-5 py-3 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition">
                 </div>
-
+                {{-- Select --}}
+                <div>
+                    <select class="rounded-2xl px-4 py-3 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition">
+                        <option>Semua Kategori</option>
+                        <option>Penelitian</option>
+                        <option>Event</option>
+                        <option>Anggota</option>
+                    </select>
+                </div>
+                {{-- Button --}}
+                <div>
+                    <button class="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-medium px-6 py-3 rounded-2xl transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+                        </svg>
+                        Cari Data
+                    </button>
+                </div>
             </div>
-
         </div>
+    </div>
 
 </div>
-{{-- END SLIDESHOW BANNER --}}
+{{-- END BANNER SLIDER --}}
 
 
-{{-- Hero --}}
+{{-- ── Hero Text ── --}}
 <section class="relative bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 text-white py-16 overflow-hidden">
-    {{-- Grid kotak-kotak overlay --}}
     <div class="absolute inset-0 pointer-events-none"
          style="background-image: linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px); background-size: 40px 40px; z-index:0;"></div>
     <div class="absolute inset-0 opacity-10" style="z-index:1;">
@@ -219,7 +268,8 @@
     </div>
 </section>
 
-{{-- Stats --}}
+
+{{-- ── Stats ── --}}
 <section class="py-12 bg-white dark:bg-gray-800 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-3 gap-6 text-center">
@@ -229,7 +279,7 @@
             </div>
             <div data-aos="fade-down-right">
                 <div class="text-4xl font-bold text-primary-600 dark:text-primary-400">{{ number_format($stats['events']) }}+</div>
-                <div class="text-gray-500 dark:text-gray-400 mt-1">Kegiatan</div>
+                <div class="text-gray-500 dark:text-gray-400 mt-1">Kegiatan Terlaksana</div>
             </div>
             <div data-aos="fade-down-right">
                 <div class="text-4xl font-bold text-primary-600 dark:text-primary-400">{{ number_format($stats['articles']) }}+</div>
@@ -240,22 +290,19 @@
 </section>
 
 
-{{-- =============================================
-     ANNOUNCEMENTS — style gambar 1
-     (icon + judul kiri, filter kategori + card carousel kanan)
-     ============================================= --}}
-@if($announcements->count())
+{{-- ════════════════════════════════════════════════
+     ANNOUNCEMENTS — filter tab + card carousel (doc2)
+════════════════════════════════════════════════ --}}
+@if(isset($announcements) && $announcements->count())
 <section class="py-12 bg-primary-50 dark:bg-primary-900/10 relative overflow-hidden">
-    {{-- Grid kotak-kotak --}}
     <div class="absolute inset-0 pointer-events-none"
          style="background-image: linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px); background-size: 40px 40px;"></div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
 
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div class="flex flex-col md:flex-row gap-8 items-start">
 
             {{-- ── LEFT: icon + title + CTA ── --}}
-            {{-- <div class="flex-shrink-0 md:w-56">
-                
+            <div class="flex-shrink-0 md:w-56">
                 <div class="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-800 flex items-center justify-center mb-4">
                     <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -269,54 +316,47 @@
                    class="inline-block text-sm font-semibold text-primary-600 dark:text-primary-400 bg-primary-100 dark:bg-primary-800 px-5 py-2.5 rounded-xl hover:bg-primary-200 dark:hover:bg-primary-700 transition">
                     Lihat semua pengumuman
                 </a>
-            </div> --}}
+            </div>
 
-            {{-- ── RIGHT: filter tabs + announcement cards ── --}}
+            {{-- ── RIGHT: filter tabs + cards ── --}}
             <div class="flex-1 min-w-0">
 
-                {{-- Filter tabs (like gambar 1: Semua, Pesawat, Hotel…) --}}
+                {{-- Filter tabs --}}
                 <div class="flex gap-2 flex-wrap mb-5" id="annFilterTabs">
                     <button data-filter="semua"
-                            class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition
-                                   bg-primary-600 text-white border-primary-600">
+                            class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition bg-primary-600 text-white border-primary-600">
                         Semua
                     </button>
                     <button data-filter="pinned"
-                            class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition
-                                   border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-400">
+                            class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-400">
                         📌 Penting
                     </button>
                     <button data-filter="umum"
-                            class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition
-                                   border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-400">
+                            class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-400">
                         Umum
                     </button>
                     <button data-filter="kegiatan"
-                            class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition
-                                   border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-400">
+                            class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-400">
                         Kegiatan
                     </button>
                     <button data-filter="info"
-                            class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition
-                                   border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-400">
+                            class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-400">
                         Info
                     </button>
                 </div>
 
-                {{-- Cards container (horizontal scroll) --}}
+                {{-- Card carousel --}}
                 <div class="relative">
                     <div class="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory scroll-smooth" id="annCarouselInner"
                          style="scrollbar-width:none; -ms-overflow-style:none;">
 
-                        @foreach($announcements as $i => $ann)
+                        @foreach($announcements as $ann)
                         <div class="ann-card snap-start flex-shrink-0 w-72 bg-white dark:bg-gray-800 rounded-2xl border border-primary-100 dark:border-gray-700 shadow-sm overflow-hidden"
                              data-category="{{ $ann->is_pinned ? 'pinned' : 'umum' }}">
 
-                            {{-- Card colour strip --}}
                             <div class="h-2 {{ $ann->is_pinned ? 'bg-amber-400' : 'bg-primary-500' }}"></div>
 
                             <div class="p-5">
-                                {{-- Pin badge --}}
                                 @if($ann->is_pinned)
                                 <span class="inline-flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-300 px-2.5 py-0.5 rounded-full mb-3">
                                     📌 Penting
@@ -333,10 +373,11 @@
                                 <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-3">
                                     {{ Str::limit($ann->content, 120) }}
                                 </p>
-
                                 <a href="#" class="inline-flex items-center gap-1 mt-4 text-xs font-semibold text-primary-600 dark:text-primary-400 hover:underline">
                                     Baca selengkapnya
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                    </svg>
                                 </a>
                             </div>
                         </div>
@@ -345,20 +386,26 @@
                     </div>
                 </div>
 
-                {{-- Pagination counter (like "9/10" in gambar 1) --}}
+                {{-- Pagination nav --}}
                 <div class="flex items-center gap-3 mt-4">
                     <button id="annPrev"
                             class="w-9 h-9 bg-white dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition shadow-sm">
-                        <svg class="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        <svg class="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
                     </button>
                     <button id="annNext"
                             class="w-9 h-9 bg-white dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition shadow-sm">
-                        <svg class="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        <svg class="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
                     </button>
                     <div class="flex-1 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden ml-2">
-                        <div id="annProgressBar" class="h-full bg-gray-400 dark:bg-gray-500 rounded-full transition-all duration-300" style="width:0%"></div>
+                        <div id="annProgressBar" class="h-full bg-primary-400 dark:bg-primary-500 rounded-full transition-all duration-300" style="width:0%"></div>
                     </div>
-                    <span id="annCounter" class="text-xs text-gray-500 dark:text-gray-400 font-medium ml-1">1/{{ $announcements->count() }}</span>
+                    <span id="annCounter" class="text-xs text-gray-500 dark:text-gray-400 font-medium ml-1">
+                        1/{{ $announcements->count() }}
+                    </span>
                 </div>
 
             </div>
@@ -369,7 +416,7 @@
 {{-- END ANNOUNCEMENTS --}}
 
 
-{{-- Latest Articles --}}
+{{-- ── Latest Articles ── --}}
 <section class="py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between mb-8">
@@ -384,9 +431,11 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2"/>
                     </svg>
                 </div>
-                <div class="p-5" data-aos="fade-right">
+                <div class="p-5">
                     @if($article->category)
-                    <span class="inline-block text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 px-2.5 py-0.5 rounded-full mb-3">{{ $article->category->name }}</span>
+                    <span class="inline-block text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 px-2.5 py-0.5 rounded-full mb-3">
+                        {{ $article->category->name }}
+                    </span>
                     @endif
                     <h3 class="font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition line-clamp-2">
                         <a href="{{ route('articles.show', $article->slug) }}">{{ $article->title }}</a>
@@ -403,8 +452,9 @@
     </div>
 </section>
 
-{{-- Upcoming Events --}}
-@if($events->count())
+
+{{-- ── Upcoming Events ── --}}
+@if(isset($events) && $events->count())
 <section class="py-16 bg-gray-50 dark:bg-gray-800/50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between mb-8">
@@ -422,11 +472,18 @@
                     <h3 class="font-semibold text-gray-900 dark:text-white truncate">{{ $event->title }}</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $event->location ?? 'Online' }}</p>
                     <div class="flex items-center gap-2 mt-2">
-                        @if($event->is_member_only)<span class="text-xs bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 px-2 py-0.5 rounded-full">Member Only</span>@endif
-                        @if($event->is_free)<span class="text-xs bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-full">Gratis</span>@endif
+                        @if($event->is_member_only)
+                        <span class="text-xs bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 px-2 py-0.5 rounded-full">Member Only</span>
+                        @endif
+                        @if($event->is_free)
+                        <span class="text-xs bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-full">Gratis</span>
+                        @endif
                     </div>
                 </div>
-                <a href="{{ route('events.show', $event->slug) }}" class="flex-shrink-0 self-center text-primary-600 dark:text-primary-400 hover:underline text-sm">Detail →</a>
+                <a href="{{ route('events.show', $event->slug) }}"
+                   class="flex-shrink-0 self-center text-primary-600 dark:text-primary-400 hover:underline text-sm">
+                    Detail →
+                </a>
             </div>
             @endforeach
         </div>
@@ -434,13 +491,16 @@
 </section>
 @endif
 
-{{-- CTA --}}
-<section class="py-20 mx-20 md:mx-5 rounded-3xl bg-primary-600 dark:bg-primary-800 text-white text-center relative overflow-hidden" data-aos="zoom-in-down">
+
+{{-- ── CTA ── --}}
+<section class="py-20 mx-4 md:mx-20 rounded-3xl bg-primary-600 dark:bg-primary-800 text-white text-center relative overflow-hidden my-10" data-aos="zoom-in-down">
     <div class="absolute inset-0 rounded-3xl pointer-events-none"
          style="background-image: linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px); background-size: 40px 40px;"></div>
     <div class="max-w-2xl mx-auto px-4 relative" style="z-index:1;">
         <h2 class="text-3xl font-bold mb-4">{{ $s('cta_title', 'Bergabunglah dengan HPMI') }}</h2>
-        <p class="text-primary-100 mb-8 text-lg">{{ $s('cta_subtitle', 'Tingkatkan kompetensi Anda bersama ribuan perawat manajer profesional di seluruh Indonesia.') }}</p>
+        <p class="text-primary-100 mb-8 text-lg">
+            {{ $s('cta_subtitle', 'Tingkatkan kompetensi Anda bersama ribuan perawat manajer profesional di seluruh Indonesia.') }}
+        </p>
         @if($s('feature_registration', '1') === '1')
         <a href="{{ route('register') }}" class="inline-flex items-center px-8 py-4 bg-white text-primary-700 font-semibold rounded-xl hover:bg-primary-50 transition shadow-lg text-lg">
             {{ $s('cta_button_text', 'Daftar Sekarang') }}
@@ -452,142 +512,142 @@
 </section>
 
 
-{{-- =============================================
-     JAVASCRIPT
-     ============================================= --}}
+{{-- ════════════════════════════════════════════════
+     JAVASCRIPT — Banner Carousel 3D Peek + Announcement Carousel
+════════════════════════════════════════════════ --}}
 <script>
 (function () {
-    /* ────────────────────────────────────────────
-       BANNER CAROUSEL (style gambar 2)
-    ──────────────────────────────────────────── */
-    const track     = document.getElementById('bannerTrack');
-    const slides    = Array.from(track.querySelectorAll('.banner-slide'));
-    const prevBtn   = document.getElementById('bannerPrev');
-    const nextBtn   = document.getElementById('bannerNext');
-    const dotsWrap  = document.getElementById('bannerDots');
-    const total     = slides.length;
-    let current     = 0;
-    let autoTimer;
+
+    /* ─────────────────────────────────────────────
+       1. BANNER CAROUSEL — 3D peek style (doc2)
+    ───────────────────────────────────────────── */
+    const track    = document.getElementById('bannerTrack');
+    const dotsWrap = document.getElementById('bannerDots');
+    const prevBtn  = document.getElementById('bannerPrev');
+    const nextBtn  = document.getElementById('bannerNext');
+
+    if (!track) return;
+
+    const slides = Array.from(track.querySelectorAll('.banner-slide'));
+    const total  = slides.length;
+    if (!total) return;
+
+    let current   = 0;
+    let autoTimer = null;
 
     // Build dots
-    slides.forEach((_, i) => {
-        const d = document.createElement('button');
-        d.className = 'w-2 h-2 rounded-full transition-all duration-300 ' +
-            (i === 0 ? 'bg-primary-600 w-5' : 'bg-gray-300 dark:bg-gray-600');
-        d.setAttribute('aria-label', 'Slide ' + (i + 1));
-        d.addEventListener('click', () => goTo(i));
-        dotsWrap.appendChild(d);
-    });
+    if (dotsWrap && total > 1) {
+        slides.forEach((_, i) => {
+            const d = document.createElement('button');
+            d.setAttribute('aria-label', 'Slide ' + (i + 1));
+            d.addEventListener('click', () => { stopAuto(); goTo(i); startAuto(); });
+            dotsWrap.appendChild(d);
+        });
+    }
 
     function updateDots() {
+        if (!dotsWrap) return;
         Array.from(dotsWrap.children).forEach((d, i) => {
-            if (i === current) {
-                d.className = 'w-5 h-2 rounded-full transition-all duration-300 bg-primary-600';
-            } else {
-                d.className = 'w-2 h-2 rounded-full transition-all duration-300 bg-gray-300 dark:bg-gray-600';
-            }
+            d.className = i === current
+                ? 'w-5 h-2 rounded-full transition-all duration-300 bg-primary-600 dark:bg-primary-400'
+                : 'w-2 h-2 rounded-full transition-all duration-300 bg-gray-300 dark:bg-gray-600';
         });
     }
 
     function updateBanner() {
-        const trackW = track.offsetWidth;
-
         slides.forEach((slide, i) => {
-            const offset = i - current;
+            const offset    = i - current;
             const absOffset = Math.abs(offset);
 
             if (absOffset > 2) {
-                slide.style.opacity = '0';
+                slide.style.opacity       = '0';
                 slide.style.pointerEvents = 'none';
-                slide.style.transform = `translateX(${offset > 0 ? 200 : -200}%) scale(0.5)`;
+                slide.style.transform     = `translateX(${offset > 0 ? 200 : -200}%) scale(0.5)`;
+                slide.style.zIndex        = '0';
                 return;
             }
 
-            const isCurrent = offset === 0;
-            const isAdjacent = absOffset === 1;
+            const scale   = offset === 0 ? 1 : absOffset === 1 ? 0.82 : 0.68;
+            const opacity = offset === 0 ? 1 : absOffset === 1 ? 0.55 : 0.3;
+            const transX  = offset * 72; // % shift
 
-            // Position: centre slide fills centre, adjacent peek from sides
-            const translateX = offset * 72; // % shift per step
-            const scale = isCurrent ? 1 : isAdjacent ? 0.82 : 0.68;
-            const opacity = isCurrent ? 1 : isAdjacent ? 0.55 : 0.3;
-            const zIndex  = total - absOffset;
-
-            slide.style.transform  = `translateX(${translateX}%) scale(${scale})`;
-            slide.style.opacity    = opacity;
-            slide.style.zIndex     = zIndex;
-            slide.style.pointerEvents = isCurrent ? 'auto' : 'none';
+            slide.style.transform     = `translateX(${transX}%) scale(${scale})`;
+            slide.style.opacity       = opacity;
+            slide.style.zIndex        = String(total - absOffset);
+            slide.style.pointerEvents = offset === 0 ? 'auto' : 'none';
         });
 
         updateDots();
     }
 
     function goTo(n) {
-        current = (n + total) % total;
+        current = ((n % total) + total) % total;
         updateBanner();
     }
 
-    function next() { goTo(current + 1); }
-    function prev() { goTo(current - 1); }
-
-    prevBtn.addEventListener('click', () => { clearInterval(autoTimer); prev(); startAuto(); });
-    nextBtn.addEventListener('click', () => { clearInterval(autoTimer); next(); startAuto(); });
-
+    function stopAuto() { clearInterval(autoTimer); }
     function startAuto() {
-        autoTimer = setInterval(next, 5000);
+        if (total <= 1) return;
+        autoTimer = setInterval(() => goTo(current + 1), 5000);
     }
+
+    if (prevBtn) prevBtn.addEventListener('click', () => { stopAuto(); goTo(current - 1); startAuto(); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { stopAuto(); goTo(current + 1); startAuto(); });
+
+    // Touch swipe
+    let touchStartX = 0;
+    track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend', e => {
+        const diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) { stopAuto(); goTo(current + (diff > 0 ? 1 : -1)); startAuto(); }
+    }, { passive: true });
 
     updateBanner();
     startAuto();
 
 
-    /* ────────────────────────────────────────────
-       ANNOUNCEMENT CAROUSEL (style gambar 1)
-    ──────────────────────────────────────────── */
-    const annInner  = document.getElementById('annCarouselInner');
-    const annPrev   = document.getElementById('annPrev');
-    const annNext   = document.getElementById('annNext');
-    const annBar    = document.getElementById('annProgressBar');
-    const annCount  = document.getElementById('annCounter');
+    /* ─────────────────────────────────────────────
+       2. ANNOUNCEMENT CAROUSEL + FILTER (doc2)
+    ───────────────────────────────────────────── */
+    const annInner   = document.getElementById('annCarouselInner');
+    const annPrev    = document.getElementById('annPrev');
+    const annNext    = document.getElementById('annNext');
+    const annBar     = document.getElementById('annProgressBar');
+    const annCount   = document.getElementById('annCounter');
     const filterBtns = document.querySelectorAll('.ann-filter-btn');
-    const allCards  = Array.from(document.querySelectorAll('.ann-card'));
+    const allCards   = Array.from(document.querySelectorAll('.ann-card'));
 
     if (!annInner) return;
 
-    const cardW = () => {
+    const cardWidth = () => {
         const c = annInner.querySelector('.ann-card');
-        return c ? c.offsetWidth + 16 : 288; // card width + gap
+        return c ? c.offsetWidth + 16 : 288;
     };
 
     function updateAnnUI() {
-        const visible = Array.from(annInner.querySelectorAll('.ann-card:not([style*="display: none"])'));
-        const total   = visible.length;
-        if (!total) { annBar.style.width = '0%'; annCount.textContent = '0/0'; return; }
+        const visible = allCards.filter(c => c.style.display !== 'none');
+        const tot     = visible.length;
+        if (!tot) { if (annBar) annBar.style.width = '0%'; if (annCount) annCount.textContent = '0/0'; return; }
 
         const scrolled = annInner.scrollLeft;
-        const max      = annInner.scrollWidth - annInner.clientWidth;
-        const pct      = max > 0 ? (scrolled / max) * 100 : 0;
-        annBar.style.width = pct + '%';
+        const maxScroll = annInner.scrollWidth - annInner.clientWidth;
+        const pct = maxScroll > 0 ? (scrolled / maxScroll) * 100 : 0;
+        if (annBar) annBar.style.width = pct + '%';
 
-        // Estimate current index
-        const idx = Math.round(scrolled / cardW()) + 1;
-        annCount.textContent = Math.min(idx, total) + '/' + total;
+        const idx = Math.round(scrolled / cardWidth()) + 1;
+        if (annCount) annCount.textContent = Math.min(idx, tot) + '/' + tot;
     }
 
     annInner.addEventListener('scroll', updateAnnUI);
 
-    annPrev.addEventListener('click', () => {
-        annInner.scrollBy({ left: -cardW(), behavior: 'smooth' });
-    });
-    annNext.addEventListener('click', () => {
-        annInner.scrollBy({ left: cardW(), behavior: 'smooth' });
-    });
+    if (annPrev) annPrev.addEventListener('click', () => annInner.scrollBy({ left: -cardWidth(), behavior: 'smooth' }));
+    if (annNext) annNext.addEventListener('click', () => annInner.scrollBy({ left:  cardWidth(), behavior: 'smooth' }));
 
     // Filter tabs
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const filter = btn.dataset.filter;
 
-            // Update active tab style
             filterBtns.forEach(b => {
                 b.classList.remove('bg-primary-600', 'text-white', 'border-primary-600');
                 b.classList.add('border-gray-300', 'dark:border-gray-600', 'text-gray-700', 'dark:text-gray-300');
@@ -595,9 +655,8 @@
             btn.classList.add('bg-primary-600', 'text-white', 'border-primary-600');
             btn.classList.remove('border-gray-300', 'dark:border-gray-600', 'text-gray-700', 'dark:text-gray-300');
 
-            // Show/hide cards
             allCards.forEach(card => {
-                const cat = card.dataset.category;
+                const cat  = card.dataset.category;
                 const show = filter === 'semua' || cat === filter;
                 card.style.display = show ? '' : 'none';
             });
@@ -608,7 +667,8 @@
     });
 
     updateAnnUI();
-})();
+
+}());
 </script>
 
 @endsection
