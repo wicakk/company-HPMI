@@ -8,77 +8,77 @@ use App\Models\SiteSetting;
 
 class PaymentController extends Controller
 {
-   public function index()
+    public function index()
     {
         $user    = auth()->user();
         $member  = $user->member;
-        $pending = $member?->payments()->whereIn('status', ['pending','waiting'])->latest()->first();
+        $pending = $member?->payments()->whereIn('status', ['pending', 'waiting'])->latest()->first();
 
-        // Ambil bank dari site_settings
         $banks = collect(range(1, 5))->map(fn($i) => [
             'bank_name'      => SiteSetting::get("bank_{$i}_name"),
             'account_number' => SiteSetting::get("bank_{$i}_number"),
             'account_name'   => SiteSetting::get("bank_{$i}_owner"),
             'active'         => SiteSetting::get("bank_{$i}_active") === '1',
-        ])->filter(fn($b) => $b['active'] && $b['bank_name']);
+        ])->filter(fn($b) => $b['active'] && $b['bank_name'])->values();
 
-        return view('member.payment.index', compact('user', 'member', 'pending', 'banks'));
+        $settings = SiteSetting::all_map();
+
+        return view('member.payment.index', compact('user', 'member', 'pending', 'banks', 'settings'));
     }
 
-    /** Ajukan upgrade premium - buat tagihan VA */
+    /** Ajukan upgrade — langsung upload bukti sekaligus */
     public function pay(Request $request)
     {
         $user   = auth()->user();
         $member = $user->member;
-        if (!$member) return back()->with('error', 'Data member tidak ditemukan.');
 
-        // Sudah premium
-        if ($user->isPremium()) {
-            return back()->with('info', 'Anda sudah menjadi anggota Premium.');
-        }
+        if (!$member)           return back()->with('error', 'Data member tidak ditemukan.');
+        if ($user->isPremium()) return back()->with('info', 'Anda sudah menjadi anggota Premium.');
 
-        // Sudah ada pengajuan pending
-        $existing = $member->payments()->where('status', 'pending')->first();
-        if ($existing) {
-            return back()->with('info', 'Pengajuan upgrade Premium Anda sedang diproses.');
-        }
+        $existing = $member->payments()->whereIn('status', ['pending', 'waiting'])->first();
+        if ($existing) return back()->with('info', 'Pengajuan upgrade Premium Anda sedang diproses.');
 
-        $member->payments()->create([
-            'amount'     => 300000,
-            'type'       => 'registration',
-            'status'     => 'pending',
-            'va_number'  => '88808' . rand(1000000, 9999999),
-            'expired_at' => now()->addDay(),
+        $request->validate([
+            'target_bank'    => 'required|string|max:150',
+            'sender_name'    => 'required|string|max:100',
+            'payment_method' => 'required|string|max:100',
+            'transfer_date'  => 'required|date|before_or_equal:today',
+            'proof'          => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        ], [
+            'target_bank.required'    => 'Pilih rekening tujuan transfer.',
+            'sender_name.required'    => 'Nama pengirim wajib diisi.',
+            'payment_method.required' => 'Bank/e-wallet pengirim wajib diisi.',
+            'transfer_date.required'  => 'Tanggal transfer wajib diisi.',
+            'proof.required'          => 'Bukti transfer wajib diupload.',
+            'proof.image'             => 'File harus berupa gambar (JPG/PNG).',
+            'proof.max'               => 'Ukuran file maksimal 2 MB.',
         ]);
 
-        // Tandai member sedang menunggu validasi admin
+        $proofPath = $request->file('proof')->store('proofs', 'public');
+        $amount    = (int) SiteSetting::get('billing_registration_fee', 300000);
+
+        $member->payments()->create([
+            'amount'         => $amount,
+            'type'           => 'registration',
+            'status'         => 'waiting',
+            'payment_method' => $request->payment_method,
+            'sender_name'    => $request->sender_name,
+            'transfer_date'  => $request->transfer_date,
+            'proof_path'     => $proofPath,
+            'notes'          => 'Transfer ke: ' . $request->target_bank,
+            'expired_at'     => now()->addDays(3),
+        ]);
+
         $member->update(['status' => 'premium_pending']);
 
         return redirect()->route('member.payment')
-            ->with('success', 'Tagihan berhasil dibuat! Selesaikan pembayaran lalu konfirmasi di bawah.');
+            ->with('success', 'Pengajuan berhasil dikirim! Bukti transfer Anda sedang divalidasi admin dalam 1×24 jam.');
     }
 
-    /** Member konfirmasi sudah transfer → menunggu validasi admin */
-    public function simulateConfirm(Request $request, int $id)
+    /** Konfirmasi untuk payment yang sudah ada (state 3) — opsional, bisa dihapus */
+    public function confirm(Request $request, int $id)
     {
-        $member  = auth()->user()->member;
-        $payment = Payment::where('id', $id)
-            ->where('member_id', $member->id)
-            ->where('status', 'pending')
-            ->firstOrFail();
-
-        $request->validate([
-            'payment_method' => 'required|in:bca,bni,mandiri,bri,dana,gopay,ovo',
-        ]);
-
-        // Simpan metode bayar, tapi status tetap pending (menunggu validasi admin)
-        $payment->update([
-            'payment_method' => strtoupper($request->payment_method),
-            'notes'          => 'Member mengkonfirmasi sudah transfer. Menunggu validasi admin.',
-        ]);
-
-        return redirect()->route('member.payment')
-            ->with('success', '✅ Konfirmasi diterima! Akun Premium Anda sedang divalidasi oleh admin (1x24 jam).');
+        return redirect()->route('member.payment');
     }
 
     public function history()

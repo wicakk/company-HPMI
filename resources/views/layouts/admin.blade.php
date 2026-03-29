@@ -96,7 +96,7 @@
     ];
     $badges = [
       'pending_members' => \App\Models\Member::where('status','pending')->count(),
-      'pending_payments' => \App\Models\Payment::where('status','pending')->count(),
+      'pending_payments' => \App\Models\Payment::whereIn('status', ['pending', 'waiting'])->count(),
       'unread_messages' => \App\Models\ContactMessage::where('is_read',false)->count(),
     ];
     @endphp

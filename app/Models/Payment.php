@@ -8,7 +8,10 @@ class Payment extends Model
     protected $fillable = [
         'member_id','invoice_no','amount','type','status',
         'va_number','payment_method','paid_at','expired_at','notes',
+        'sender_name','transfer_date','proof_path', // ← pastikan ini ada
     ];
+
+    public function isWaiting(): bool { return $this->status === 'waiting'; }
     protected $casts = ['paid_at' => 'datetime', 'expired_at' => 'datetime', 'amount' => 'decimal:2'];
 
     public function member() { return $this->belongsTo(Member::class); }

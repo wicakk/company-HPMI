@@ -80,10 +80,10 @@ class MemberAdminController extends Controller
     public function rejectPayment($id)
     {
         $payment = Payment::findOrFail($id);
+        $payment->update(['status' => 'rejected']); // ✅ sudah ada di enum sekarang
 
-        // Pastikan value sesuai ENUM di database
-        $payment->status = 'rejected'; // gunakan 'rejected', bukan 'ditolak'
-        $payment->save();
+        // Reset member ke free jika ditolak
+        $payment->member->update(['status' => 'free']);
 
         return redirect()->route('admin.payments.index')
             ->with('success', 'Pembayaran ditolak.');
