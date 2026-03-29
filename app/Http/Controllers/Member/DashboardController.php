@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Member;
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
 use App\Models\Journal;
+use App\Models\SiteSetting;
 use App\Models\Ebook;
 
 class DashboardController extends Controller
@@ -19,6 +20,7 @@ class DashboardController extends Controller
     // }
 
     $user          = auth()->user();
+    $setting             = SiteSetting::all_map();
     $member        = $user->member;
     $registrations = $member?->eventRegistrations ?? collect();
     $announcements = Announcement::active()->where(fn($q) => $q->where('is_member_only',false)->orWhere('is_member_only',true))
@@ -33,7 +35,7 @@ class DashboardController extends Controller
                    ->latest()->take(4)->get();
 
     return view('member.dashboard.index', compact(
-        'user', 'member', 'registrations', 'announcements', 'journals', 'ebooks'
+        'user','setting', 'member', 'registrations', 'announcements', 'journals', 'ebooks'
     ));
 }   
 }

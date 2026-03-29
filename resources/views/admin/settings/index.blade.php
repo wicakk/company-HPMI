@@ -627,7 +627,7 @@
               <select name="billing_membership_duration"
                 class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700/50 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition appearance-none cursor-pointer">
                 <option value="">-- Pilih Durasi --</option>
-                @foreach(['1 Bulan','3 Bulan','6 Bulan','1 Tahun'] as $dur)
+                @foreach(['1 Bulan','3 Bulan','6 Bulan','1 Tahun','Selamanya'] as $dur)
                 <option value="{{ $dur }}" {{ ($settings['billing_membership_duration']?->value === $dur) ? 'selected' : '' }}>{{ $dur }}</option>
                 @endforeach
               </select>

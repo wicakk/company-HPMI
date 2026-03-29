@@ -46,7 +46,7 @@
                 <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             </div>
             <div class="flex-1">
-                <p class="font-black text-amber-900 dark:text-amber-200 text-sm">Upgrade ke Premium — Rp 300.000/tahun</p>
+                <p class="font-black text-amber-900 dark:text-amber-200 text-sm">Upgrade ke Premium — {{ $setting['billing_registration_fee'] ?? '-' }}/{{ $setting['billing_membership_duration'] ?? '-' }}</p>
                 <p class="text-amber-700 dark:text-amber-400 text-xs mt-1">Akses <strong>semua materi edukasi</strong>, webinar eksklusif, sertifikat resmi, dan lebih banyak konten.</p>
             </div>
             <a href="{{ route('member.payment') }}" class="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black text-sm rounded-xl shadow-lg shadow-amber-500/30 transition">
@@ -73,7 +73,8 @@
         @php $statsCards = [
             ['label'=>'Status Akun','value'=>$user->isPremium()?'Premium':($user->isPremiumPending()?'Pending':'Gratis'),'icon'=>'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z','color'=>$user->isPremium()?'amber':($user->isPremiumPending()?'blue':'slate')],
             ['label'=>'Bergabung','value'=>$member->joined_at ? \Carbon\Carbon::parse($member->joined_at)->format('M Y') : '—','icon'=>'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z','color'=>'blue'],
-            ['label'=>'Premium Hingga','value'=>$member->expired_at ? \Carbon\Carbon::parse($member->expired_at)->format('M Y') : '—','icon'=>'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z','color'=>'emerald'],
+            // ['label'=>'Premium Hingga','value'=>$member->expired_at ? \Carbon\Carbon::parse($member->expired_at)->format('M Y') : '—','icon'=>'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z','color'=>'emerald'],
+            ['label'=>'Premium Hingga','value'=>$member->expired_at ? "Selamanya" : '—','icon'=>'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z','color'=>'emerald'],
             ['label'=>'Kegiatan Diikuti','value'=>$registrations->count(),'icon'=>'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z','color'=>'violet'],
         ];
         $cm=['amber'=>'bg-amber-50 dark:bg-amber-900/20','blue'=>'bg-blue-50 dark:bg-blue-900/20','emerald'=>'bg-emerald-50 dark:bg-emerald-900/20','violet'=>'bg-violet-50 dark:bg-violet-900/20','slate'=>'bg-slate-100 dark:bg-slate-800'];
