@@ -569,6 +569,94 @@
 {{-- END ANNOUNCEMENTS --}}
 
 
+{{-- Layanan --}}
+{{-- Layanan --}}
+@if(isset($layanans) && $layanans->count())
+<section class="py-16 bg-gray-50 dark:bg-gray-800/30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+ 
+        {{-- Section Header --}}
+        <div class="flex items-center justify-between mb-10">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Layanan Kami</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    Layanan medis terpercaya untuk Anda dan keluarga.
+                </p>
+            </div>
+            <a href="{{ route('layanan.index') }}"
+               class="text-primary-600 dark:text-primary-400 text-sm hover:underline">
+                Lihat semua →
+            </a>
+        </div>
+ 
+        @if(isset($grouped) && !$grouped->isEmpty())
+ 
+            @foreach($grouped as $kategori => $items)
+            <div class="mb-12">
+                {{-- Kategori label --}}
+                <div class="flex items-center gap-3 mb-6">
+                    <h3 class="text-base font-semibold text-gray-700 dark:text-gray-300">
+                        {{ $kategori }}
+                    </h3>
+                    <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
+                    <span class="text-xs text-gray-400">{{ $items->count() }} layanan</span>
+                </div>
+ 
+                {{-- Grid kartu --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" data-aos="fade-up">
+                    @foreach($items as $layanan)
+                    <a href="{{ route('layanan.show', $layanan->slug) }}"
+                       class="group bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700
+                              p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+ 
+                        {{-- Ikon --}}
+                        <div class="w-14 h-14 rounded-2xl bg-primary-50 dark:bg-primary-900/30
+                                    flex items-center justify-center text-3xl mb-5
+                                    group-hover:bg-primary-100 dark:group-hover:bg-primary-900/50 transition-colors">
+                            {{ $layanan->ikon ?? '🏥' }}
+                        </div>
+ 
+                        {{-- Nama --}}
+                        <h4 class="text-base font-bold text-gray-900 dark:text-white mb-2
+                                   group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                            {{ $layanan->nama }}
+                        </h4>
+ 
+                        {{-- Deskripsi --}}
+                        <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-5 line-clamp-3">
+                            {{ $layanan->deskripsi_singkat }}
+                        </p>
+ 
+                        {{-- CTA --}}
+                        <span class="inline-flex items-center gap-1
+                                     text-primary-600 dark:text-primary-400 text-sm font-semibold">
+                            Selengkapnya
+                            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </span>
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+            @endforeach
+ 
+        @else
+            <div class="text-center py-16 text-gray-400 dark:text-gray-500">
+                <p class="text-base">Belum ada layanan yang tersedia saat ini.</p>
+            </div>
+        @endif
+ 
+    </div>
+</section>
+@endif
+{{-- end layanan --}}
+
+
+
+
 {{-- ── Latest Articles ── --}}
 <section class="py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

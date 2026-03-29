@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\{Article, Event, Announcement, Member, SiteSetting, User};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Layanan;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
@@ -42,7 +44,6 @@ class HomeController extends Controller
         // ── Stats ──
         $stats = [
             'members'  => Member::count(),
-            // 'events'   => Event::where('status', 'completed')->count(),
             'events'   => Event::all()->count(),
             'articles' => Article::where('status', 'published')->count(),
         ];
@@ -67,7 +68,11 @@ class HomeController extends Controller
             ->limit(10)
             ->get();
 
-        // ── Default search state (PENTING biar Blade aman) ──
+        // ── Layanan (tampil di homepage) ──
+        $layanans = Layanan::aktif()->urut()->get();
+        $grouped  = $layanans->groupBy('kategori');
+
+        // ── Default search state ──
         $keyword  = '';
         $category = 'semua';
         $members  = collect();
@@ -81,7 +86,9 @@ class HomeController extends Controller
             'announcements',
             'keyword',
             'category',
-            'members'
+            'members',
+            'layanans',
+            'grouped',
         ));
     }
 
@@ -130,7 +137,7 @@ class HomeController extends Controller
             }
         }
 
-        // ── Shared data (WAJIB biar Blade tidak error) ──
+        // ── Shared data ──
         $settings = SiteSetting::all()->keyBy('key');
 
         $stats = [
@@ -139,9 +146,12 @@ class HomeController extends Controller
             'articles' => Article::where('status', 'published')->count(),
         ];
 
-        // ❗ penting: tetap kirim walaupun kosong
         $announcements = collect();
         $bannerSlides  = collect();
+
+        // ── Layanan tetap dikirim agar section tidak error ──
+        $layanans = Layanan::aktif()->urut()->get();
+        $grouped  = $layanans->groupBy('kategori');
 
         return view('public.home', compact(
             'keyword',
@@ -152,7 +162,33 @@ class HomeController extends Controller
             'settings',
             'stats',
             'announcements',
-            'bannerSlides'
+            'bannerSlides',
+            'layanans',
+            'grouped',
         ));
+    }
+
+    // ── Halaman dedicated daftar layanan ─────────────────────────────────────
+    public function indexLayanan(): View
+    {
+        $layanans = Layanan::aktif()->urut()->get();
+        $grouped  = $layanans->groupBy('kategori');
+
+        return view('public.layanan.index', compact('layanans', 'grouped'));
+    }
+
+    // ── Detail satu layanan ───────────────────────────────────────────────────
+    public function show(string $slug): View
+    {
+        $layanan = Layanan::aktif()->where('slug', $slug)->firstOrFail();
+
+        $related = Layanan::aktif()
+            ->urut()
+            ->where('id', '!=', $layanan->id)
+            ->where('kategori', $layanan->kategori)
+            ->limit(3)
+            ->get();
+
+        return view('public.layanan.show', compact('layanan', 'related'));
     }
 }

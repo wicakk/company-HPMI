@@ -27,11 +27,13 @@ use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\JournalController;
 use App\Http\Controllers\Admin\BankAccountController;
+use App\Http\Controllers\Admin\LayananController;
 
 
 use App\Http\Controllers\Admin\EbookController as AdminEbookController;
 use App\Http\Controllers\Member\EbookController as MemberEbookController;
 use App\Http\Controllers\Public\EbookController as PublicEbookController;
+use App\Http\Controllers\Public\LayananPublicController;
 
 // ─── PUBLIC ROUTES ───────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -44,6 +46,9 @@ Route::get('/kegiatan/{slug}', [PublicEventController::class, 'show'])->name('ev
 Route::get('/kontak', [ContactController::class, 'index'])->name('contact');
 Route::post('/kontak', [ContactController::class, 'send'])->name('contact.send');
 Route::get('/home/research', [HomeController::class, 'researchSearch'])->name('research.search');
+
+Route::get('/layanan',         [HomeController::class, 'indexLayanan'])->name('layanan.index');
+Route::get('/layanan/{slug}',  [HomeController::class, 'show'])->name('layanan.show');
 
 Route::get('/ebooks', [PublicEbookController::class, 'index'])->name('ebooks');
 Route::get('/ebooks/{ebook}/download', [PublicEbookController::class, 'download'])->name('ebooks.download');
@@ -138,4 +143,11 @@ Route::middleware(['auth', 'member'])->group(function () {
     Route::resource('/admin/ebooks', AdminEbookController::class)->names('admin.ebooks');
     Route::patch('/admin/ebooks/{ebook}/toggle-publish', [AdminEbookController::class, 'togglePublish'])->name('admin.ebooks.toggle-publish');
     Route::get('/admin/ebooks/{ebook}/download', [AdminEbookController::class, 'download'])->name('admin.ebooks.download');
+
+
+    Route::resource('/admin/layanan', LayananController::class)->names('admin.layanan');
+    Route::patch('/admin/layanan/{layanan}/toggle-status', [LayananController::class, 'toggleStatus'])
+        ->name('admin.layanan.toggle-status');
+    Route::post('/admin/layanan/update-urutan', [LayananController::class, 'updateUrutan'])
+        ->name('admin.layanan.update-urutan');
 });
