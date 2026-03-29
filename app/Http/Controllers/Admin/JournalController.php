@@ -60,6 +60,7 @@ class JournalController extends Controller
             'volume'       => 'nullable|string|max:50',
             'year'         => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
             'is_published' => 'nullable|boolean',
+            'access'       => 'required|in:free,premium',
         ], [
             'file.required'  => 'File jurnal wajib diupload.',
             'file.mimes'     => 'File harus berformat PDF, DOC, atau DOCX.',
@@ -85,6 +86,7 @@ class JournalController extends Controller
             'file_name'    => $origName,
             'file_size'    => $fileSize,
             'file_type'    => $ext,
+            'access'       => $validated['access'], 
             'abstract'     => $validated['abstract'] ?? null,
             'category'     => $validated['category'] ?? null,
             'volume'       => $validated['volume'] ?? null,
@@ -128,6 +130,7 @@ class JournalController extends Controller
             'volume'       => 'nullable|string|max:50',
             'year'         => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
             'is_published' => 'nullable|boolean',
+            'access'       => 'required|in:free,premium',
         ], [
             'file.mimes' => 'File harus berformat PDF, DOC, atau DOCX.',
             'file.max'   => 'Ukuran file maksimal 20 MB.',
@@ -140,6 +143,7 @@ class JournalController extends Controller
             'category'     => $validated['category'] ?? null,
             'volume'       => $validated['volume'] ?? null,
             'year'         => $validated['year'] ?? null,
+            'access'       => $validated['access'], 
             'is_published' => $request->boolean('is_published', true),
         ];
 

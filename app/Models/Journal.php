@@ -23,6 +23,7 @@ class Journal extends Model
         'year',
         'download_count',
         'is_published',
+        'access',        // ← INI YANG KURANG — tanpa ini Eloquent abaikan nilai access
         'uploaded_by',
     ];
 
@@ -30,13 +31,11 @@ class Journal extends Model
         'is_published'   => 'boolean',
         'download_count' => 'integer',
         'year'           => 'integer',
+        // access tidak perlu di-cast, string 'free'/'premium' sudah cukup
     ];
 
     // ─── Relationships ─────────────────────────────────────────
 
-    /**
-     * User yang mengupload jurnal.
-     */
     public function uploader()
     {
         return $this->belongsTo(User::class, 'uploaded_by');
@@ -44,74 +43,77 @@ class Journal extends Model
 
     // ─── Accessors ─────────────────────────────────────────────
 
-    /**
-     * URL publik file jurnal.
-     */
     public function getFileUrlAttribute(): string
     {
         return Storage::disk('public')->url($this->file_path);
     }
 
-    /**
-     * Icon class berdasarkan tipe file.
-     */
     public function getFileIconAttribute(): string
     {
         return match (strtolower($this->file_type ?? '')) {
-            'pdf'                       => 'pdf',
-            'doc', 'docx'               => 'word',
-            'xls', 'xlsx'               => 'excel',
-            'ppt', 'pptx'               => 'powerpoint',
-            default                     => 'generic',
+            'pdf'             => 'pdf',
+            'doc', 'docx'     => 'word',
+            'xls', 'xlsx'     => 'excel',
+            'ppt', 'pptx'     => 'powerpoint',
+            default           => 'generic',
         };
+    }
+
+    /**
+     * Apakah jurnal ini akses premium?
+     */
+    public function isPremium(): bool
+    {
+        return $this->access === 'premium';
     }
 
     // ─── Scopes ────────────────────────────────────────────────
 
-    /**
-     * Hanya jurnal yang dipublikasikan.
-     */
     public function scopePublished($query)
     {
         return $query->where('is_published', true);
     }
 
-    /**
-     * Filter berdasarkan kata kunci.
-     */
     public function scopeSearch($query, ?string $keyword)
     {
         if (!$keyword) return $query;
         return $query->where(function ($q) use ($keyword) {
             $q->where('title',    'like', "%{$keyword}%")
-              ->orWhere('author', 'like', "%{$keyword}%")
+              ->orWhere('author',   'like', "%{$keyword}%")
               ->orWhere('category', 'like', "%{$keyword}%")
               ->orWhere('abstract', 'like', "%{$keyword}%");
         });
     }
 
-    /**
-     * Filter berdasarkan kategori.
-     */
     public function scopeByCategory($query, ?string $category)
     {
         if (!$category) return $query;
         return $query->where('category', $category);
     }
 
-    // ─── Helpers ───────────────────────────────────────────────
+    /**
+     * Hanya jurnal gratis.
+     */
+    public function scopeFree($query)
+    {
+        return $query->where('access', 'free');
+    }
 
     /**
-     * Tambah counter download.
+     * Hanya jurnal premium.
      */
+    public function scopePremium($query)
+    {
+        return $query->where('access', 'premium');
+    }
+
+    // ─── Helpers ───────────────────────────────────────────────
+
     public function incrementDownload(): void
     {
         $this->increment('download_count');
     }
 
-    /**
-     * Hapus file dari storage sebelum model dihapus.
-     */
     protected static function booted(): void
     {
         static::deleting(function (Journal $journal) {
