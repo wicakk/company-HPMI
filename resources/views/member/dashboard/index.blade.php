@@ -114,6 +114,190 @@
         @endforeach
     </div>
 
+    {{-- ── Jurnal Terbaru ── --}}
+<div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+  <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <div class="w-2 h-4 bg-gradient-to-b from-violet-400 to-violet-600 rounded-full"></div>
+      <h3 class="font-bold text-slate-900 dark:text-white text-sm">Jurnal Ilmiah</h3>
+      <span class="px-2 py-0.5 bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 text-xs font-bold rounded-full">
+        {{ $journals->count() }}
+      </span>
+    </div>
+    <a href="{{ route('research.search') }}"
+       class="text-xs font-semibold text-violet-600 dark:text-violet-400 hover:underline flex items-center gap-1">
+      Lihat Semua
+      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
+  @if($journals->isEmpty())
+  <div class="py-10 text-center">
+    <p class="text-sm text-slate-400 dark:text-slate-500">Belum ada jurnal tersedia</p>
+  </div>
+  @else
+  <div class="divide-y divide-slate-50 dark:divide-slate-800">
+    @foreach($journals as $journal)
+    @php $isPremiumJournal = isset($journal->access) && $journal->access === 'premium'; @endphp
+    <div class="px-6 py-4 flex items-start gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group">
+
+      {{-- Icon tipe --}}
+      <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center font-black text-[10px]
+                  {{ strtolower($journal->file_type ?? 'pdf') === 'pdf'
+                    ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
+                    : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' }}">
+        {{ strtoupper($journal->file_type ?? 'PDF') }}
+      </div>
+
+      {{-- Info --}}
+      <div class="flex-1 min-w-0">
+        <div class="flex items-start gap-2">
+          <p class="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1 flex-1">
+            {{ $journal->title }}
+          </p>
+          {{-- Badge akses --}}
+          @if($isPremiumJournal)
+            @if($user->isPremium())
+            <span class="flex-shrink-0 px-2 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] font-black rounded-full">⭐ Premium</span>
+            @else
+            <span class="flex-shrink-0 px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-400 text-[10px] font-bold rounded-full flex items-center gap-1">
+              <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              Terkunci
+            </span>
+            @endif
+          @else
+          <span class="flex-shrink-0 px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold rounded-full">Gratis</span>
+          @endif
+        </div>
+
+        <div class="flex items-center gap-2 mt-1 flex-wrap">
+          @if($journal->author)
+          <span class="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            {{ $journal->author }}
+          </span>
+          @endif
+          @if($journal->year)
+          <span class="text-slate-300 dark:text-slate-600">·</span>
+          <span class="text-xs text-slate-400 dark:text-slate-500">{{ $journal->year }}</span>
+          @endif
+          @if($journal->category)
+          <span class="text-slate-300 dark:text-slate-600">·</span>
+          <span class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-medium rounded">{{ $journal->category }}</span>
+          @endif
+        </div>
+      </div>
+
+      {{-- Tombol aksi --}}
+      <div class="flex-shrink-0">
+        @if(!$isPremiumJournal || $user->isPremium())
+        <a href="{{ route('admin.journals.download', $journal) }}"
+           class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-violet-600 hover:bg-violet-700 text-white text-xs font-semibold rounded-lg transition opacity-0 group-hover:opacity-100">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          Unduh
+        </a>
+        @else
+        <a href="{{ route('member.payment') }}"
+           class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-lg transition opacity-0 group-hover:opacity-100">
+          ⭐ Upgrade
+        </a>
+        @endif
+      </div>
+
+    </div>
+    @endforeach
+  </div>
+  @endif
+</div>
+
+{{-- ── Ebook Terbaru ── --}}
+<div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+  <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <div class="w-2 h-4 bg-gradient-to-b from-rose-400 to-rose-600 rounded-full"></div>
+      <h3 class="font-bold text-slate-900 dark:text-white text-sm">Koleksi Ebook</h3>
+      <span class="px-2 py-0.5 bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 text-xs font-bold rounded-full">
+        {{ $ebooks->count() }}
+      </span>
+    </div>
+    <a href="{{ route('member.ebooks') }}"
+       class="text-xs font-semibold text-rose-600 dark:text-rose-400 hover:underline flex items-center gap-1">
+      Lihat Semua
+      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
+  @if($ebooks->isEmpty())
+  <div class="py-10 text-center">
+    <p class="text-sm text-slate-400 dark:text-slate-500">Belum ada ebook tersedia</p>
+  </div>
+  @else
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5">
+    @foreach($ebooks as $ebook)
+    @php $canDownload = $ebook->canDownload($user); @endphp
+    <div class="relative group flex flex-col bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+
+      {{-- Cover --}}
+      <div class="relative aspect-[3/4] bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 overflow-hidden">
+        @if($ebook->cover_path)
+        <img src="{{ Storage::url($ebook->cover_path) }}"
+             alt="{{ $ebook->title }}"
+             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+        @else
+        <div class="w-full h-full flex items-center justify-center">
+          <svg class="w-8 h-8 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+          </svg>
+        </div>
+        @endif
+
+        {{-- Badge akses --}}
+        <div class="absolute top-1.5 left-1.5">
+          @if($ebook->isPremium())
+          <span class="px-1.5 py-0.5 bg-amber-500 text-white text-[9px] font-black rounded-full">⭐ Premium</span>
+          @else
+          <span class="px-1.5 py-0.5 bg-emerald-500 text-white text-[9px] font-black rounded-full">Gratis</span>
+          @endif
+        </div>
+
+        {{-- Lock overlay --}}
+        @if(!$canDownload)
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-[2px] flex flex-col items-center justify-center gap-1.5">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+          <p class="text-white text-[9px] font-bold text-center px-2">Premium only</p>
+        </div>
+        @endif
+      </div>
+
+      {{-- Info --}}
+      <div class="p-3 flex flex-col flex-1">
+        <p class="text-xs font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug">{{ $ebook->title }}</p>
+        <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-1 truncate">{{ $ebook->author }}</p>
+
+        <div class="mt-2">
+          @if($canDownload)
+          <a href="{{ route('member.ebooks.download', $ebook) }}"
+             class="w-full flex items-center justify-center gap-1 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-[10px] font-bold rounded-lg transition">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Download
+          </a>
+          @else
+          <a href="{{ route('member.payment') }}"
+             class="w-full flex items-center justify-center gap-1 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-[10px] font-bold rounded-lg transition">
+            ⭐ Upgrade
+          </a>
+          @endif
+        </div>
+      </div>
+
+    </div>
+    @endforeach
+  </div>
+  @endif
+</div>
+
     {{-- Pengumuman --}}
     @if($announcements->isNotEmpty())
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">

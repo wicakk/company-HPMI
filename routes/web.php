@@ -11,6 +11,7 @@ use App\Http\Controllers\Member\DashboardController;
 use App\Http\Controllers\Member\ProfileController;
 use App\Http\Controllers\Member\PaymentController;
 use App\Http\Controllers\Member\MaterialController;
+use App\Http\Controllers\Member\JournalController as MemberJournalController;
 use App\Http\Controllers\Member\EventController as MemberEventController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ArticleAdminController;
@@ -51,46 +52,51 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
-Route::resource('/admin/bank-accounts', BankAccountController::class)->names('admin.bank-accounts');
 // ─── MEMBER ROUTES ────────────────────────────────────────────────────
 
 Route::middleware(['auth', 'member'])->group(function () {
     Route::get('/member/dashboard', [DashboardController::class, 'index'])->name('member.dashboard');
-
+    
     // Payment — nama berbeda untuk GET dan POST
     Route::get('/member/pembayaran', [PaymentController::class, 'index'])->name('member.payment');
     Route::post('/member/pembayaran', [PaymentController::class, 'pay'])->name('member.payment.pay'); // ← fix duplikat nama
     Route::post('/member/pembayaran/{id}/confirm', [PaymentController::class, 'confirm'])->name('member.payment.confirm');
     Route::get('/member/pembayaran/history', [PaymentController::class, 'history'])->name('member.payment.history');
-
+    
     // Profile
     Route::get('/member/profile', [ProfileController::class, 'index'])->name('member.profile');  // ← fix dari member.profile.index
     Route::put('/member/profile', [ProfileController::class, 'update'])->name('member.profile.update');
-
+    
     Route::get('/member/materi', [MaterialController::class, 'index'])->name('member.materials');
     Route::get('/member/materi/{id}', [MaterialController::class, 'show'])->name('member.materials.show');
     Route::get('/member/materi/{id}/download', [MaterialController::class, 'download'])->name('member.materials.download');
-
+    
     Route::get('/member/kegiatan', [MemberEventController::class, 'index'])->name('member.events');
     Route::get('/member/kegiatan/{id}', [MemberEventController::class, 'show'])->name('member.events.show');
     Route::post('/member/kegiatan/{id}/daftar', [MemberEventController::class, 'register'])->name('member.events.register');
     Route::delete('/member/kegiatan/{id}/batal', [MemberEventController::class, 'cancel'])->name('member.events.cancel');
-
+    
     Route::get('/member/ebooks', [MemberEbookController::class, 'index'])->name('member.ebooks');
     Route::get('/member/ebooks/{ebook}/download', [MemberEbookController::class, 'download'])->name('member.ebooks.download');
-});
 
-// ─── ADMIN ROUTES ─────────────────────────────────────────────────────
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-
-    Route::resource('/admin/artikel', ArticleAdminController::class)->names('admin.articles');
-    Route::resource('/admin/kegiatan', EventAdminController::class)->names('admin.events');
-    Route::resource('/admin/materi', MaterialAdminController::class)->names('admin.materials');
-    Route::resource('/admin/pengumuman', AnnouncementAdminController::class)->names('admin.announcements');
-    Route::resource('/admin/struktur-organisasi', OrgStructureAdminController::class)->names('admin.org');
-
-    Route::get('/admin/anggota', [MemberAdminController::class, 'index'])->name('admin.members.index');
+    // Member Journal Routes
+    Route::get('/member/journals', [MemberJournalController::class, 'index'])->name('member.journals');
+    Route::get('/member/journals/{journal}/download', [MemberJournalController::class, 'download'])->name('member.journals.download');
+    // Route::get('/admin/journals/{journal}/download', [JournalController::class, 'download'])->name('admin.journals.download');
+    });
+    
+    // ─── ADMIN ROUTES ─────────────────────────────────────────────────────
+    Route::middleware(['auth', 'admin'])->group(function () {
+        Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+        Route::resource('/admin/bank-accounts', BankAccountController::class)->names('admin.bank-accounts');
+        
+        Route::resource('/admin/artikel', ArticleAdminController::class)->names('admin.articles');
+        Route::resource('/admin/kegiatan', EventAdminController::class)->names('admin.events');
+        Route::resource('/admin/materi', MaterialAdminController::class)->names('admin.materials');
+        Route::resource('/admin/pengumuman', AnnouncementAdminController::class)->names('admin.announcements');
+        Route::resource('/admin/struktur-organisasi', OrgStructureAdminController::class)->names('admin.org');
+        
+        Route::get('/admin/anggota', [MemberAdminController::class, 'index'])->name('admin.members.index');
     Route::get('/admin/anggota/export/excel', [MemberAdminController::class, 'exportExcel'])->name('admin.members.export');
     Route::get('/admin/anggota/{id}', [MemberAdminController::class, 'show'])->name('admin.members.show');
     Route::put('/admin/anggota/{id}/status', [MemberAdminController::class, 'updateStatus'])->name('admin.members.status');
