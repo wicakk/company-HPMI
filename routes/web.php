@@ -12,6 +12,7 @@ use App\Http\Controllers\Member\ProfileController;
 use App\Http\Controllers\Member\PaymentController;
 use App\Http\Controllers\Member\MaterialController;
 use App\Http\Controllers\Member\JournalController as MemberJournalController;
+use App\Http\Controllers\Public\JournalController as PublicJournalController;
 use App\Http\Controllers\Member\EventController as MemberEventController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ArticleAdminController;
@@ -30,6 +31,7 @@ use App\Http\Controllers\Admin\BankAccountController;
 
 use App\Http\Controllers\Admin\EbookController as AdminEbookController;
 use App\Http\Controllers\Member\EbookController as MemberEbookController;
+use App\Http\Controllers\Public\EbookController as PublicEbookController;
 
 // ─── PUBLIC ROUTES ───────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -42,6 +44,13 @@ Route::get('/kegiatan/{slug}', [PublicEventController::class, 'show'])->name('ev
 Route::get('/kontak', [ContactController::class, 'index'])->name('contact');
 Route::post('/kontak', [ContactController::class, 'send'])->name('contact.send');
 Route::get('/home/research', [HomeController::class, 'researchSearch'])->name('research.search');
+
+Route::get('/ebooks', [PublicEbookController::class, 'index'])->name('ebooks');
+Route::get('/ebooks/{ebook}/download', [PublicEbookController::class, 'download'])->name('ebooks.download');
+
+    // Member Journal Routes
+Route::get('/journals', [PublicJournalController::class, 'index'])->name('journals');
+Route::get('/journals/{journal}/download', [PublicJournalController::class, 'download'])->name('journals.download');
 
 // ─── AUTH ROUTES ─────────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {

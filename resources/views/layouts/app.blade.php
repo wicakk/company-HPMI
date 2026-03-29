@@ -67,6 +67,8 @@
                     <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Beranda</a>
                     <a href="{{ route('about') }}" class="nav-link {{ request()->routeIs('about*') ? 'active' : '' }}">Tentang</a>
                     <a href="{{ route('articles.index') }}" class="nav-link {{ request()->routeIs('articles*') ? 'active' : '' }}">Artikel</a>
+                    <a href="{{ route('journals') }}" class="nav-link {{ request()->routeIs('journals*') ? 'active' : '' }}">Jurnal</a>
+                    <a href="{{ route('ebooks') }}" class="nav-link {{ request()->routeIs('ebooks*') ? 'active' : '' }}">Ebook</a>
                     <a href="{{ route('events.index') }}" class="nav-link {{ request()->routeIs('events*') ? 'active' : '' }}">Kegiatan</a>
                     <a href="{{ route('contact') }}" class="nav-link {{ request()->routeIs('contact*') ? 'active' : '' }}">Kontak</a>
                 </div>
