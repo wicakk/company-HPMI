@@ -3,44 +3,42 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class Category extends Model
 {
     protected $fillable = [
-        'name', 'slug', 'description', 'color', 'type', 'sort_order', 'is_active'
+        'name',
+        'slug',
+        'type',        // TEXT kolom — disimpan sebagai JSON string, di-cast ke array
+        'color',
+        'sort_order',
+        'is_active',
     ];
 
+    /**
+     * Cast 'type' otomatis dari/ke PHP array.
+     * Di DB tersimpan sebagai: ["artikel","jurnal"]
+     * Di PHP terbaca sebagai: ['artikel', 'jurnal']
+     */
     protected $casts = [
+        'type'      => 'array',
         'is_active' => 'boolean',
-        'sort_order' => 'integer',
     ];
 
-    // Auto slug dari name
-    protected static function boot()
+    // ── Helper: cek apakah kategori ini termasuk tipe tertentu ──
+    public function hasType(string $type): bool
     {
-        parent::boot();
-        static::creating(function ($category) {
-            if (empty($category->slug)) {
-                $category->slug = Str::slug($category->name);
-            }
-        });
-        static::updating(function ($category) {
-            $category->slug = Str::slug($category->name);
-        });
+        return in_array($type, (array) ($this->type ?? []));
     }
 
-    public function articles()  { return $this->hasMany(Article::class); }
-    public function journals()  { return $this->hasMany(Journal::class, 'category', 'name'); }
-    public function materials() { return $this->hasMany(Material::class); }
-
-    // Label warna untuk badge
-    public function getTextColorAttribute(): string
+    // ── Scope filter per tipe (untuk query di luar controller) ──
+    public function scopeOfType($query, string $type)
     {
-        // Hitung luminance untuk auto text color (hitam/putih)
-        $hex = ltrim($this->color, '#');
-        [$r, $g, $b] = [hexdec(substr($hex,0,2)), hexdec(substr($hex,2,2)), hexdec(substr($hex,4,2))];
-        $luminance = (0.299*$r + 0.587*$g + 0.114*$b) / 255;
-        return $luminance > 0.5 ? '#1e293b' : '#ffffff';
+        return $query->where('type', 'like', '%"'.$type.'"%');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 }

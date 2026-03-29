@@ -12,8 +12,11 @@ return new class extends Migration {
             // $table->enum('type', ['article','event','material'])->default('article');
             $table->text('type')->nullable();
             $table->string('color')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->integer('sort_order')->default(0);
             $table->timestamps();
         });
     }
-    public function down(): void { Schema::dropIfExists('categories'); }
+    public function down(): void { 
+        Schema::dropIfExists('categories'); }
 };

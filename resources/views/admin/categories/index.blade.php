@@ -32,7 +32,7 @@
   {{-- Stats --}}
   <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
     @foreach([
-      ['Total',   $stats['total'],   'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400'],
+      ['Total',   $stats['total'],   'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'],
       // ['Aktif',   $stats['aktif'],   'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'],
       ['Artikel', $stats['artikel'], 'bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400'],
       ['Jurnal',  $stats['jurnal'],  'bg-violet-50 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400'],
@@ -54,17 +54,17 @@
         <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.35-4.35"/>
       </svg>
       <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari nama atau deskripsi..."
-        class="w-full pl-10 pr-4 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500 transition">
+        class="w-full pl-10 pr-4 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
     </div>
     <select name="type"
-      class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500 transition cursor-pointer">
+      class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition cursor-pointer">
       <option value="">Semua Tipe</option>
       <option value="artikel" {{ request('type') === 'artikel' ? 'selected' : '' }}>Artikel</option>
       <option value="jurnal"  {{ request('type') === 'jurnal'  ? 'selected' : '' }}>Jurnal</option>
       <option value="materi"  {{ request('type') === 'materi'  ? 'selected' : '' }}>Materi</option>
     </select>
     <select name="status"
-      class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500 transition cursor-pointer">
+      class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition cursor-pointer">
       <option value="">Semua Status</option>
       <option value="active"   {{ request('status') === 'active'   ? 'selected' : '' }}>Aktif</option>
       <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Nonaktif</option>
@@ -202,7 +202,7 @@
               </p>
               @if(!request()->hasAny(['q','type','status']))
               <a href="{{ route('admin.categories.create') }}"
-                 class="inline-flex items-center gap-1.5 px-4 py-2 bg-rose-600 text-white rounded-xl text-xs font-semibold hover:bg-rose-700 transition shadow-sm">
+                 class="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold hover:bg-blue-700 transition shadow-sm">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Tambah Kategori
               </a>
