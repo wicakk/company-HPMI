@@ -10,7 +10,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('slug')->unique();
             // $table->enum('type', ['article','event','material'])->default('article');
-            $table->text('type')->change();
+            $table->text('type')->nullable();
             $table->string('color')->nullable();
             $table->timestamps();
         });

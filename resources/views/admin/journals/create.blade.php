@@ -209,6 +209,61 @@
                        class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 dark:focus:ring-violet-400 transition">
               </div>
             </div>
+            {{-- Tipe Akses --}}
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-2">
+                Tipe Akses <span class="text-red-400">*</span>
+              </label>
+              <div class="space-y-2">
+
+                {{-- Gratis --}}
+                <label class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all
+                              {{ old('access', $journal->access ?? 'free') === 'free'
+                                ? 'border-emerald-400 bg-emerald-50 dark:bg-emerald-900/20'
+                                : 'border-slate-200 dark:border-slate-600 hover:border-slate-300' }}"
+                      id="access-label-free">
+                  <input type="radio" name="access" value="free"
+                        {{ old('access', $journal->access ?? 'free') === 'free' ? 'checked' : '' }}
+                        class="sr-only" onchange="toggleAccessJournal('free')">
+                  <div id="access-radio-free"
+                      class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all
+                              {{ old('access', $journal->access ?? 'free') === 'free'
+                                ? 'border-emerald-500 bg-emerald-500'
+                                : 'border-slate-300 dark:border-slate-500' }}">
+                    <div class="w-2 h-2 rounded-full bg-white {{ old('access', $journal->access ?? 'free') === 'free' ? '' : 'hidden' }}"
+                        id="access-dot-free"></div>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-sm font-bold text-slate-800 dark:text-white">✅ Gratis</p>
+                    <p class="text-xs text-slate-400 dark:text-slate-500">Semua member bisa download</p>
+                  </div>
+                </label>
+
+                {{-- Premium --}}
+                <label class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all
+                              {{ old('access', $journal->access ?? 'free') === 'premium'
+                                ? 'border-amber-400 bg-amber-50 dark:bg-amber-900/20'
+                                : 'border-slate-200 dark:border-slate-600 hover:border-slate-300' }}"
+                      id="access-label-premium">
+                  <input type="radio" name="access" value="premium"
+                        {{ old('access', $journal->access ?? '') === 'premium' ? 'checked' : '' }}
+                        class="sr-only" onchange="toggleAccessJournal('premium')">
+                  <div id="access-radio-premium"
+                      class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all
+                              {{ old('access', $journal->access ?? '') === 'premium'
+                                ? 'border-amber-500 bg-amber-500'
+                                : 'border-slate-300 dark:border-slate-500' }}">
+                    <div class="w-2 h-2 rounded-full bg-white {{ old('access', $journal->access ?? '') === 'premium' ? '' : 'hidden' }}"
+                        id="access-dot-premium"></div>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-sm font-bold text-slate-800 dark:text-white">⭐ Premium</p>
+                    <p class="text-xs text-slate-400 dark:text-slate-500">Hanya member premium</p>
+                  </div>
+                </label>
+
+              </div>
+            </div>
 
             {{-- Status Publish --}}
             <div class="pt-1 pb-1">
@@ -261,4 +316,68 @@
   </form>
   
 </div>
+
+
+@push('scripts')
+<script>
+// File input preview
+const fileInput  = document.getElementById('fileInput');
+const dropZone   = document.getElementById('dropZone');
+const emptyState = document.getElementById('emptyState');
+const filePreview = document.getElementById('filePreview');
+const fileNameText = document.getElementById('fileNameText');
+const fileSizeText = document.getElementById('fileSizeText');
+
+fileInput.addEventListener('change', function() {
+  const f = this.files[0];
+  if (!f) return;
+  fileNameText.textContent = f.name;
+  fileSizeText.textContent = f.size >= 1048576
+    ? (f.size/1048576).toFixed(1) + ' MB'
+    : (f.size/1024).toFixed(1) + ' KB';
+  emptyState.classList.add('hidden');
+  filePreview.classList.remove('hidden');
+  dropZone.classList.add('border-emerald-400','bg-emerald-50');
+  dropZone.classList.remove('border-slate-200','border-dashed');
+});
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('border-rose-400'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-rose-400'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  const dt = new DataTransfer();
+  dt.items.add(e.dataTransfer.files[0]);
+  fileInput.files = dt.files;
+  fileInput.dispatchEvent(new Event('change'));
+});
+
+function toggleAccessJournal(selected) {
+  const config = {
+    free:    { border: 'border-emerald-400', bg: ['bg-emerald-50','dark:bg-emerald-900/20'], radio: ['border-emerald-500','bg-emerald-500'] },
+    premium: { border: 'border-amber-400',   bg: ['bg-amber-50','dark:bg-amber-900/20'],     radio: ['border-amber-500','bg-amber-500'] },
+  };
+  ['free', 'premium'].forEach(val => {
+    const label = document.getElementById('access-label-' + val);
+    const radio = document.getElementById('access-radio-' + val);
+    const dot   = document.getElementById('access-dot-' + val);
+    const input = document.querySelector(`input[name="access"][value="${val}"]`);
+    const c     = config[val];
+    if (val === selected) {
+      label.classList.remove('border-slate-200','dark:border-slate-600');
+      label.classList.add(c.border, ...c.bg);
+      radio.classList.remove('border-slate-300','dark:border-slate-500');
+      radio.classList.add(...c.radio);
+      dot.classList.remove('hidden');
+      input.checked = true;
+    } else {
+      label.classList.add('border-slate-200','dark:border-slate-600');
+      label.classList.remove(c.border, ...c.bg);
+      radio.classList.add('border-slate-300','dark:border-slate-500');
+      radio.classList.remove(...c.radio);
+      dot.classList.add('hidden');
+    }
+  });
+}
+</script>
+@endpush
 @endsection
