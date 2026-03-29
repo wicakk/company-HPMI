@@ -455,15 +455,13 @@
 {{-- ════════════════════════════════════════════════
      ANNOUNCEMENTS — filter tab + card carousel (doc2)
 ════════════════════════════════════════════════ --}}
-@if(isset($announcements) && $announcements->count())
+{{-- @if(isset($announcements) && $announcements->count())
 <section class="py-12 bg-primary-50 dark:bg-primary-900/10 relative overflow-hidden">
     <div class="absolute inset-0 pointer-events-none"
          style="background-image: linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px); background-size: 40px 40px;"></div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div class="flex flex-col md:flex-row gap-8 items-start">
-
-            {{-- ── LEFT: icon + title + CTA ── --}}
             <div class="flex-shrink-0 md:w-56">
                 <div class="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-800 flex items-center justify-center mb-4">
                     <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -479,11 +477,7 @@
                     Lihat semua pengumuman
                 </a>
             </div>
-
-            {{-- ── RIGHT: filter tabs + cards ── --}}
             <div class="flex-1 min-w-0">
-
-                {{-- Filter tabs --}}
                 <div class="flex gap-2 flex-wrap mb-5" id="annFilterTabs">
                     <button data-filter="semua"
                             class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition bg-primary-600 text-white border-primary-600">
@@ -506,8 +500,6 @@
                         Info
                     </button>
                 </div>
-
-                {{-- Card carousel --}}
                 <div class="relative">
                     <div class="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory scroll-smooth" id="annCarouselInner"
                          style="scrollbar-width:none; -ms-overflow-style:none;">
@@ -548,7 +540,6 @@
                     </div>
                 </div>
 
-                {{-- Pagination nav --}}
                 <div class="flex items-center gap-3 mt-4">
                     <button id="annPrev"
                             class="w-9 h-9 bg-white dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition shadow-sm">
@@ -574,7 +565,7 @@
         </div>
     </div>
 </section>
-@endif
+@endif --}}
 {{-- END ANNOUNCEMENTS --}}
 
 
