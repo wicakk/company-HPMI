@@ -7,7 +7,7 @@
   {{-- Header --}}
   <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
     <div>
-      <p class="text-xs font-bold uppercase tracking-widest text-rose-500 mb-1">Perpustakaan Digital</p>
+      <p class="text-xs font-bold uppercase tracking-widest text-blue-500 mb-1">Perpustakaan Digital</p>
       <h1 class="text-2xl font-black text-slate-900 dark:text-white">Koleksi Ebook HPMI</h1>
       <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Referensi ilmiah dan panduan keperawatan manajerial</p>
     </div>
@@ -32,22 +32,22 @@
     <div class="relative flex-1">
       <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.35-4.35"/></svg>
       <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari judul atau penulis..."
-        class="w-full pl-10 pr-4 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500 transition">
+        class="w-full pl-10 pr-4 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
     </div>
     @if($categories->count())
-    <select name="category" class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer">
+    <select name="category" class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
       <option value="">Semua Kategori</option>
       @foreach($categories as $cat)
       <option value="{{ $cat }}" {{ request('category')===$cat?'selected':'' }}>{{ $cat }}</option>
       @endforeach
     </select>
     @endif
-    <select name="access" class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer">
+    <select name="access" class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
       <option value="">Semua Akses</option>
       <option value="free"    {{ request('access')==='free'?'selected':'' }}>Gratis</option>
       <option value="premium" {{ request('access')==='premium'?'selected':'' }}>Premium</option>
     </select>
-    <button type="submit" class="h-10 px-5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl transition active:scale-95">Cari</button>
+    <button type="submit" class="h-10 px-5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition active:scale-95">Cari</button>
     @if(request()->hasAny(['q','category','access']))
     <a href="{{ route('member.ebooks') }}" class="h-10 px-4 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium rounded-xl transition flex items-center hover:bg-slate-200">Reset</a>
     @endif
@@ -116,7 +116,7 @@
         <div class="mt-3">
           @if($canDownload)
           <a href="{{ route('member.ebooks.download', $ebook) }}"
-             class="w-full flex items-center justify-center gap-2 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition active:scale-95">
+             class="w-full flex items-center justify-center gap-2 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition active:scale-95">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
             Download PDF
           </a>
@@ -141,8 +141,8 @@
 
   @else
   <div class="py-20 text-center">
-    <div class="w-20 h-20 bg-rose-50 dark:bg-rose-900/20 rounded-3xl flex items-center justify-center mx-auto mb-4">
-      <svg class="w-10 h-10 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+    <div class="w-20 h-20 bg-blue-50 dark:bg-blue-900/20 rounded-3xl flex items-center justify-center mx-auto mb-4">
+      <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
     </div>
     <p class="text-slate-600 dark:text-slate-400 font-semibold">Belum ada ebook tersedia</p>
     <p class="text-sm text-slate-400 mt-1">Koleksi ebook akan segera ditambahkan</p>

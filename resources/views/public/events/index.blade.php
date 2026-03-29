@@ -3,20 +3,20 @@
 @section('content')
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="text-center mb-12">
-        <p class="text-xs font-bold text-violet-600 dark:text-violet-400 uppercase tracking-widest mb-2">Program & Kegiatan</p>
+        <p class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-2">Program & Kegiatan</p>
         <h1 class="text-4xl font-black text-slate-900 dark:text-white">Kegiatan HPMI</h1>
         <p class="text-slate-500 dark:text-slate-400 mt-3">Seminar, webinar, pelatihan & workshop keperawatan manajemen</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse($events as $event)
         <a href="{{ route('events.show', $event->slug) }}" class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all group">
-            <div class="h-48 overflow-hidden bg-gradient-to-br from-violet-100 to-indigo-100 dark:from-violet-900/30 dark:to-indigo-900/30">
-                @if($event->thumbnail)<img src="{{ $event->thumbnail }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="{{ $event->title }}">@else<div class="w-full h-full flex items-center justify-center"><svg class="w-12 h-12 text-violet-400/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>@endif
+            <div class="h-48 overflow-hidden bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30">
+                @if($event->thumbnail)<img src="{{ $event->thumbnail }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="{{ $event->title }}">@else<div class="w-full h-full flex items-center justify-center"><svg class="w-12 h-12 text-blue-400/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>@endif
             </div>
             <div class="p-5">
                 @php $ss=['open'=>'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400','closed'=>'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400','completed'=>'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'];$sl=['open'=>'Buka Pendaftaran','closed'=>'Pendaftaran Ditutup','completed'=>'Selesai']; @endphp
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-bold text-violet-600 dark:text-violet-400">{{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}</span>
+                    <span class="text-xs font-bold text-blue-600 dark:text-blue-400">{{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}</span>
                     <span class="text-xs font-semibold px-2 py-0.5 rounded-lg {{ $ss[$event->status]??'bg-slate-100 text-slate-600' }}">{{ $sl[$event->status]??$event->status }}</span>
                 </div>
                 <h2 class="font-black text-slate-900 dark:text-white line-clamp-2 mb-3">{{ $event->title }}</h2>
