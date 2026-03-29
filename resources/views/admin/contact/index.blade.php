@@ -6,7 +6,7 @@
 
   {{-- Header --}}
   <div>
-    <p class="text-xs font-bold uppercase tracking-widest text-teal-500 dark:text-teal-400 mb-1">Inbox</p>
+    <p class="text-xs font-bold uppercase tracking-widest text-blue-500 dark:text-blue-400 mb-1">Inbox</p>
     <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Pesan Masuk</h2>
     <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Pesan dari formulir kontak website</p>
   </div>

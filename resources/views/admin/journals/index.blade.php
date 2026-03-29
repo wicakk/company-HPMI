@@ -7,12 +7,12 @@
   {{-- ── HEADER ── --}}
   <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
     <div>
-      <p class="text-xs font-bold uppercase tracking-widest text-rose-500 dark:text-rose-400 mb-1">Publikasi</p>
+      <p class="text-xs font-bold uppercase tracking-widest text-blue-500 dark:text-blue-400 mb-1">Publikasi</p>
       <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Manajemen Jurnal</h2>
       <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Kelola koleksi jurnal dan publikasi ilmiah HPMI</p>
     </div>
     <a href="{{ route('admin.journals.create') }}"
-       class="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl shadow-sm shadow-rose-500/25 transition-all active:scale-95 flex-shrink-0">
+       class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow-sm shadow-blue-500/25 transition-all active:scale-95 flex-shrink-0">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
       </svg>
@@ -31,7 +31,7 @@
   {{-- ── STATS ── --}}
   <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
     @foreach([
-      ['Total Jurnal',    $stats['total'],     'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400',    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>'],
+      ['Total Jurnal',    $stats['total'],     'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>'],
       ['Dipublikasikan',  $stats['published'], 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400', '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>'],
       ['Draft',           $stats['draft'],     'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400',  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>'],
       ['Total Unduhan',   number_format($stats['downloads']), 'bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400', '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>'],
@@ -56,13 +56,13 @@
         <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.35-4.35"/>
       </svg>
       <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari judul, author, kategori..."
-        class="w-full pl-10 pr-4 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500 dark:focus:ring-rose-400 transition">
+        class="w-full pl-10 pr-4 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition">
     </div>
 
     {{-- Kategori --}}
     @if($categories->count())
     <select name="category"
-      class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500 dark:focus:ring-rose-400 transition cursor-pointer">
+      class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition cursor-pointer">
       <option value="">Semua Kategori</option>
       @foreach($categories as $cat)
       <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
@@ -72,14 +72,14 @@
 
     {{-- Status --}}
     <select name="status"
-      class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500 dark:focus:ring-rose-400 transition cursor-pointer">
+      class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition cursor-pointer">
       <option value="">Semua Status</option>
       <option value="published" {{ request('status') === 'published' ? 'selected' : '' }}>Dipublikasikan</option>
       <option value="draft"     {{ request('status') === 'draft'     ? 'selected' : '' }}>Draft</option>
     </select>
 
     <button type="submit"
-      class="h-10 px-5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl transition-all shadow-sm shadow-rose-500/20 active:scale-95 flex items-center gap-2">
+      class="h-10 px-5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-all shadow-sm shadow-blue-500/20 active:scale-95 flex items-center gap-2">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.35-4.35"/></svg>
       Cari
     </button>
@@ -129,7 +129,7 @@
                 </div>
                 <div class="min-w-0">
                   <a href="{{ route('admin.journals.show', $journal) }}"
-                     class="font-semibold text-slate-900 dark:text-white hover:text-rose-600 dark:hover:text-rose-400 transition-colors line-clamp-1 max-w-[240px] block">
+                     class="font-semibold text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors line-clamp-1 max-w-[240px] block">
                     {{ $journal->title }}
                   </a>
                   <div class="flex items-center gap-2 mt-0.5">
@@ -152,7 +152,7 @@
             {{-- Author --}}
             <td class="px-6 py-4 hidden md:table-cell">
               <div class="flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-full bg-gradient-to-br from-rose-400 to-rose-600 flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
+                <div class="w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
                   {{ strtoupper(substr($journal->author, 0, 1)) }}
                 </div>
                 <span class="text-sm text-slate-700 dark:text-slate-300 truncate max-w-[160px]">{{ $journal->author }}</span>
@@ -239,8 +239,8 @@
           @empty
           <tr>
             <td colspan="7" class="px-6 py-20 text-center">
-              <div class="w-16 h-16 bg-rose-50 dark:bg-rose-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                 </svg>
               </div>
@@ -252,7 +252,7 @@
               </p>
               @if(!request()->hasAny(['q','category','status']))
               <a href="{{ route('admin.journals.create') }}"
-                 class="inline-flex items-center gap-1.5 px-4 py-2 bg-rose-600 text-white rounded-xl text-xs font-semibold hover:bg-rose-700 transition shadow-sm shadow-rose-500/25">
+                 class="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold hover:bg-blue-700 transition shadow-sm shadow-blue-500/25">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Upload Jurnal
               </a>

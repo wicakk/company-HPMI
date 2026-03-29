@@ -11,7 +11,7 @@
       <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Materi Edukasi</h2>
       <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Kelola modul, PDF, dan video pembelajaran</p>
     </div>
-    <a href="{{ route('admin.materials.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-sm shadow-emerald-500/25 transition-all active:scale-95">
+    <a href="{{ route('admin.materials.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow-sm shadow-emerald-500/25 transition-all active:scale-95">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
       Upload Materi
     </a>

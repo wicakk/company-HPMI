@@ -56,12 +56,12 @@
 <body class="font-sans bg-slate-50 text-slate-700 min-h-screen overflow-x-hidden transition-colors duration-200">
 
 <!-- ════════ SIDEBAR ════════ -->
-<aside id="sidebar" class="w-[260px] min-h-screen bg-[#0f1b2d] flex flex-col fixed left-0 top-0 bottom-0 z-[100] overflow-hidden transition-all duration-[180ms]">
+<aside id="sidebar" class="w-[260px] min-h-screen bg-white shadow flex flex-col fixed left-0 top-0 bottom-0 z-[100] overflow-hidden transition-all duration-[180ms]">
   <div class="brand-inner flex items-center gap-3 px-[18px] py-5 border-b border-white/[.07] flex-shrink-0">
-    <div class="w-9 h-9 bg-[#1e5aff] rounded-[10px] flex items-center justify-center text-white font-extrabold text-[15px] flex-shrink-0 tracking-tight">H</div>
+    <div class="w-9 h-9 bg-blue-500 rounded-[10px] flex items-center justify-center text-white font-extrabold text-[15px] flex-shrink-0 tracking-tight">H</div>
     <div class="brand-text overflow-hidden whitespace-nowrap transition-all duration-[180ms]">
-      <div class="text-white text-[14px] font-bold leading-tight">HPMI Admin</div>
-      <div class="text-white/40 text-[10.5px]">CMS Panel v2.0</div>
+      <div class="text-slate-700 dark:text-white text-[14px] font-bold leading-tight">HPMI Admin</div>
+      <div class="text-slate-400 dark:text-white text-[10.5px]">CMS Panel v2.0</div>
     </div>
     <button onclick="toggleSidebar()" class="ml-auto w-7 h-7 rounded-[7px] flex items-center justify-center text-white/40 hover:bg-white/[.08] hover:text-white/80 transition-all flex-shrink-0">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
@@ -125,13 +125,13 @@
   </div>
 
   <!-- User Card -->
-  <div class="user-card flex items-center gap-3 px-[14px] py-[14px] border-t border-white/[.07] flex-shrink-0">
+  <div class="user-card flex shadow-lg items-center gap-3 px-[14px] py-[14px] border-t border-white/[.07] flex-shrink-0">
     <div class="w-9 h-9 rounded-[9px] bg-[#1e4080] flex items-center justify-center font-bold text-white text-[13px] flex-shrink-0">
       {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 2)) }}
     </div>
     <div class="user-info flex-1 min-w-0 overflow-hidden whitespace-nowrap transition-all duration-[180ms]">
-      <div class="text-white text-[12.5px] font-semibold truncate">{{ auth()->user()->name ?? 'Admin' }}</div>
-      <div class="text-white/40 text-[11px]">Administrator</div>
+      <div class="text-slate-700 dark:text-white text-[12.5px] font-semibold truncate">{{ auth()->user()->name ?? 'Admin' }}</div>
+      <div class="text-slate-400 dark:text-white text-[11px]">Administrator</div>
     </div>
     <form method="POST" action="{{ route('logout') }}">
       @csrf

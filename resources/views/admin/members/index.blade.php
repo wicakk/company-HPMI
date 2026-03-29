@@ -7,11 +7,11 @@
   {{-- Header --}}
   <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
     <div>
-      <p class="text-xs font-bold uppercase tracking-widest text-violet-500 dark:text-violet-400 mb-1">Manajemen</p>
+      <p class="text-xs font-bold uppercase tracking-widest text-blue-500 dark:text-blue-400 mb-1">Manajemen</p>
       <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Anggota HPMI</h2>
       <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Kelola semua data keanggotaan</p>
     </div>
-    <a href="{{ route('admin.members.export') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-sm shadow-emerald-500/25 transition-all active:scale-95">
+    <a href="{{ route('admin.members.export') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow-sm shadow-blue-500/25 transition-all active:scale-95">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
       Export CSV
     </a>
@@ -39,14 +39,14 @@
     @forelse($members as $member)
     @php
       $statusMap = [
-        'active'    => ['bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400', 'Aktif'],
+        'active'    => ['bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400', 'Aktif'],
         'pending'   => ['bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400', 'Pending'],
         'expired'   => ['bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400', 'Kadaluarsa'],
         'suspended' => ['bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400', 'Ditangguhkan'],
       ];
       [$statusClass, $statusLabel] = $statusMap[$member->status] ?? ['bg-slate-100 dark:bg-slate-700 text-slate-500', ucfirst($member->status)];
       $initial = strtoupper(substr($member->user->name ?? 'U', 0, 1));
-      $avatarBgs = ['from-blue-500 to-indigo-600','from-emerald-500 to-teal-600','from-violet-500 to-purple-600','from-amber-500 to-orange-600','from-pink-500 to-rose-600'];
+      $avatarBgs = ['from-blue-500 to-indigo-600','from-blue-500 to-teal-600','from-blue-500 to-purple-600','from-amber-500 to-orange-600','from-pink-500 to-rose-600'];
       $bg = $avatarBgs[$loop->index % count($avatarBgs)];
     @endphp
     <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-lg hover:shadow-slate-200/60 dark:hover:shadow-slate-900/60 hover:-translate-y-0.5 transition-all duration-200 event-card"

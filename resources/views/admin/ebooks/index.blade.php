@@ -7,12 +7,12 @@
   {{-- Header --}}
   <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
     <div>
-      <p class="text-xs font-bold uppercase tracking-widest text-rose-500 dark:text-rose-400 mb-1">Konten</p>
+      <p class="text-xs font-bold uppercase tracking-widest text-blue-500 dark:text-blue-400 mb-1">Konten</p>
       <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Manajemen Ebook</h2>
       <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Kelola koleksi ebook HPMI</p>
     </div>
     <a href="{{ route('admin.ebooks.create') }}"
-       class="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl shadow-sm shadow-rose-500/25 transition-all active:scale-95 flex-shrink-0">
+       class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow-sm shadow-blue-500/25 transition-all active:scale-95 flex-shrink-0">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
       Tambah Ebook
     </a>
@@ -29,7 +29,7 @@
   {{-- Stats --}}
   <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
     @foreach([
-      ['Total Ebook',    $stats['total'],     'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400'],
+      ['Total Ebook',    $stats['total'],     'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'],
       ['Gratis',         $stats['free'],      'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'],
       ['Premium',        $stats['premium'],   'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400'],
       ['Total Unduhan',  number_format($stats['downloads']), 'bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400'],
@@ -48,19 +48,19 @@
     <div class="relative flex-1">
       <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.35-4.35"/></svg>
       <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari judul atau penulis..."
-        class="w-full pl-10 pr-4 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500 transition">
+        class="w-full pl-10 pr-4 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
     </div>
-    <select name="access" class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500 transition cursor-pointer">
+    <select name="access" class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition cursor-pointer">
       <option value="">Semua Akses</option>
       <option value="free"    {{ request('access')==='free'    ? 'selected':'' }}>Gratis</option>
       <option value="premium" {{ request('access')==='premium' ? 'selected':'' }}>Premium</option>
     </select>
-    <select name="status" class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500 transition cursor-pointer">
+    <select name="status" class="h-10 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition cursor-pointer">
       <option value="">Semua Status</option>
       <option value="published" {{ request('status')==='published' ? 'selected':'' }}>Published</option>
       <option value="draft"     {{ request('status')==='draft'     ? 'selected':'' }}>Draft</option>
     </select>
-    <button type="submit" class="h-10 px-5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl transition shadow-sm active:scale-95">Cari</button>
+    <button type="submit" class="h-10 px-5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition shadow-sm active:scale-95">Cari</button>
     @if(request()->hasAny(['q','access','status']))
     <a href="{{ route('admin.ebooks.index') }}" class="h-10 px-4 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-600 dark:text-slate-300 text-sm font-medium rounded-xl transition flex items-center">Reset</a>
     @endif
@@ -180,12 +180,12 @@
           @empty
           <tr>
             <td colspan="6" class="px-6 py-20 text-center">
-              <div class="w-16 h-16 bg-rose-50 dark:bg-rose-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+              <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
               </div>
               <p class="text-sm font-bold text-slate-800 dark:text-white">Belum ada ebook</p>
               <p class="text-xs text-slate-400 mt-1 mb-5">Tambahkan ebook pertama untuk koleksi HPMI</p>
-              <a href="{{ route('admin.ebooks.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2 bg-rose-600 text-white rounded-xl text-xs font-semibold hover:bg-rose-700 transition">
+              <a href="{{ route('admin.ebooks.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold hover:bg-blue-700 transition">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Tambah Ebook
               </a>

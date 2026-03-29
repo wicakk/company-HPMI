@@ -7,11 +7,11 @@
   {{-- Header --}}
   <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
     <div>
-      <p class="text-xs font-bold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 mb-1">Kepengurusan</p>
+      <p class="text-xs font-bold uppercase tracking-widest text-blue-500 dark:text-blue-400 mb-1">Kepengurusan</p>
       <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Struktur Organisasi</h2>
       <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Kelola kepengurusan HPMI</p>
     </div>
-    <a href="{{ route('admin.org.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm shadow-indigo-500/25 transition-all active:scale-95">
+    <a href="{{ route('admin.org.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow-sm shadow-blue-500/25 transition-all active:scale-95">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
       Tambah Pengurus
     </a>
@@ -29,7 +29,7 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
     @forelse($structures as $org)
     @php
-      $gradients = ['from-blue-500 to-indigo-600','from-violet-500 to-purple-600','from-emerald-500 to-teal-600','from-amber-500 to-orange-500','from-pink-500 to-rose-600','from-sky-500 to-cyan-600'];
+      $gradients = ['from-blue-500 to-blue-600','from-violet-500 to-purple-600','from-emerald-500 to-teal-600','from-amber-500 to-orange-500','from-pink-500 to-rose-600','from-sky-500 to-cyan-600'];
       $grad = $gradients[$loop->index % count($gradients)];
     @endphp
     <div class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-xl hover:shadow-slate-200/60 dark:hover:shadow-slate-900/60 hover:-translate-y-1 transition-all duration-250 {{ !$org->is_active ? 'opacity-60' : '' }}">
@@ -58,7 +58,7 @@
         </div>
 
         <h3 class="font-bold text-slate-900 dark:text-white text-sm leading-tight">{{ $org->name }}</h3>
-        <p class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 mt-1">{{ $org->position }}</p>
+        <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mt-1">{{ $org->position }}</p>
 
         @if($org->period)
         <span class="inline-flex items-center gap-1 mt-2 px-2.5 py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-medium rounded-full">
@@ -79,7 +79,7 @@
 
         {{-- Actions --}}
         <div class="mt-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <a href="{{ route('admin.org.edit', $org) }}" class="flex-1 inline-flex items-center justify-center gap-1.5 py-2 text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all">
+          <a href="{{ route('admin.org.edit', $org) }}" class="flex-1 inline-flex items-center justify-center gap-1.5 py-2 text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 rounded-xl transition-all">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
             Edit
           </a>
@@ -100,7 +100,7 @@
       </div>
       <p class="text-sm font-bold text-slate-800 dark:text-white">Belum ada pengurus</p>
       <p class="text-xs text-slate-400 mt-1 mb-5">Tambahkan pengurus organisasi</p>
-      <a href="{{ route('admin.org.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition shadow-sm shadow-indigo-500/25">+ Tambah Pengurus</a>
+      <a href="{{ route('admin.org.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold hover:bg-blue-700 transition shadow-sm shadow-blue-500/25">+ Tambah Pengurus</a>
     </div>
     @endforelse
   </div>
