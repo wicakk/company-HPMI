@@ -116,7 +116,7 @@
       </div>
 
       {{-- Upload File PDF --}}
-      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden">
+      {{-- <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden">
         <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
           <div class="w-2 h-2 rounded-full bg-sky-500"></div>
           <h3 class="text-sm font-bold text-slate-900 dark:text-white">File PDF Ebook <span class="text-red-400">*</span></h3>
@@ -153,7 +153,58 @@
           </label>
           @error('file')<p class="text-red-500 text-xs mt-2">{{ $message }}</p>@enderror
         </div>
-      </div>
+      </div> --}}
+
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden">
+          <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-sky-500"></div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white">File Ebook</h3>
+          </div>
+          <div class="p-6">
+
+            <label for="fileInput" class="block cursor-pointer">
+              <div id="dropZone"
+                  class="border-2 border-dashed border-slate-200 dark:border-slate-600 rounded-2xl py-10 px-6 text-center hover:border-rose-400 hover:bg-rose-50/30 transition-all duration-200">
+
+                {{-- Icon --}}
+                <div class="w-14 h-14 rounded-2xl bg-rose-50 dark:bg-rose-900/30 flex items-center justify-center mx-auto mb-4">
+                  <svg class="w-7 h-7 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                </div>
+
+                {{-- Empty state text --}}
+                <div id="emptyState">
+                  <p class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Drag & drop atau <span class="text-rose-600 dark:text-rose-400">pilih file</span>
+                  </p>
+                  <p class="text-xs text-slate-400 dark:text-slate-500">PDF, DOC, DOCX — Maksimal <strong>20 MB</strong></p>
+                </div>
+
+                {{-- File preview (hidden by default) --}}
+                <div id="filePreview" class="hidden">
+                  <p id="fileNameText" class="text-sm font-semibold text-emerald-700 dark:text-emerald-400"></p>
+                  <p id="fileSizeText" class="text-xs text-slate-500 mt-0.5"></p>
+                  <p class="text-xs text-slate-400 mt-2">Klik untuk ganti file</p>
+                </div>
+
+              </div>
+
+              <input type="file" id="fileInput" name="file" accept=".pdf,.doc,.docx" class="sr-only">
+            </label>
+
+            @error('file')
+            <p class="text-red-500 text-xs mt-2 flex items-center gap-1">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+              </svg>
+              {{ $message }}
+            </p>
+            @enderror
+
+          </div>
+        </div>
 
     </div>
 
