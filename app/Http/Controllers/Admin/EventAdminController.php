@@ -11,13 +11,18 @@ class EventAdminController extends Controller
 {
     public function index()
     {
+        
         $events = Event::with('user')->latest()->paginate(15);
         return view('admin.events.index', compact('events'));
     }
 
     public function create()
     {
-        return view('admin.events.create');
+        $categories = \App\Models\Category::where('is_active', 1)
+            ->where('type', 'like', '%event%')
+            ->orderBy('sort_order')
+            ->pluck('name', 'id');
+        return view('admin.events.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -66,8 +71,12 @@ class EventAdminController extends Controller
 
     public function edit(Event $kegiatan)
     {
+        $categories = \App\Models\Category::where('is_active', 1)
+            ->where('type', 'like', '%event%')
+            ->orderBy('sort_order')
+            ->pluck('name', 'id');
         $event = $kegiatan; // rename to match view
-        return view('admin.events.edit', compact('event'));
+        return view('admin.events.edit', compact('event', 'categories'));
     }
 
     public function update(Request $request, Event $kegiatan)

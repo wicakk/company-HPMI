@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ebook;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -34,12 +35,17 @@ class EbookController extends Controller
 
         $categories = Ebook::distinct()->pluck('category')->filter();
 
+
         return view('admin.ebooks.index', compact('ebooks','stats','categories'));
     }
 
     public function create()
     {
-        $categories = Ebook::distinct()->pluck('category')->filter();
+        $categories = Category::where('is_active', 1)
+            ->where('type', 'like', '%event%')
+            ->orderBy('sort_order')
+            ->pluck('name', 'id');
+        // $categories = Ebook::distinct()->pluck('category')->filter();
         return view('admin.ebooks.form', ['ebook' => null, 'categories' => $categories]);
     }
 
@@ -78,7 +84,11 @@ class EbookController extends Controller
 
     public function edit(Ebook $ebook)
     {
-        $categories = Ebook::distinct()->pluck('category')->filter();
+        $categories = Category::where('is_active', 1)
+            ->where('type', 'like', '%event%')
+            ->orderBy('sort_order')
+            ->pluck('name', 'id');
+        
         return view('admin.ebooks.form', compact('ebook','categories'));
     }
 

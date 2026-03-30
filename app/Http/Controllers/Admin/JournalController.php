@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Journal;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -42,7 +43,10 @@ class JournalController extends Controller
      */
     public function create()
     {
-        $categories = Journal::distinct()->pluck('category')->filter()->sort()->values();
+        $categories = Category::where('is_active', 1)
+            ->where('type', 'like', '%event%')
+            ->orderBy('sort_order')
+            ->pluck('name', 'id');
         return view('admin.journals.create', compact('categories'));
     }
 
@@ -112,7 +116,10 @@ class JournalController extends Controller
      */
     public function edit(Journal $journal)
     {
-        $categories = Journal::distinct()->pluck('category')->filter()->sort()->values();
+        $categories = Category::where('is_active', 1)
+            ->where('type', 'like', '%event%')
+            ->orderBy('sort_order')
+            ->pluck('name', 'id');
         return view('admin.journals.edit', compact('journal', 'categories'));
     }
 

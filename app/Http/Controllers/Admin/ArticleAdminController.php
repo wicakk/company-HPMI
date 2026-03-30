@@ -19,7 +19,10 @@ class ArticleAdminController extends Controller
 
     public function create()
     {
-        $categories = Category::where('type', 'article')->get();
+        $categories = Category::where('is_active', 1)
+            ->where('type', 'like', '%event%')
+            ->orderBy('sort_order')
+            ->pluck('name', 'id');
         return view('admin.articles.create', compact('categories'));
     }
 
@@ -58,7 +61,10 @@ class ArticleAdminController extends Controller
 
     public function edit(Article $artikel)
     {
-        $categories = Category::where('type', 'article')->get();
+        $categories = Category::where('is_active', 1)
+            ->where('type', 'like', '%event%')
+            ->orderBy('sort_order')
+            ->pluck('name', 'id');
         return view('admin.articles.edit', compact('artikel', 'categories'));
     }
 

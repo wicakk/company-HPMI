@@ -134,15 +134,28 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-2">Kategori</label>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">
+                                Kategori / Tipe
+                            </label>
+                            @if($categories->count())
                             <select name="category_id"
-                                    class="w-full px-3 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition cursor-pointer">
-                                <option value="">— Tanpa Kategori —</option>
-                                @foreach($categories as $cat)
-                                <option value="{{ $cat->id }}" {{ $artikel->category_id==$cat->id?'selected':'' }}>{{ $cat->name }}</option>
+                                class="w-full px-3 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500 dark:focus:ring-violet-400 transition cursor-pointer">
+                                <option value="">— Pilih Kategori —</option>
+                                @foreach($categories as $id => $name)
+                                {{-- untuk create --}}
+                                <option value="{{ $id }}" {{ old('category_id') == $id ? 'selected' : '' }}>
+                                {{ $name }}
+                                </option>
                                 @endforeach
                             </select>
-                        </div>
+                            @else
+                            <div class="px-4 py-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-700 dark:text-amber-400 flex items-center gap-2">
+                                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                Belum ada kategori tipe "Kegiatan". 
+                                <a href="{{ route('admin.categories.create') }}" class="font-bold underline">Tambah sekarang →</a>
+                            </div>
+                            @endif
+                            </div>
                     </div>
 
                     {{-- Meta info --}}
