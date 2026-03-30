@@ -50,7 +50,7 @@
             <div>
               <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">Konten Artikel <span class="text-red-400">*</span></label>
               <textarea name="content" rows="18" required placeholder="Tulis konten artikel di sini..."
-                class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition font-mono leading-relaxed resize-y">{{ old('content') }}</textarea>
+                class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition font-mono leading-relaxed resize-y text-justify">{{ old('content') }}</textarea>
               @error('content')<p class="text-red-500 text-xs mt-1.5">{{ $message }}</p>@enderror
             </div>
           </div>

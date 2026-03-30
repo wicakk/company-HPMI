@@ -57,13 +57,13 @@
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Ringkasan</label>
                             <textarea name="excerpt" rows="3"
-                                      class="w-full px-4 py-3 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none">{{ old('excerpt', $artikel->excerpt) }}</textarea>
+                                      class="w-full px-4 py-3 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none text-justify">{{ old('excerpt', $artikel->excerpt) }}</textarea>
                         </div>
 
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Konten Artikel <span class="text-red-500">*</span></label>
                             <textarea name="content" rows="18" required
-                                      class="w-full px-4 py-3 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition font-mono leading-relaxed resize-y">{{ old('content', $artikel->content) }}</textarea>
+                                      class="w-full px-4 py-3 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition font-mono leading-relaxed resize-y text-justify">{{ old('content', $artikel->content) }}</textarea>
                             @error('content')<p class="text-red-500 text-xs mt-1.5">{{ $message }}</p>@enderror
                         </div>
                     </div>

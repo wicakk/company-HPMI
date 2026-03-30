@@ -56,17 +56,17 @@
                             <span class="w-1.5 h-1.5 rounded-full {{ $artikel->status === 'published' ? 'bg-emerald-500' : ($artikel->status === 'draft' ? 'bg-slate-400' : 'bg-amber-500') }}"></span>
                             {{ $sl }}
                         </span>
-                        <h1 class="text-xl font-bold text-slate-900 dark:text-white leading-snug">{{ $artikel->title }}</h1>
+                        <h1 class="text-xl font-bold text-slate-900 dark:text-white leading-snug resize-y text-justify">{{ $artikel->title }}</h1>
                     </div>
                 </div>
 
                 @if($artikel->excerpt)
-                <div class="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl border-l-4 border-blue-500 mb-4">
-                    <p class="text-sm text-slate-600 dark:text-slate-400 italic leading-relaxed">{{ $artikel->excerpt }}</p>
+                <div class="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl border-l-4 border-blue-500 mb-4 resize-y text-justify">
+                    <p class="text-sm text-slate-600 dark:text-slate-400 italic leading-relaxed resize-y text-justify">{{ $artikel->excerpt }}</p>
                 </div>
                 @endif
 
-                <div class="prose prose-sm dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">{{ $artikel->content }}</div>
+                <div class="prose prose-sm dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap resize-y text-justify">{{ $artikel->content }}</div>
             </div>
 
         </div>
