@@ -94,13 +94,9 @@
       </div>
 
       {{-- ════════════════════════════════════
-           BANNER SLIDER — Pure Blade + Vanilla JS
-           Data diambil dari $slides (PHP variable)
-           yang sudah diproses di controller
+           BANNER SLIDER
       ════════════════════════════════════ --}}
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden">
-
-        {{-- Header banner --}}
         <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 flex-shrink-0">
@@ -116,16 +112,13 @@
           </div>
         </div>
 
-        {{-- Tab buttons (Pure Blade — tidak perlu JS untuk render) --}}
         <div class="flex border-b border-slate-100 dark:border-slate-700 overflow-x-auto" id="slideTabs">
           @foreach($slides as $slide)
           <button type="button"
             onclick="showSlide({{ $slide['index'] }})"
             id="tab-{{ $slide['index'] }}"
             class="slide-tab relative flex items-center gap-2 px-5 py-3 text-xs font-semibold whitespace-nowrap transition-all flex-shrink-0
-              {{ $slide['index'] === 1
-                ? 'border-b-2 border-indigo-500 text-indigo-600 dark:text-indigo-400 bg-indigo-50/50'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700' }}">
+              {{ $slide['index'] === 1 ? 'border-b-2 border-indigo-500 text-indigo-600 dark:text-indigo-400 bg-indigo-50/50' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700' }}">
             <span class="w-5 h-5 rounded-full text-[10px] font-black flex items-center justify-center
               {{ $slide['active'] ? 'bg-indigo-100 text-indigo-600' : 'bg-slate-100 dark:bg-slate-700 text-slate-400' }}">
               {{ $slide['index'] }}
@@ -140,25 +133,18 @@
           @endforeach
         </div>
 
-        {{-- Panel setiap slide — semua di-render oleh Blade, JS hanya toggle show/hide --}}
         <div class="p-6">
           @foreach($slides as $slide)
-          <div id="panel-{{ $slide['index'] }}"
-               class="slide-panel space-y-5 {{ $slide['index'] !== 1 ? 'hidden' : '' }}">
+          <div id="panel-{{ $slide['index'] }}" class="slide-panel space-y-5 {{ $slide['index'] !== 1 ? 'hidden' : '' }}">
 
-            {{-- Toggle aktif --}}
             <div class="flex items-center justify-between">
               <label class="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                 Gambar Banner Slide {{ $slide['index'] }}
               </label>
               <label class="flex items-center gap-2 cursor-pointer select-none">
                 <input type="hidden" name="banner_slide_{{ $slide['index'] }}_active" value="0">
-                <input type="checkbox"
-                  name="banner_slide_{{ $slide['index'] }}_active"
-                  value="1"
-                  id="active-{{ $slide['index'] }}"
-                  {{ $slide['active'] ? 'checked' : '' }}
-                  class="sr-only peer">
+                <input type="checkbox" name="banner_slide_{{ $slide['index'] }}_active" value="1"
+                  id="active-{{ $slide['index'] }}" {{ $slide['active'] ? 'checked' : '' }} class="sr-only peer">
                 <div class="relative w-9 h-5 bg-slate-200 dark:bg-slate-600 rounded-full transition peer-checked:bg-indigo-500">
                   <div class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform peer-checked:translate-x-4"
                        id="toggle-thumb-{{ $slide['index'] }}"></div>
@@ -167,26 +153,15 @@
               </label>
             </div>
 
-            {{-- ── Upload gambar ── --}}
             <div>
-              {{-- Drop zone — klik membuka file picker --}}
-              <label for="file-{{ $slide['index'] }}"
-                class="block cursor-pointer group"
-                id="dropzone-{{ $slide['index'] }}"
-                ondragover="event.preventDefault()"
-                ondrop="handleDrop(event, {{ $slide['index'] }})">
-
+              <label for="file-{{ $slide['index'] }}" class="block cursor-pointer group"
+                ondragover="event.preventDefault()" ondrop="handleDrop(event, {{ $slide['index'] }})">
                 <div class="relative border-2 border-dashed rounded-2xl overflow-hidden transition-all
-                  {{ $slide['preview_url'] ? 'border-indigo-300 dark:border-indigo-600' : 'border-slate-200 dark:border-slate-600 group-hover:border-indigo-400' }}"
-                  id="dropzone-inner-{{ $slide['index'] }}">
-
-                  {{-- Preview dari DB (sudah ada gambar) --}}
+                  {{ $slide['preview_url'] ? 'border-indigo-300 dark:border-indigo-600' : 'border-slate-200 dark:border-slate-600 group-hover:border-indigo-400' }}">
                   @if($slide['preview_url'])
                   <div class="relative" id="preview-wrap-{{ $slide['index'] }}">
-                    <img src="{{ $slide['preview_url'] }}"
-                         alt="Slide {{ $slide['index'] }}"
-                         class="w-full object-cover rounded-2xl"
-                         style="aspect-ratio:1366/768; max-height:220px;"
+                    <img src="{{ $slide['preview_url'] }}" alt="Slide {{ $slide['index'] }}"
+                         class="w-full object-cover rounded-2xl" style="aspect-ratio:1366/768; max-height:220px;"
                          id="preview-img-{{ $slide['index'] }}">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all rounded-2xl flex items-center justify-center">
                       <span class="opacity-0 group-hover:opacity-100 transition text-white text-sm font-semibold bg-black/50 px-4 py-2 rounded-xl">Klik untuk ganti</span>
@@ -194,7 +169,6 @@
                     <div class="absolute bottom-2 left-2 px-2 py-0.5 bg-black/60 text-white text-[10px] font-mono rounded-lg">1366 × 768</div>
                   </div>
                   @else
-                  {{-- Placeholder — belum ada gambar --}}
                   <div class="flex flex-col items-center justify-center py-10 gap-3" id="placeholder-{{ $slide['index'] }}">
                     <div class="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center">
                       <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -202,88 +176,55 @@
                       </svg>
                     </div>
                     <div class="text-center">
-                      <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">
-                        Drag & drop atau <span class="text-indigo-600 dark:text-indigo-400">pilih file</span>
-                      </p>
+                      <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">Drag & drop atau <span class="text-indigo-600 dark:text-indigo-400">pilih file</span></p>
                       <p class="text-xs text-slate-400 mt-1">PNG, JPG, WEBP • Rekomendasi <strong>1366 × 768 px</strong></p>
                     </div>
                   </div>
-                  @endif
-
-                  {{-- Preview baru (muncul setelah user pilih file baru, via JS) --}}
-                  @if(!$slide['preview_url'])
                   <div class="hidden relative" id="new-preview-wrap-{{ $slide['index'] }}">
-                    <img src="" alt="Preview baru"
-                         class="w-full object-cover rounded-2xl"
-                         style="aspect-ratio:1366/768; max-height:220px;"
-                         id="new-preview-img-{{ $slide['index'] }}">
+                    <img src="" alt="Preview baru" class="w-full object-cover rounded-2xl"
+                         style="aspect-ratio:1366/768; max-height:220px;" id="new-preview-img-{{ $slide['index'] }}">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all rounded-2xl flex items-center justify-center">
                       <span class="opacity-0 group-hover:opacity-100 transition text-white text-sm font-semibold bg-black/50 px-4 py-2 rounded-xl">Klik untuk ganti</span>
                     </div>
                   </div>
                   @endif
-
                 </div>
               </label>
-
-              {{-- Input file tersembunyi --}}
-              <input type="file"
-                id="file-{{ $slide['index'] }}"
-                name="banner_slide_{{ $slide['index'] }}_image_file"
-                accept="image/jpeg,image/png,image/webp"
-                class="sr-only"
-                onchange="previewImage(this, {{ $slide['index'] }})">
+              <input type="file" id="file-{{ $slide['index'] }}" name="banner_slide_{{ $slide['index'] }}_image_file"
+                accept="image/jpeg,image/png,image/webp" class="sr-only" onchange="previewImage(this, {{ $slide['index'] }})">
             </div>
 
-            {{-- ── Field teks slide ── --}}
             <div class="grid grid-cols-2 gap-4">
               <div class="col-span-2">
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">Judul Slide</label>
-                <input type="text"
-                  name="banner_slide_{{ $slide['index'] }}_title"
-                  value="{{ $slide['title'] }}"
-                  placeholder="Judul slide banner..."
-                  id="input-title-{{ $slide['index'] }}"
-                  oninput="updatePreview({{ $slide['index'] }})"
+                <input type="text" name="banner_slide_{{ $slide['index'] }}_title" value="{{ $slide['title'] }}"
+                  placeholder="Judul slide banner..." id="input-title-{{ $slide['index'] }}" oninput="updatePreview({{ $slide['index'] }})"
                   class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
               </div>
               <div class="col-span-2">
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">Subtitle</label>
-                <input type="text"
-                  name="banner_slide_{{ $slide['index'] }}_subtitle"
-                  value="{{ $slide['subtitle'] }}"
-                  placeholder="Deskripsi singkat..."
-                  id="input-subtitle-{{ $slide['index'] }}"
-                  oninput="updatePreview({{ $slide['index'] }})"
+                <input type="text" name="banner_slide_{{ $slide['index'] }}_subtitle" value="{{ $slide['subtitle'] }}"
+                  placeholder="Deskripsi singkat..." id="input-subtitle-{{ $slide['index'] }}" oninput="updatePreview({{ $slide['index'] }})"
                   class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
               </div>
               <div>
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">URL Tautan (opsional)</label>
-                <input type="text"
-                  name="banner_slide_{{ $slide['index'] }}_link"
-                  value="{{ $slide['link'] }}"
-                  placeholder="https://..."
+                <input type="text" name="banner_slide_{{ $slide['index'] }}_link" value="{{ $slide['link'] }}" placeholder="https://..."
                   class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
               </div>
               <div>
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">Warna Overlay</label>
                 <div class="flex items-center gap-3">
-                  <input type="color"
-                    name="banner_slide_{{ $slide['index'] }}_color"
-                    value="{{ $slide['color'] }}"
-                    id="input-color-{{ $slide['index'] }}"
-                    oninput="syncColor({{ $slide['index'] }}, this.value); updatePreview({{ $slide['index'] }})"
+                  <input type="color" name="banner_slide_{{ $slide['index'] }}_color" value="{{ $slide['color'] }}"
+                    id="input-color-{{ $slide['index'] }}" oninput="syncColor({{ $slide['index'] }}, this.value); updatePreview({{ $slide['index'] }})"
                     class="w-10 h-10 rounded-xl border border-slate-200 cursor-pointer p-0.5 bg-slate-50">
-                  <input type="text"
-                    value="{{ $slide['color'] }}"
-                    id="color-text-{{ $slide['index'] }}"
+                  <input type="text" value="{{ $slide['color'] }}" id="color-text-{{ $slide['index'] }}"
                     oninput="syncColor({{ $slide['index'] }}, this.value)"
                     class="flex-1 px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                 </div>
               </div>
             </div>
 
-            {{-- ── Live preview mini (CSS only, update via JS) ── --}}
             <div class="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700"
                  id="mini-preview-{{ $slide['index'] }}"
                  style="{{ !$slide['preview_url'] && !$slide['title'] ? 'display:none' : '' }}">
@@ -293,19 +234,13 @@
                 <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                 <span class="text-xs text-slate-400 ml-1">Preview</span>
               </div>
-              <div class="relative overflow-hidden" style="aspect-ratio:1366/768;max-height:160px;"
-                   id="mini-preview-bg-{{ $slide['index'] }}"
-                   style="background:{{ $slide['color'] }}">
+              <div class="relative overflow-hidden" style="aspect-ratio:1366/768;max-height:160px;">
                 @if($slide['preview_url'])
-                <img src="{{ $slide['preview_url'] }}"
-                     class="w-full h-full object-cover absolute inset-0"
-                     id="mini-preview-img-{{ $slide['index'] }}">
+                <img src="{{ $slide['preview_url'] }}" class="w-full h-full object-cover absolute inset-0" id="mini-preview-img-{{ $slide['index'] }}">
                 @else
-                <img src="" class="w-full h-full object-cover absolute inset-0 hidden"
-                     id="mini-preview-img-{{ $slide['index'] }}">
+                <img src="" class="w-full h-full object-cover absolute inset-0 hidden" id="mini-preview-img-{{ $slide['index'] }}">
                 @endif
-                <div class="absolute inset-0"
-                     id="mini-overlay-{{ $slide['index'] }}"
+                <div class="absolute inset-0" id="mini-overlay-{{ $slide['index'] }}"
                      style="background:linear-gradient(to right, {{ $slide['color'] }}cc, {{ $slide['color'] }}44)"></div>
                 <div class="absolute inset-0 flex flex-col justify-center px-6 py-4">
                   <p class="text-white font-black text-sm leading-tight" id="preview-title-{{ $slide['index'] }}">
@@ -318,11 +253,10 @@
               </div>
             </div>
 
-          </div>{{-- /panel --}}
+          </div>
           @endforeach
         </div>
       </div>
-
 
       {{-- ── Hero Section ── --}}
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-6">
@@ -338,19 +272,17 @@
         <div class="space-y-4">
           @php
           $heroFields = [
-            ['hero_badge_text',    'Badge Text',         'text', 'Organisasi Profesi Keperawatan Indonesia'],
-            ['hero_title',         'Judul (baris 1)',    'text', 'Himpunan Perawat'],
+            ['hero_badge_text',    'Badge Text',            'text', 'Organisasi Profesi Keperawatan Indonesia'],
+            ['hero_title',         'Judul (baris 1)',        'text', 'Himpunan Perawat'],
             ['hero_title_accent',  'Judul Aksen (baris 2)', 'text', 'Manajer Indonesia'],
-            ['hero_cta_primary',   'Tombol Utama',       'text', 'Gabung Sekarang'],
-            ['hero_cta_secondary', 'Tombol Sekunder',    'text', 'Tentang HPMI'],
+            ['hero_cta_primary',   'Tombol Utama',          'text', 'Gabung Sekarang'],
+            ['hero_cta_secondary', 'Tombol Sekunder',       'text', 'Tentang HPMI'],
           ];
           @endphp
           @foreach($heroFields as [$key, $label, $type, $placeholder])
           <div>
             <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">{{ $label }}</label>
-            <input type="{{ $type }}" name="{{ $key }}"
-              value="{{ $settings[$key]?->value ?? '' }}"
-              placeholder="{{ $placeholder }}"
+            <input type="{{ $type }}" name="{{ $key }}" value="{{ $settings[$key]?->value ?? '' }}" placeholder="{{ $placeholder }}"
               class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
           </div>
           @endforeach
@@ -406,16 +338,11 @@
           </div>
         </div>
 
-        {{-- Tab bank --}}
         <div class="flex border-b border-slate-100 dark:border-slate-700 overflow-x-auto" id="bankTabs">
           @foreach($banks as $bank)
-          <button type="button"
-            onclick="showBank({{ $bank['index'] }})"
-            id="bank-tab-{{ $bank['index'] }}"
+          <button type="button" onclick="showBank({{ $bank['index'] }})" id="bank-tab-{{ $bank['index'] }}"
             class="bank-tab relative flex items-center gap-2 px-5 py-3 text-xs font-semibold whitespace-nowrap transition-all flex-shrink-0
-              {{ $bank['index'] === 1
-                ? 'border-b-2 border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-emerald-50/50'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700' }}">
+              {{ $bank['index'] === 1 ? 'border-b-2 border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-emerald-50/50' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700' }}">
             <span class="w-5 h-5 rounded-full text-[10px] font-black flex items-center justify-center
               {{ $bank['active'] ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 dark:bg-slate-700 text-slate-400' }}">
               {{ $bank['index'] }}
@@ -430,13 +357,10 @@
           @endforeach
         </div>
 
-        {{-- Panel tiap bank --}}
         <div class="p-6">
           @foreach($banks as $bank)
-          <div id="bank-panel-{{ $bank['index'] }}"
-              class="bank-panel space-y-4 {{ $bank['index'] !== 1 ? 'hidden' : '' }}">
+          <div id="bank-panel-{{ $bank['index'] }}" class="bank-panel space-y-4 {{ $bank['index'] !== 1 ? 'hidden' : '' }}">
 
-            {{-- Toggle aktif --}}
             <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-700">
               <div>
                 <p class="text-sm font-semibold text-slate-800 dark:text-white">Rekening {{ $bank['index'] }}</p>
@@ -444,55 +368,33 @@
               </div>
               <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
                 <input type="hidden" name="bank_{{ $bank['index'] }}_active" value="0">
-                <input type="checkbox"
-                  name="bank_{{ $bank['index'] }}_active"
-                  value="1"
-                  {{ $bank['active'] ? 'checked' : '' }}
-                  class="sr-only peer"
+                <input type="checkbox" name="bank_{{ $bank['index'] }}_active" value="1"
+                  {{ $bank['active'] ? 'checked' : '' }} class="sr-only peer"
                   onchange="updateBankTab({{ $bank['index'] }}, this.checked)">
                 <div class="w-10 h-[22px] bg-slate-200 dark:bg-slate-600 peer-checked:bg-emerald-500 rounded-full transition-colors"></div>
                 <div class="absolute left-0.5 top-0.5 w-[18px] h-[18px] bg-white rounded-full shadow-sm transition-transform peer-checked:translate-x-[18px]"></div>
               </label>
             </div>
 
-            {{-- Nama Bank --}}
             <div>
-              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">
-                Nama Bank / E-Wallet <span class="text-red-400">*</span>
-              </label>
-              <input type="text"
-                    name="bank_{{ $bank['index'] }}_name"
-                    value="{{ $bank['name'] }}"
-                    placeholder="cth: BCA, BNI, Mandiri, DANA, GoPay..."
-                    oninput="updateBankTabName({{ $bank['index'] }}, this.value)"
-                    class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">Nama Bank / E-Wallet <span class="text-red-400">*</span></label>
+              <input type="text" name="bank_{{ $bank['index'] }}_name" value="{{ $bank['name'] }}"
+                placeholder="cth: BCA, BNI, Mandiri, DANA, GoPay..." oninput="updateBankTabName({{ $bank['index'] }}, this.value)"
+                class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
             </div>
 
-            {{-- Nomor Rekening --}}
             <div>
-              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">
-                Nomor Rekening / Nomor HP <span class="text-red-400">*</span>
-              </label>
-              <input type="text"
-                    name="bank_{{ $bank['index'] }}_number"
-                    value="{{ $bank['number'] }}"
-                    placeholder="cth: 1234567890"
-                    class="w-full px-4 py-2.5 text-sm font-mono border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">Nomor Rekening / Nomor HP <span class="text-red-400">*</span></label>
+              <input type="text" name="bank_{{ $bank['index'] }}_number" value="{{ $bank['number'] }}" placeholder="cth: 1234567890"
+                class="w-full px-4 py-2.5 text-sm font-mono border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
             </div>
 
-            {{-- Nama Pemilik --}}
             <div>
-              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">
-                Nama Pemilik Rekening <span class="text-red-400">*</span>
-              </label>
-              <input type="text"
-                    name="bank_{{ $bank['index'] }}_owner"
-                    value="{{ $bank['owner'] }}"
-                    placeholder="cth: HPMI Pusat"
-                    class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">Nama Pemilik Rekening <span class="text-red-400">*</span></label>
+              <input type="text" name="bank_{{ $bank['index'] }}_owner" value="{{ $bank['owner'] }}" placeholder="cth: HPMI Pusat"
+                class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
             </div>
 
-            {{-- Preview card --}}
             <div class="rounded-xl border border-slate-100 dark:border-slate-700 overflow-hidden">
               <div class="px-3 py-2 bg-slate-50 dark:bg-slate-700/50 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-red-400"></span>
@@ -506,22 +408,11 @@
                   {{ $bank['name'] ? strtoupper(substr($bank['name'], 0, 3)) : '—' }}
                 </div>
                 <div class="flex-1">
-                  <p class="text-xs font-bold text-slate-400 uppercase tracking-wide"
-                    id="bank-preview-name-{{ $bank['index'] }}">
-                    {{ $bank['name'] ?: 'Nama Bank' }}
-                  </p>
-                  <p class="font-mono font-black text-slate-900 dark:text-white text-base mt-0.5"
-                    id="bank-preview-number-{{ $bank['index'] }}">
-                    {{ $bank['number'] ?: '————————' }}
-                  </p>
-                  <p class="text-xs text-slate-500 mt-0.5"
-                    id="bank-preview-owner-{{ $bank['index'] }}">
-                    a.n. {{ $bank['owner'] ?: 'Nama Pemilik' }}
-                  </p>
+                  <p class="text-xs font-bold text-slate-400 uppercase tracking-wide" id="bank-preview-name-{{ $bank['index'] }}">{{ $bank['name'] ?: 'Nama Bank' }}</p>
+                  <p class="font-mono font-black text-slate-900 dark:text-white text-base mt-0.5" id="bank-preview-number-{{ $bank['index'] }}">{{ $bank['number'] ?: '————————' }}</p>
+                  <p class="text-xs text-slate-500 mt-0.5" id="bank-preview-owner-{{ $bank['index'] }}">a.n. {{ $bank['owner'] ?: 'Nama Pemilik' }}</p>
                 </div>
-                <div class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-500">
-                  📋 Salin
-                </div>
+                <div class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-500">📋 Salin</div>
               </div>
             </div>
 
@@ -550,6 +441,60 @@
         </div>
       </div>
 
+      {{-- ── Footer ── --}}
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 flex-shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white">Informasi Footer</h3>
+            <p class="text-xs text-slate-400 mt-0.5">Kosongkan untuk otomatis pakai data dari Informasi Organisasi.</p>
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">
+              Deskripsi Footer
+              <span class="ml-1 normal-case font-normal text-slate-400">(kosong = pakai Deskripsi Organisasi)</span>
+            </label>
+            <textarea name="footer_description" rows="2" placeholder="Himpunan Perawat Manajer Indonesia — membangun profesionalisme..."
+              class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition resize-none">{{ $settings['footer_description']?->value ?? '' }}</textarea>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">
+                Email <span class="ml-1 normal-case font-normal text-slate-400">(kosong = pakai email org)</span>
+              </label>
+              <input type="email" name="footer_email" value="{{ $settings['footer_email']?->value ?? '' }}" placeholder="sekretariat@hpmi.id"
+                class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">
+                Telepon <span class="ml-1 normal-case font-normal text-slate-400">(kosong = pakai telp org)</span>
+              </label>
+              <input type="text" name="footer_phone" value="{{ $settings['footer_phone']?->value ?? '' }}" placeholder="021-12345678"
+                class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">
+                Alamat <span class="ml-1 normal-case font-normal text-slate-400">(kosong = pakai alamat org)</span>
+              </label>
+              <input type="text" name="footer_address" value="{{ $settings['footer_address']?->value ?? '' }}" placeholder="Jakarta Pusat, DKI Jakarta"
+                class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">Teks Copyright</label>
+            <input type="text" name="footer_copyright" value="{{ $settings['footer_copyright']?->value ?? '' }}"
+              placeholder="© {{ date('Y') }} HPMI — Himpunan Perawat Manajer Indonesia. Semua hak dilindungi."
+              class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+          </div>
+        </div>
+      </div>
+
     </div>{{-- /LEFT --}}
 
 
@@ -557,6 +502,69 @@
          KOLOM KANAN (1/3)
     ════════════════════════════════════ --}}
     <div class="lg:col-span-1 space-y-5">
+
+      {{-- ── Logo Website ── --}}
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 flex-shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white">Logo Website</h3>
+            <p class="text-xs text-slate-400 mt-0.5">PNG/SVG transparan • Maks 2 MB</p>
+          </div>
+        </div>
+
+        {{-- Drop zone --}}
+        <label for="site_logo_file" class="block cursor-pointer group"
+               ondragover="event.preventDefault()" ondrop="handleLogoDrop(event)">
+          <div id="logo-dropzone" class="relative border-2 border-dashed rounded-2xl overflow-hidden transition-all
+            {{ $logoPreviewUrl ? 'border-blue-300 dark:border-blue-600' : 'border-slate-200 dark:border-slate-600 group-hover:border-blue-400' }}">
+
+            @if($logoPreviewUrl)
+            <div class="flex items-center justify-center py-6 bg-slate-50 dark:bg-slate-700/30 relative" id="logo-preview-wrap">
+              <img src="{{ $logoPreviewUrl }}" alt="Logo" class="max-h-20 max-w-full object-contain" id="logo-preview-img">
+              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all rounded-2xl flex items-center justify-center">
+                <span class="opacity-0 group-hover:opacity-100 transition text-white text-xs font-semibold bg-black/50 px-3 py-1.5 rounded-xl">Klik untuk ganti</span>
+              </div>
+            </div>
+            @else
+            <div class="flex flex-col items-center justify-center py-8 gap-2" id="logo-placeholder">
+              <div class="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-black text-slate-400 text-2xl">H</div>
+              <p class="text-xs font-semibold text-slate-500 dark:text-slate-400">Klik atau drag & drop logo</p>
+              <p class="text-xs text-slate-400">PNG, SVG, WEBP • transparan</p>
+            </div>
+            <div class="hidden items-center justify-center py-6 bg-slate-50 dark:bg-slate-700/30 relative" id="logo-new-wrap">
+              <img src="" alt="Preview logo" class="max-h-20 max-w-full object-contain" id="logo-new-img">
+              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all rounded-2xl flex items-center justify-center">
+                <span class="opacity-0 group-hover:opacity-100 transition text-white text-xs font-semibold bg-black/50 px-3 py-1.5 rounded-xl">Klik untuk ganti</span>
+              </div>
+            </div>
+            @endif
+
+          </div>
+        </label>
+
+        <input type="file" id="site_logo_file" name="site_logo_file"
+               accept="image/jpeg,image/png,image/webp,image/svg+xml"
+               class="sr-only" onchange="previewLogo(this)">
+
+        {{-- Tombol hapus (hanya jika sudah ada logo) --}}
+        @if($logoPreviewUrl)
+        <div class="mt-3" id="logo-remove-btn-wrap">
+          <input type="hidden" name="remove_logo" id="remove_logo" value="0">
+          <button type="button" onclick="removeLogo()"
+            class="w-full text-xs text-red-500 hover:text-red-700 font-semibold py-2 rounded-xl border border-red-100 hover:border-red-300 dark:border-red-900/40 hover:bg-red-50 dark:hover:bg-red-900/20 transition flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            Hapus Logo
+          </button>
+        </div>
+        @else
+        <input type="hidden" name="remove_logo" id="remove_logo" value="0">
+        @endif
+      </div>
 
       {{-- ── Fitur Website ── --}}
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-6">
@@ -581,10 +589,8 @@
           <div class="flex items-center justify-between py-3 border-b border-slate-50 dark:border-slate-700/50 last:border-0">
             <span class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ $label }}</span>
             <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
-              {{-- Hidden input untuk fallback nilai 0 saat checkbox tidak dicentang --}}
               <input type="hidden" name="{{ $key }}" value="0">
-              <input type="checkbox" name="{{ $key }}" value="1"
-                class="sr-only peer"
+              <input type="checkbox" name="{{ $key }}" value="1" class="sr-only peer"
                 {{ ($settings[$key]?->value ?? '0') === '1' ? 'checked' : '' }}>
               <div class="w-10 h-[22px] bg-slate-200 dark:bg-slate-600 peer-checked:bg-blue-500 rounded-full transition-colors"></div>
               <div class="absolute left-0.5 top-0.5 w-[18px] h-[18px] bg-white rounded-full shadow-sm transition-transform peer-checked:translate-x-[18px]"></div>
@@ -607,8 +613,7 @@
             <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">Biaya Pendaftaran (Rp)</label>
             <div class="relative">
               <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-400">Rp</span>
-              <input type="number" name="billing_registration_fee"
-                value="{{ $settings['billing_registration_fee']?->value ?? '' }}" placeholder="150000"
+              <input type="number" name="billing_registration_fee" value="{{ $settings['billing_registration_fee']?->value ?? '' }}" placeholder="150000"
                 class="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
             </div>
           </div>
@@ -616,8 +621,7 @@
             <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1.5">Iuran Tahunan (Rp)</label>
             <div class="relative">
               <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-400">Rp</span>
-              <input type="number" name="billing_annual_fee"
-                value="{{ $settings['billing_annual_fee']?->value ?? '' }}" placeholder="300000"
+              <input type="number" name="billing_annual_fee" value="{{ $settings['billing_annual_fee']?->value ?? '' }}" placeholder="300000"
                 class="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
             </div>
           </div>
@@ -638,170 +642,109 @@
       </div>
 
     </div>{{-- /RIGHT --}}
+
   </div>
 </form>
 
-{{-- ════════════════════════════════════
-     VANILLA JAVASCRIPT
-     Tidak ada framework — murni JS biasa
-     Fungsi: tab slide, preview gambar, sync warna
-════════════════════════════════════ --}}
+
 <script>
-// ── Tab slide: tampilkan/sembunyikan panel ──────────────────────
+// ── Tab slide ──────────────────────────────────────────────────
 function showSlide(index) {
-  // Sembunyikan semua panel
   document.querySelectorAll('.slide-panel').forEach(p => p.classList.add('hidden'));
-  // Reset semua tab
   document.querySelectorAll('.slide-tab').forEach(t => {
-    t.classList.remove('border-b-2', 'border-indigo-500', 'text-indigo-600', 'dark:text-indigo-400', 'bg-indigo-50/50');
-    t.classList.add('text-slate-500', 'dark:text-slate-400');
+    t.classList.remove('border-b-2','border-indigo-500','text-indigo-600','dark:text-indigo-400','bg-indigo-50/50');
+    t.classList.add('text-slate-500','dark:text-slate-400');
   });
-
-  // Tampilkan panel yang dipilih
-  const panel = document.getElementById('panel-' + index);
-  if (panel) panel.classList.remove('hidden');
-
-  // Aktifkan tab yang dipilih
+  document.getElementById('panel-' + index)?.classList.remove('hidden');
   const tab = document.getElementById('tab-' + index);
   if (tab) {
-    tab.classList.add('border-b-2', 'border-indigo-500', 'text-indigo-600', 'dark:text-indigo-400', 'bg-indigo-50/50');
-    tab.classList.remove('text-slate-500', 'dark:text-slate-400');
+    tab.classList.add('border-b-2','border-indigo-500','text-indigo-600','dark:text-indigo-400','bg-indigo-50/50');
+    tab.classList.remove('text-slate-500','dark:text-slate-400');
   }
 }
 
-// ── Preview gambar baru sebelum upload ─────────────────────────
+// ── Preview banner ─────────────────────────────────────────────
 function previewImage(input, index) {
   const file = input.files[0];
   if (!file) return;
-
   const reader = new FileReader();
   reader.onload = function(e) {
     const url = e.target.result;
-
-    // Sembunyikan placeholder, tampilkan preview baru
     const placeholder = document.getElementById('placeholder-' + index);
     if (placeholder) placeholder.classList.add('hidden');
-
-    // Tampilkan preview wrap baru
     const newWrap = document.getElementById('new-preview-wrap-' + index);
     const newImg  = document.getElementById('new-preview-img-' + index);
-    if (newWrap && newImg) {
-      newImg.src = url;
-      newWrap.classList.remove('hidden');
-    }
-
-    // Jika sudah ada preview lama (dari DB), update gambarnya
+    if (newWrap && newImg) { newImg.src = url; newWrap.classList.remove('hidden'); }
     const oldImg = document.getElementById('preview-img-' + index);
     if (oldImg) oldImg.src = url;
-
-    // Update mini preview
     const miniImg = document.getElementById('mini-preview-img-' + index);
-    if (miniImg) {
-      miniImg.src = url;
-      miniImg.classList.remove('hidden');
-    }
-
-    // Tampilkan mini preview jika sebelumnya tersembunyi
+    if (miniImg) { miniImg.src = url; miniImg.classList.remove('hidden'); }
     const miniPreview = document.getElementById('mini-preview-' + index);
     if (miniPreview) miniPreview.style.display = '';
   };
   reader.readAsDataURL(file);
 }
 
-// ── Handle drag & drop ─────────────────────────────────────────
 function handleDrop(event, index) {
   event.preventDefault();
   const file = event.dataTransfer.files[0];
   if (!file || !file.type.startsWith('image/')) return;
-
-  // Masukkan file ke input
   const input = document.getElementById('file-' + index);
   const dt = new DataTransfer();
   dt.items.add(file);
   input.files = dt.files;
-
-  // Trigger preview
   previewImage(input, index);
 }
 
-// ── Update teks live preview saat mengetik ─────────────────────
 function updatePreview(index) {
   const title    = document.getElementById('input-title-' + index)?.value || 'Judul Slide';
   const subtitle = document.getElementById('input-subtitle-' + index)?.value || '';
   const color    = document.getElementById('input-color-' + index)?.value || '#1a4e8a';
-
-  // Update teks di mini preview
   const prevTitle = document.getElementById('preview-title-' + index);
   if (prevTitle) prevTitle.textContent = title;
-
   const prevSub = document.getElementById('preview-subtitle-' + index);
   if (prevSub) prevSub.textContent = subtitle;
-
-  // Update warna overlay
   const overlay = document.getElementById('mini-overlay-' + index);
   if (overlay) overlay.style.background = `linear-gradient(to right, ${color}cc, ${color}44)`;
-
-  // Tampilkan mini preview jika ada konten
   const miniPreview = document.getElementById('mini-preview-' + index);
   if (miniPreview && title) miniPreview.style.display = '';
 }
 
-// ── Sinkronisasi color picker ↔ text input ─────────────────────
 function syncColor(index, value) {
   const picker = document.getElementById('input-color-' + index);
   const text   = document.getElementById('color-text-' + index);
-
   if (picker && picker.value !== value) picker.value = value;
   if (text   && text.value   !== value) text.value   = value;
-
-  // Update overlay mini preview
   const overlay = document.getElementById('mini-overlay-' + index);
   if (overlay) overlay.style.background = `linear-gradient(to right, ${value}cc, ${value}44)`;
 }
 
-// ── Handle toggle active (update dot indikator di tab) ─────────
 document.querySelectorAll('[id^="active-"]').forEach(checkbox => {
   checkbox.addEventListener('change', function() {
     const index = this.id.replace('active-', '');
     const thumb = document.getElementById('toggle-thumb-' + index);
-    if (thumb) {
-      if (this.checked) {
-        thumb.style.transform = 'translateX(1rem)';
-      } else {
-        thumb.style.transform = 'translateX(0)';
-      }
-    }
+    if (thumb) thumb.style.transform = this.checked ? 'translateX(1rem)' : 'translateX(0)';
   });
 });
-// ── Tab bank ────────────────────────────────────────────────────
+
+// ── Tab bank ──────────────────────────────────────────────────
 function showBank(index) {
   document.querySelectorAll('.bank-panel').forEach(p => p.classList.add('hidden'));
   document.querySelectorAll('.bank-tab').forEach(t => {
-    t.classList.remove('border-b-2', 'border-emerald-500', 'text-emerald-600', 'dark:text-emerald-400', 'bg-emerald-50/50');
-    t.classList.add('text-slate-500', 'dark:text-slate-400');
+    t.classList.remove('border-b-2','border-emerald-500','text-emerald-600','dark:text-emerald-400','bg-emerald-50/50');
+    t.classList.add('text-slate-500','dark:text-slate-400');
   });
   document.getElementById('bank-panel-' + index)?.classList.remove('hidden');
   const tab = document.getElementById('bank-tab-' + index);
   if (tab) {
-    tab.classList.add('border-b-2', 'border-emerald-500', 'text-emerald-600', 'dark:text-emerald-400', 'bg-emerald-50/50');
-    tab.classList.remove('text-slate-500', 'dark:text-slate-400');
+    tab.classList.add('border-b-2','border-emerald-500','text-emerald-600','dark:text-emerald-400','bg-emerald-50/50');
+    tab.classList.remove('text-slate-500','dark:text-slate-400');
   }
 }
 
-// ── Update preview live saat mengetik ───────────────────────────
 function updateBankTabName(index, value) {
-  // Update label di tab
-  const tab = document.getElementById('bank-tab-' + index);
-  if (tab) {
-    const span = tab.querySelector('span:first-child');
-    const label = tab.childNodes[tab.childNodes.length - 1];
-    tab.childNodes.forEach(node => {
-      if (node.nodeType === 3) node.textContent = ' ' + (value || 'Bank ' + index);
-    });
-  }
-  // Update preview
-  const previewName   = document.getElementById('bank-preview-name-' + index);
-  const previewLogo   = document.getElementById('bank-preview-logo-' + index);
+  const previewName = document.getElementById('bank-preview-name-' + index);
+  const previewLogo = document.getElementById('bank-preview-logo-' + index);
   if (previewName) previewName.textContent = value || 'Nama Bank';
   if (previewLogo) previewLogo.textContent = value ? value.substring(0, 3).toUpperCase() : '—';
 }
@@ -814,7 +757,6 @@ function updateBankTab(index, active) {
   }
 }
 
-// Live preview nomor & pemilik
 document.querySelectorAll('[name^="bank_"][name$="_number"]').forEach(input => {
   input.addEventListener('input', function() {
     const index = this.name.match(/bank_(\d+)_number/)[1];
@@ -822,6 +764,7 @@ document.querySelectorAll('[name^="bank_"][name$="_number"]').forEach(input => {
     if (el) el.textContent = this.value || '————————';
   });
 });
+
 document.querySelectorAll('[name^="bank_"][name$="_owner"]').forEach(input => {
   input.addEventListener('input', function() {
     const index = this.name.match(/bank_(\d+)_owner/)[1];
@@ -829,5 +772,54 @@ document.querySelectorAll('[name^="bank_"][name$="_owner"]').forEach(input => {
     if (el) el.textContent = 'a.n. ' + (this.value || 'Nama Pemilik');
   });
 });
+
+// ── Logo upload & preview ──────────────────────────────────────
+function previewLogo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const url = e.target.result;
+    const oldImg = document.getElementById('logo-preview-img');
+    if (oldImg) { oldImg.src = url; return; }
+    const placeholder = document.getElementById('logo-placeholder');
+    if (placeholder) placeholder.classList.add('hidden');
+    const newWrap = document.getElementById('logo-new-wrap');
+    const newImg  = document.getElementById('logo-new-img');
+    if (newWrap && newImg) {
+      newImg.src = url;
+      newWrap.classList.remove('hidden');
+      newWrap.classList.add('flex');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleLogoDrop(event) {
+  event.preventDefault();
+  const file = event.dataTransfer.files[0];
+  if (!file || !file.type.startsWith('image/')) return;
+  const input = document.getElementById('site_logo_file');
+  const dt = new DataTransfer();
+  dt.items.add(file);
+  input.files = dt.files;
+  previewLogo(input);
+}
+
+function removeLogo() {
+  if (!confirm('Hapus logo? Perubahan berlaku setelah klik Simpan Semua.')) return;
+  document.getElementById('remove_logo').value = '1';
+  const wrap = document.getElementById('logo-preview-wrap');
+  if (wrap) wrap.remove();
+  const placeholder = document.getElementById('logo-placeholder');
+  if (placeholder) placeholder.classList.remove('hidden');
+  const btnWrap = document.getElementById('logo-remove-btn-wrap');
+  if (btnWrap) btnWrap.remove();
+  const dropzone = document.getElementById('logo-dropzone');
+  if (dropzone) {
+    dropzone.classList.remove('border-blue-300','dark:border-blue-600');
+    dropzone.classList.add('border-slate-200','dark:border-slate-600');
+  }
+}
 </script>
 @endsection

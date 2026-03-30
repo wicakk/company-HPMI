@@ -31,7 +31,7 @@
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased min-h-screen flex flex-col">
 
-    {{-- TOPBAR PREMIUM BANNER (khusus member free yang belum premium) --}}
+    {{-- TOPBAR PREMIUM BANNER --}}
     @auth
     @if(auth()->user()->isMember() && !auth()->user()->isPremium() && !auth()->user()->isPremiumPending())
     <div class="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-2.5 px-4 text-xs font-semibold flex items-center justify-center gap-3">
@@ -49,15 +49,26 @@
     @endif
     @endauth
 
+    {{-- Ambil logo sekali, dipakai navbar & footer --}}
+    @php $logoUrl = \App\Models\SiteSetting::imageUrl('site_logo'); @endphp
+
     {{-- NAVBAR --}}
     <nav class="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-slate-200 dark:border-slate-800 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
+
                 {{-- Brand --}}
                 <a href="{{ route('home') }}" class="flex items-center gap-3 group">
-                    <div class="w-9 h-9 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-lg shadow-primary-500/30 group-hover:scale-105 transition-transform">H</div>
+                    @if($logoUrl)
+                        <img src="{{ $logoUrl }}" alt="{{ \App\Models\SiteSetting::get('org_name', 'HPMI') }}"
+                             class="h-9 w-auto object-contain group-hover:scale-105 transition-transform">
+                    @else
+                        <div class="w-9 h-9 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-lg shadow-primary-500/30 group-hover:scale-105 transition-transform">H</div>
+                    @endif
                     <div>
-                        <p class="font-black text-slate-900 dark:text-white text-sm leading-none">HPMI</p>
+                        <p class="font-black text-slate-900 dark:text-white text-sm leading-none">
+                            {{ \App\Models\SiteSetting::get('org_name', 'HPMI') }}
+                        </p>
                         <p class="text-xs text-slate-400 leading-none mt-0.5">Perawat Manajer Indonesia</p>
                     </div>
                 </a>
@@ -82,7 +93,6 @@
                     </button>
 
                     @auth
-                    {{-- Tombol Upgrade Premium (kalau belum premium) --}}
                     @if(auth()->user()->isMember() && !auth()->user()->isPremium())
                     <a href="{{ route('member.payment') }}"
                        class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white text-xs font-black rounded-xl shadow-lg shadow-amber-500/30 transition">
@@ -111,7 +121,9 @@
                                 <p class="font-bold text-slate-900 dark:text-white text-sm truncate">{{ auth()->user()->name }}</p>
                                 <div class="flex items-center gap-1.5 mt-1">
                                     @if(auth()->user()->isPremium())
-                                    <span class="text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 rounded-full flex items-center gap-1"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Premium</span>
+                                    <span class="text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Premium
+                                    </span>
                                     @elseif(auth()->user()->isPremiumPending())
                                     <span class="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/20 px-2 py-0.5 rounded-full">⏳ Pending</span>
                                     @else
@@ -184,16 +196,33 @@
     <footer class="bg-slate-900 dark:bg-slate-950 text-slate-400 mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-8">
+
+                {{-- Kolom 1: Brand & Deskripsi --}}
                 <div>
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-9 h-9 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center text-white font-black text-sm">H</div>
+                        @if($logoUrl)
+                            {{-- brightness-0 invert: logo jadi putih di background gelap footer --}}
+                            <img src="{{ $logoUrl }}" alt="{{ \App\Models\SiteSetting::get('org_name', 'HPMI') }}"
+                                 class="h-9 w-auto object-contain brightness-0 invert">
+                        @else
+                            <div class="w-9 h-9 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center text-white font-black text-sm">H</div>
+                        @endif
                         <div>
-                            <p class="font-black text-white text-sm">HPMI</p>
+                            <p class="font-black text-white text-sm">{{ \App\Models\SiteSetting::get('org_name', 'HPMI') }}</p>
                             <p class="text-xs text-slate-400">Perawat Manajer Indonesia</p>
                         </div>
                     </div>
-                    <p class="text-sm leading-relaxed">Himpunan Perawat Manajer Indonesia — membangun profesionalisme keperawatan nasional.</p>
+                    <p class="text-sm leading-relaxed">
+                        {{--
+                            Prioritas: footer_description → org_description → fallback statis.
+                            Ini memungkinkan admin punya deskripsi footer berbeda dari deskripsi umum organisasi.
+                        --}}
+                        {{ \App\Models\SiteSetting::get('footer_description')
+                            ?: \App\Models\SiteSetting::get('org_description', 'Himpunan Perawat Manajer Indonesia — membangun profesionalisme keperawatan nasional.') }}
+                    </p>
                 </div>
+
+                {{-- Kolom 2: Tautan Cepat --}}
                 <div>
                     <p class="font-bold text-white text-sm mb-4">Tautan Cepat</p>
                     <div class="space-y-2 text-sm">
@@ -202,23 +231,37 @@
                         @endforeach
                     </div>
                 </div>
+
+                {{-- Kolom 3: Kontak dari DB --}}
+                {{--
+                    Prioritas: footer_email → contact_email (dari Informasi Organisasi).
+                    Sehingga jika admin tidak isi footer_email tapi isi contact_email, tetap muncul.
+                --}}
                 <div>
                     <p class="font-bold text-white text-sm mb-4">Kontak</p>
                     <div class="space-y-2 text-sm">
-                        <p>📧 sekretariat@hpmi.id</p>
-                        <p>📞 021-12345678</p>
-                        <p>📍 Jakarta Pusat, DKI Jakarta</p>
+                        @php
+                            $fEmail   = \App\Models\SiteSetting::get('footer_email')   ?: \App\Models\SiteSetting::get('contact_email');
+                            $fPhone   = \App\Models\SiteSetting::get('footer_phone')   ?: \App\Models\SiteSetting::get('contact_phone');
+                            $fAddress = \App\Models\SiteSetting::get('footer_address') ?: \App\Models\SiteSetting::get('contact_address');
+                        @endphp
+                        @if($fEmail)   <p>📧 {{ $fEmail }}</p>   @endif
+                        @if($fPhone)   <p>📞 {{ $fPhone }}</p>   @endif
+                        @if($fAddress) <p>📍 {{ $fAddress }}</p> @endif
+                        @if(!$fEmail && !$fPhone && !$fAddress)
+                            <p class="text-slate-500 italic text-xs">Belum ada kontak yang diatur.</p>
+                        @endif
                     </div>
                 </div>
+
             </div>
             <div class="border-t border-slate-800 pt-6 text-center text-xs">
-                © {{ date('Y') }} HPMI — Himpunan Perawat Manajer Indonesia. Semua hak dilindungi.
+                {{ \App\Models\SiteSetting::get('footer_copyright', '© '.date('Y').' HPMI — Himpunan Perawat Manajer Indonesia. Semua hak dilindungi.') }}
             </div>
         </div>
     </footer>
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init();
-    </script>
+    <script>AOS.init();</script>
 </body>
 </html>
