@@ -107,7 +107,7 @@
             </div>
             <div>
               <h3 class="text-sm font-bold text-slate-900 dark:text-white">Banner Slider Homepage</h3>
-              <p class="text-xs text-slate-400 mt-0.5">Gambar disimpan ke storage • Rekomendasi <strong class="text-indigo-500">1366 × 768 px</strong></p>
+              <p class="text-xs text-slate-400 mt-0.5">Gambar disimpan ke storage • Rekomendasi <strong class="text-indigo-500">1920 × 1080 px</strong></p>
             </div>
           </div>
         </div>
@@ -161,12 +161,12 @@
                   @if($slide['preview_url'])
                   <div class="relative" id="preview-wrap-{{ $slide['index'] }}">
                     <img src="{{ $slide['preview_url'] }}" alt="Slide {{ $slide['index'] }}"
-                         class="w-full object-cover rounded-2xl" style="aspect-ratio:1366/768; max-height:220px;"
+                         class="w-full object-cover rounded-2xl" style="aspect-ratio:1920/1080; max-height:220px;"
                          id="preview-img-{{ $slide['index'] }}">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all rounded-2xl flex items-center justify-center">
                       <span class="opacity-0 group-hover:opacity-100 transition text-white text-sm font-semibold bg-black/50 px-4 py-2 rounded-xl">Klik untuk ganti</span>
                     </div>
-                    <div class="absolute bottom-2 left-2 px-2 py-0.5 bg-black/60 text-white text-[10px] font-mono rounded-lg">1366 × 768</div>
+                    <div class="absolute bottom-2 left-2 px-2 py-0.5 bg-black/60 text-white text-[10px] font-mono rounded-lg">1920 × 1080</div>
                   </div>
                   @else
                   <div class="flex flex-col items-center justify-center py-10 gap-3" id="placeholder-{{ $slide['index'] }}">
@@ -177,12 +177,12 @@
                     </div>
                     <div class="text-center">
                       <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">Drag & drop atau <span class="text-indigo-600 dark:text-indigo-400">pilih file</span></p>
-                      <p class="text-xs text-slate-400 mt-1">PNG, JPG, WEBP • Rekomendasi <strong>1366 × 768 px</strong></p>
+                      <p class="text-xs text-slate-400 mt-1">PNG, JPG, WEBP • Rekomendasi <strong>1920 × 1080 px</strong></p>
                     </div>
                   </div>
                   <div class="hidden relative" id="new-preview-wrap-{{ $slide['index'] }}">
                     <img src="" alt="Preview baru" class="w-full object-cover rounded-2xl"
-                         style="aspect-ratio:1366/768; max-height:220px;" id="new-preview-img-{{ $slide['index'] }}">
+                         style="aspect-ratio:1920/1080; max-height:220px;" id="new-preview-img-{{ $slide['index'] }}">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all rounded-2xl flex items-center justify-center">
                       <span class="opacity-0 group-hover:opacity-100 transition text-white text-sm font-semibold bg-black/50 px-4 py-2 rounded-xl">Klik untuk ganti</span>
                     </div>
@@ -234,7 +234,7 @@
                 <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                 <span class="text-xs text-slate-400 ml-1">Preview</span>
               </div>
-              <div class="relative overflow-hidden" style="aspect-ratio:1366/768;max-height:160px;">
+              <div class="relative overflow-hidden" style="aspect-ratio:1920/1080;max-height:160px;">
                 @if($slide['preview_url'])
                 <img src="{{ $slide['preview_url'] }}" class="w-full h-full object-cover absolute inset-0" id="mini-preview-img-{{ $slide['index'] }}">
                 @else
@@ -517,7 +517,6 @@
           </div>
         </div>
 
-        {{-- Drop zone --}}
         <label for="site_logo_file" class="block cursor-pointer group"
                ondragover="event.preventDefault()" ondrop="handleLogoDrop(event)">
           <div id="logo-dropzone" class="relative border-2 border-dashed rounded-2xl overflow-hidden transition-all
@@ -551,7 +550,6 @@
                accept="image/jpeg,image/png,image/webp,image/svg+xml"
                class="sr-only" onchange="previewLogo(this)">
 
-        {{-- Tombol hapus (hanya jika sudah ada logo) --}}
         @if($logoPreviewUrl)
         <div class="mt-3" id="logo-remove-btn-wrap">
           <input type="hidden" name="remove_logo" id="remove_logo" value="0">

@@ -125,7 +125,7 @@
                      style="background: linear-gradient(135deg, {{ $slide['color'] }}cc 0%, {{ $slide['color'] }}66 60%, transparent 100%);"></div>
                 @endif
 
-                <div class="relative flex items-center h-56 md:h-72 px-10 gap-8 z-10">
+                <div class="relative flex items-center w-full px-4 md:px-10 gap-8 z-10" style="height: clamp(220px, 50vw, 420px);">
                     <div class="flex-1 text-white">
                         @if(!empty($slide['badge']) || !empty($slide['title']))
                         <p class="text-xs font-semibold uppercase tracking-widest mb-2"
