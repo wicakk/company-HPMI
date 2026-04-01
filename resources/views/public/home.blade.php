@@ -16,7 +16,6 @@
     $events   = $events   ?? collect();
     $members  = $members  ?? collect();
 
-    // ✅ FIX DI SINI
     $totalResults = $articles->count() + $events->count() + $members->count();
 @endphp
 
@@ -28,17 +27,11 @@
 @section('content')
 
 {{-- ════════════════════════════════════════════════
-     HERO BANNER SLIDER — Style card 3D peek (doc2)
-     Data dinamis dari $bannerSlides (controller)
-     Fallback: slide statis jika $bannerSlides kosong
+     HERO BANNER SLIDER — Style card 3D peek
+     Background bersih, tanpa grid/cahaya overlay
 ════════════════════════════════════════════════ --}}
-<div class="relative w-full overflow-hidden select-none py-16"
-     id="heroBannerWrap"
-     style="background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 40px 40px; background-color: #f8fafc;">
-
-    {{-- Dark mode grid overlay --}}
-    <div class="absolute inset-0 pointer-events-none dark:opacity-100 opacity-0"
-         style="background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 40px 40px; background-color: #030712; z-index:0;"></div>
+<div class="relative w-full overflow-hidden select-none py-16 bg-white dark:bg-gray-900"
+     id="heroBannerWrap">
 
     {{-- Slides track --}}
     <div class="relative flex items-center justify-center" id="bannerTrack" style="min-height:288px;">
@@ -46,7 +39,6 @@
         @php
             $hasSlides = isset($bannerSlides) && $bannerSlides->count() > 0;
 
-            // Slide statis sebagai fallback jika tidak ada data dari controller
             $staticSlides = [
                 [
                     'title'    => 'Pelatihan Manajerial Keperawatan 2025',
@@ -115,14 +107,12 @@
                         width: 68%; max-width: 860px;
                         transition: transform .5s cubic-bezier(.4,0,.2,1), opacity .5s ease;">
 
-                {{-- Gambar jika ada --}}
+                {{-- Gambar langsung tanpa overlay --}}
                 @if(!empty($slide['image']))
                 <img src="{{ $slide['image'] }}"
                      alt="{{ $slide['title'] }}"
                      class="absolute inset-0 w-full h-full object-cover"
                      loading="{{ $idx === 0 ? 'eager' : 'lazy' }}">
-                <div class="absolute inset-0"
-                     style="background: linear-gradient(135deg, {{ $slide['color'] }}cc 0%, {{ $slide['color'] }}66 60%, transparent 100%);"></div>
                 @endif
 
                 <div class="relative flex items-center w-full px-4 md:px-10 gap-8 z-10" style="height: clamp(220px, 50vw, 420px);">
@@ -209,18 +199,18 @@
     </button>
 
     {{-- Dot indicators --}}
-    <div class="flex justify-center gap-2 mt-4 relative z-10" id="bannerDots"></div>
+    {{-- <div class="flex justify-center gap-2 mt-4 relative z-10" id="bannerDots"></div> --}}
 
 </div>
-{{-- ── Research Data Search Box (doc2) ── --}}
-<div class="relative w-full overflow-hidden select-none "
-     id="heroBannerWrap"
-     style="background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 40px 40px; background-color: #f8fafc;">
+{{-- END BANNER SLIDER --}}
+
+
+{{-- ── Research Data Search Box ── --}}
+<div class="relative w-full overflow-hidden select-none">
     <div class="py-6 my-6 mx-12 rounded-2xl bg-gradient-to-br from-primary-700 to-primary-800 text-white">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <h1 class="text-2xl font-bold mb-6">Research Data</h1>
 
-            {{-- Search form (ulang dari home, agar bisa refinement) --}}
             <form method="GET" action="{{ route('research.search') }}" class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1">
                     <input type="text" name="q" value="{{ $keyword }}"
@@ -261,10 +251,9 @@
     </div>
 
     {{-- ── Results Body ── --}}
-    @if(!empty($keyword ) && $keyword )
+    @if(!empty($keyword) && $keyword)
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
 
-            {{-- Jika belum ada keyword --}}
             @if($keyword === '')
             <div class="text-center py-20 text-gray-400 dark:text-gray-500">
                 <svg class="w-16 h-16 mx-auto mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -274,7 +263,6 @@
                 <p class="text-lg font-medium">Masukkan keyword untuk mulai mencari</p>
             </div>
 
-            {{-- Jika ada keyword tapi tidak ada hasil --}}
             @elseif($totalResults === 0)
             <div class="text-center py-20">
                 <svg class="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -289,14 +277,12 @@
 
             @else
 
-            {{-- Ringkasan hasil --}}
             <p class="text-sm text-gray-500 dark:text-gray-400">
                 Ditemukan <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $totalResults }} hasil</span>
                 untuk <span class="font-semibold text-primary-600 dark:text-primary-400">"{{ $keyword }}"</span>
                 @if($category !== 'semua') <span>· Kategori: {{ $category }}</span> @endif
             </p>
 
-            {{-- ── Artikel / Penelitian ── --}}
             @if($articles->count())
             <div>
                 <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
@@ -331,7 +317,6 @@
             </div>
             @endif
 
-            {{-- ── Events ── --}}
             @if($events->count())
             <div>
                 <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
@@ -364,7 +349,6 @@
             </div>
             @endif
 
-            {{-- ── Anggota ── --}}
             @if($members->count())
             <div>
                 <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
@@ -395,7 +379,6 @@
         </div>
     @endif
 </div>
-{{-- END BANNER SLIDER --}}
 
 
 {{-- ── Hero Text ── --}}
@@ -452,130 +435,11 @@
 </section>
 
 
-{{-- ════════════════════════════════════════════════
-     ANNOUNCEMENTS — filter tab + card carousel (doc2)
-════════════════════════════════════════════════ --}}
-{{-- @if(isset($announcements) && $announcements->count())
-<section class="py-12 bg-primary-50 dark:bg-primary-900/10 relative overflow-hidden">
-    <div class="absolute inset-0 pointer-events-none"
-         style="background-image: linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px); background-size: 40px 40px;"></div>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div class="flex flex-col md:flex-row gap-8 items-start">
-            <div class="flex-shrink-0 md:w-56">
-                <div class="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-800 flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white leading-snug mb-4">
-                    Kuy, cek pengumuman<br>sebelum...
-                </h2>
-                <a href="#"
-                   class="inline-block text-sm font-semibold text-primary-600 dark:text-primary-400 bg-primary-100 dark:bg-primary-800 px-5 py-2.5 rounded-xl hover:bg-primary-200 dark:hover:bg-primary-700 transition">
-                    Lihat semua pengumuman
-                </a>
-            </div>
-            <div class="flex-1 min-w-0">
-                <div class="flex gap-2 flex-wrap mb-5" id="annFilterTabs">
-                    <button data-filter="semua"
-                            class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition bg-primary-600 text-white border-primary-600">
-                        Semua
-                    </button>
-                    <button data-filter="pinned"
-                            class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-400">
-                        📌 Penting
-                    </button>
-                    <button data-filter="umum"
-                            class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-400">
-                        Umum
-                    </button>
-                    <button data-filter="kegiatan"
-                            class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-400">
-                        Kegiatan
-                    </button>
-                    <button data-filter="info"
-                            class="ann-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border transition border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-400">
-                        Info
-                    </button>
-                </div>
-                <div class="relative">
-                    <div class="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory scroll-smooth" id="annCarouselInner"
-                         style="scrollbar-width:none; -ms-overflow-style:none;">
-
-                        @foreach($announcements as $ann)
-                        <div class="ann-card snap-start flex-shrink-0 w-72 bg-white dark:bg-gray-800 rounded-2xl border border-primary-100 dark:border-gray-700 shadow-sm overflow-hidden"
-                             data-category="{{ $ann->is_pinned ? 'pinned' : 'umum' }}">
-
-                            <div class="h-2 {{ $ann->is_pinned ? 'bg-amber-400' : 'bg-primary-500' }}"></div>
-
-                            <div class="p-5">
-                                @if($ann->is_pinned)
-                                <span class="inline-flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-300 px-2.5 py-0.5 rounded-full mb-3">
-                                    📌 Penting
-                                </span>
-                                @else
-                                <span class="inline-flex items-center gap-1 text-xs font-medium text-primary-600 bg-primary-50 dark:bg-primary-900/30 dark:text-primary-300 px-2.5 py-0.5 rounded-full mb-3">
-                                    Info
-                                </span>
-                                @endif
-
-                                <h3 class="font-semibold text-gray-900 dark:text-white text-sm leading-snug mb-2 line-clamp-2">
-                                    {{ $ann->title }}
-                                </h3>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-3">
-                                    {{ Str::limit($ann->content, 120) }}
-                                </p>
-                                <a href="#" class="inline-flex items-center gap-1 mt-4 text-xs font-semibold text-primary-600 dark:text-primary-400 hover:underline">
-                                    Baca selengkapnya
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                        @endforeach
-
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-3 mt-4">
-                    <button id="annPrev"
-                            class="w-9 h-9 bg-white dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition shadow-sm">
-                        <svg class="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                        </svg>
-                    </button>
-                    <button id="annNext"
-                            class="w-9 h-9 bg-white dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition shadow-sm">
-                        <svg class="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </button>
-                    <div class="flex-1 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden ml-2">
-                        <div id="annProgressBar" class="h-full bg-primary-400 dark:bg-primary-500 rounded-full transition-all duration-300" style="width:0%"></div>
-                    </div>
-                    <span id="annCounter" class="text-xs text-gray-500 dark:text-gray-400 font-medium ml-1">
-                        1/{{ $announcements->count() }}
-                    </span>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</section>
-@endif --}}
-{{-- END ANNOUNCEMENTS --}}
-
-
-{{-- Layanan --}}
 {{-- Layanan --}}
 @if(isset($layanans) && $layanans->count())
 <section class="py-16 bg-gray-50 dark:bg-gray-800/30">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
- 
-        {{-- Section Header --}}
+
         <div class="flex items-center justify-between mb-10">
             <div>
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Layanan Kami</h2>
@@ -588,12 +452,10 @@
                 Lihat semua →
             </a>
         </div>
- 
+
         @if(isset($grouped) && !$grouped->isEmpty())
- 
             @foreach($grouped as $kategori => $items)
             <div class="mb-12">
-                {{-- Kategori label --}}
                 <div class="flex items-center gap-3 mb-6">
                     <h3 class="text-base font-semibold text-gray-700 dark:text-gray-300">
                         {{ $kategori }}
@@ -601,33 +463,24 @@
                     <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
                     <span class="text-xs text-gray-400">{{ $items->count() }} layanan</span>
                 </div>
- 
-                {{-- Grid kartu --}}
+
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" data-aos="fade-up">
                     @foreach($items as $layanan)
                     <a href="{{ route('layanan.show', $layanan->slug) }}"
                        class="group bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700
                               p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
- 
-                        {{-- Ikon --}}
                         <div class="w-14 h-14 rounded-2xl bg-primary-50 dark:bg-primary-900/30
                                     flex items-center justify-center text-3xl mb-5
                                     group-hover:bg-primary-100 dark:group-hover:bg-primary-900/50 transition-colors">
                             {{ $layanan->ikon ?? '🏥' }}
                         </div>
- 
-                        {{-- Nama --}}
                         <h4 class="text-base font-bold text-gray-900 dark:text-white mb-2
                                    group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                             {{ $layanan->nama }}
                         </h4>
- 
-                        {{-- Deskripsi --}}
                         <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-5 line-clamp-3">
                             {{ $layanan->deskripsi_singkat }}
                         </p>
- 
-                        {{-- CTA --}}
                         <span class="inline-flex items-center gap-1
                                      text-primary-600 dark:text-primary-400 text-sm font-semibold">
                             Selengkapnya
@@ -642,19 +495,15 @@
                 </div>
             </div>
             @endforeach
- 
         @else
             <div class="text-center py-16 text-gray-400 dark:text-gray-500">
                 <p class="text-base">Belum ada layanan yang tersedia saat ini.</p>
             </div>
         @endif
- 
+
     </div>
 </section>
 @endif
-{{-- end layanan --}}
-
-
 
 
 {{-- ── Latest Articles ── --}}
@@ -760,7 +609,7 @@
 (function () {
 
     /* ─────────────────────────────────────────────
-       1. BANNER CAROUSEL — 3D peek style (doc2)
+       1. BANNER CAROUSEL — 3D peek style
     ───────────────────────────────────────────── */
     const track    = document.getElementById('bannerTrack');
     const dotsWrap = document.getElementById('bannerDots');
@@ -776,7 +625,6 @@
     let current   = 0;
     let autoTimer = null;
 
-    // Build dots
     if (dotsWrap && total > 1) {
         slides.forEach((_, i) => {
             const d = document.createElement('button');
@@ -810,7 +658,7 @@
 
             const scale   = offset === 0 ? 1 : absOffset === 1 ? 0.82 : 0.68;
             const opacity = offset === 0 ? 1 : absOffset === 1 ? 0.55 : 0.3;
-            const transX  = offset * 72; // % shift
+            const transX  = offset * 72;
 
             slide.style.transform     = `translateX(${transX}%) scale(${scale})`;
             slide.style.opacity       = opacity;
@@ -835,7 +683,6 @@
     if (prevBtn) prevBtn.addEventListener('click', () => { stopAuto(); goTo(current - 1); startAuto(); });
     if (nextBtn) nextBtn.addEventListener('click', () => { stopAuto(); goTo(current + 1); startAuto(); });
 
-    // Touch swipe
     let touchStartX = 0;
     track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
     track.addEventListener('touchend', e => {
@@ -848,7 +695,7 @@
 
 
     /* ─────────────────────────────────────────────
-       2. ANNOUNCEMENT CAROUSEL + FILTER (doc2)
+       2. ANNOUNCEMENT CAROUSEL + FILTER
     ───────────────────────────────────────────── */
     const annInner   = document.getElementById('annCarouselInner');
     const annPrev    = document.getElementById('annPrev');
@@ -870,7 +717,7 @@
         const tot     = visible.length;
         if (!tot) { if (annBar) annBar.style.width = '0%'; if (annCount) annCount.textContent = '0/0'; return; }
 
-        const scrolled = annInner.scrollLeft;
+        const scrolled  = annInner.scrollLeft;
         const maxScroll = annInner.scrollWidth - annInner.clientWidth;
         const pct = maxScroll > 0 ? (scrolled / maxScroll) * 100 : 0;
         if (annBar) annBar.style.width = pct + '%';
@@ -884,7 +731,6 @@
     if (annPrev) annPrev.addEventListener('click', () => annInner.scrollBy({ left: -cardWidth(), behavior: 'smooth' }));
     if (annNext) annNext.addEventListener('click', () => annInner.scrollBy({ left:  cardWidth(), behavior: 'smooth' }));
 
-    // Filter tabs
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const filter = btn.dataset.filter;
